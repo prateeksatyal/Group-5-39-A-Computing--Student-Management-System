@@ -3,7 +3,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
-
 /**
  *
  * @author Lenovo
@@ -143,6 +142,7 @@ public class loginpage extends javax.swing.JFrame {
         jButton1.setBackground(new java.awt.Color(0, 102, 255));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
         jButton1.setText("Login");
+        jButton1.addActionListener(this::jButton1ActionPerformed);
         jPanel2.add(jButton1);
         jButton1.setBounds(110, 350, 330, 23);
 
@@ -260,6 +260,10 @@ public class loginpage extends javax.swing.JFrame {
     private void jTextField14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField14ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField14ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
