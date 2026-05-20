@@ -1,0 +1,75 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package dao;
+
+import database.MySqlConnector;
+import model.UserData;
+import java.sql.*;
+
+public class UserDao {
+    
+    MySqlConnector mysql = new MySqlConnector();
+   
+    // === REGISTER NEW USER ===
+    public boolean createUser(UserData user) {
+        String sql = "INSERT INTO users (fullName, email, password, role) VALUES (?, ?, ?, ?)";
+        Connection conn = null;
+        
+        try {
+            conn = mysql.openConnection();
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            pstm.setString(1, user.getUserName());
+            pstm.setString(2, user.getEmail());
+            pstm.setString(3, user.getPassword());
+            pstm.setString(4, user.getRole());
+            pstm.executeUpdate();
+            return true;
+           
+        } catch (Exception e) {
+            System.out.println("Error in createUser: " + e.getMessage());
+            return false;
+        } finally {
+            if (conn != null) {
+                try { mysql.closeConnection(conn); } 
+                catch (Exception e) { System.out.println("Error closing: " + e.getMessage()); }
+            }
+        }
+    }
+   
+    // === LOGIN USER ===
+    public UserData loginUser(String email, String password, String role) {
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ? AND role = ?";
+        Connection conn = null;
+        
+        try {
+            conn = mysql.openConnection();
+            PreparedStatement pstm = conn.prepareStatement(sql);
+            pstm.setString(1, email);
+            pstm.setString(2, password);
+            pstm.setString(3, role);
+            
+            ResultSet rs = pstm.executeQuery();
+           
+            if (rs.next()) {
+                UserData user = new UserData(
+                    rs.getString("fullName"),
+                    rs.getString("password"),
+                    rs.getString("email"),
+                    rs.getString("role")
+                );
+                user.setUserId(rs.getInt("user_id"));
+                return user;
+            }
+        } catch (Exception e) {
+            System.out.println("Error in loginUser: " + e.getMessage());
+        } finally {
+            if (conn != null) {
+                try { mysql.closeConnection(conn); } 
+                catch (Exception e) { System.out.println("Error closing: " + e.getMessage()); }
+            }
+        }
+        return null;
+    }
+}
