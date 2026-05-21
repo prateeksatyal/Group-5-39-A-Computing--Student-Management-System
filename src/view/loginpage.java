@@ -31,19 +31,17 @@ public class loginpage extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         checkbox1 = new java.awt.Checkbox();
         jTextField5 = new javax.swing.JTextField();
-        jToggleButton1 = new javax.swing.JToggleButton();
         jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField6 = new javax.swing.JTextField();
-        jTextField7 = new javax.swing.JTextField();
-        jTextField8 = new javax.swing.JTextField();
         jTextField9 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -61,50 +59,22 @@ public class loginpage extends javax.swing.JFrame {
         jPanel2.add(checkbox1);
         checkbox1.setBounds(420, 230, 20, 20);
 
+        jTextField5.setText("Enter password");
         jTextField5.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jTextField5.addActionListener(this::jTextField5ActionPerformed);
         jPanel2.add(jTextField5);
-        jTextField5.setBounds(200, 230, 240, 20);
+        jTextField5.setBounds(190, 230, 250, 20);
 
-        jToggleButton1.setBackground(new java.awt.Color(249, 226, 226));
-        jToggleButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jToggleButton1.setForeground(new java.awt.Color(51, 102, 255));
-        jToggleButton1.setText("Register");
-        jToggleButton1.setBorder(null);
-        jToggleButton1.addActionListener(this::jToggleButton1ActionPerformed);
-        jPanel2.add(jToggleButton1);
-        jToggleButton1.setBounds(290, 420, 70, 30);
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Student", "Teacher", "Admin" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Role", "Admin", "Teacher", "Student" }));
         jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
         jPanel2.add(jComboBox1);
-        jComboBox1.setBounds(362, 288, 80, 22);
+        jComboBox1.setBounds(190, 290, 250, 23);
 
-        jTextField6.setEditable(false);
-        jTextField6.setText("      Select Role");
-        jTextField6.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jTextField6.addActionListener(this::jTextField6ActionPerformed);
-        jPanel2.add(jTextField6);
-        jTextField6.setBounds(200, 288, 240, 22);
-
-        jTextField7.setBackground(new java.awt.Color(249, 226, 226));
-        jTextField7.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
-        jTextField7.setText("Password");
-        jTextField7.setBorder(null);
-        jTextField7.addActionListener(this::jTextField7ActionPerformed);
-        jPanel2.add(jTextField7);
-        jTextField7.setBounds(40, 230, 110, 20);
-
-        jTextField8.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jTextField8.addActionListener(this::jTextField8ActionPerformed);
-        jPanel2.add(jTextField8);
-        jTextField8.setBounds(200, 180, 240, 20);
-
-        jTextField9.setText("       Enter Email or ID");
+        jTextField9.setText("Enter Email or ID");
         jTextField9.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jTextField9.addActionListener(this::jTextField9ActionPerformed);
         jPanel2.add(jTextField9);
-        jTextField9.setBounds(200, 180, 240, 20);
+        jTextField9.setBounds(190, 180, 250, 20);
 
         jButton1.setBackground(new java.awt.Color(0, 102, 255));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -120,10 +90,10 @@ public class loginpage extends javax.swing.JFrame {
         jLabel2.setBounds(140, 40, 280, 50);
 
         jLabel3.setBackground(new java.awt.Color(249, 226, 226));
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabel3.setText("Sign in to your account");
         jPanel2.add(jLabel3);
-        jLabel3.setBounds(140, 100, 260, 30);
+        jLabel3.setBounds(150, 100, 290, 30);
 
         jLabel4.setBackground(new java.awt.Color(249, 226, 226));
         jLabel4.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
@@ -137,20 +107,32 @@ public class loginpage extends javax.swing.JFrame {
         jPanel2.add(jLabel8);
         jLabel8.setBounds(40, 290, 80, 21);
 
-        jLabel9.setBackground(new java.awt.Color(249, 226, 226));
-        jLabel9.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 14)); // NOI18N
-        jLabel9.setText("Forgot Password?");
-        jPanel2.add(jLabel9);
-        jLabel9.setBounds(220, 390, 130, 20);
-
         jLabel10.setBackground(new java.awt.Color(249, 226, 226));
         jLabel10.setFont(new java.awt.Font("MS Reference Sans Serif", 0, 14)); // NOI18N
         jLabel10.setText("Don't have an account?");
         jPanel2.add(jLabel10);
-        jLabel10.setBounds(120, 420, 180, 30);
+        jLabel10.setBounds(180, 420, 160, 30);
+
+        jLabel11.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
+        jLabel11.setText("Password");
+        jPanel2.add(jLabel11);
+        jLabel11.setBounds(40, 230, 110, 23);
+
+        jButton3.setBackground(new java.awt.Color(249, 226, 226));
+        jButton3.setText("Forgot Password?");
+        jButton3.setBorder(null);
+        jPanel2.add(jButton3);
+        jButton3.setBounds(200, 390, 150, 17);
+
+        jButton2.setBackground(new java.awt.Color(249, 226, 226));
+        jButton2.setForeground(new java.awt.Color(0, 51, 255));
+        jButton2.setText("Register");
+        jButton2.setBorder(null);
+        jPanel2.add(jButton2);
+        jButton2.setBounds(340, 420, 70, 30);
 
         jPanel1.add(jPanel2);
-        jPanel2.setBounds(230, 0, 510, 470);
+        jPanel2.setBounds(230, -10, 520, 480);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/Ellipse 21.png"))); // NOI18N
         jPanel1.add(jLabel1);
@@ -172,7 +154,7 @@ public class loginpage extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel7.setText("System");
         jPanel1.add(jLabel7);
-        jLabel7.setBounds(70, 290, 81, 32);
+        jLabel7.setBounds(70, 290, 89, 30);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -184,7 +166,7 @@ public class loginpage extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 457, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 468, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -195,33 +177,17 @@ public class loginpage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField5ActionPerformed
 
-    private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField6ActionPerformed
-
-    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField7ActionPerformed
-
-    private void jTextField8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField8ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField8ActionPerformed
-
-    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField9ActionPerformed
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jTextField9ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -251,9 +217,12 @@ public class loginpage extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Checkbox checkbox1;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -261,14 +230,9 @@ public class loginpage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
     private javax.swing.JTextField jTextField9;
-    private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 }
