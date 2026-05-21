@@ -16,6 +16,8 @@ public class loginpage extends javax.swing.JFrame {
      */
     public loginpage() {
         initComponents();
+        jPasswordField1.setEchoChar('•');
+        jPasswordField1.putClientProperty("JTextField.placeholderText", "Enter password");
     }
 
     /**
@@ -29,10 +31,7 @@ public class loginpage extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        checkbox1 = new java.awt.Checkbox();
-        jTextField5 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField9 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
@@ -42,6 +41,11 @@ public class loginpage extends javax.swing.JFrame {
         jLabel11 = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jPasswordField1 = new javax.swing.JPasswordField();
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel9 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -55,26 +59,10 @@ public class loginpage extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(249, 226, 226));
         jPanel2.setLayout(null);
 
-        checkbox1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel2.add(checkbox1);
-        checkbox1.setBounds(420, 230, 20, 20);
-
-        jTextField5.setText("Enter password");
-        jTextField5.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jTextField5.addActionListener(this::jTextField5ActionPerformed);
-        jPanel2.add(jTextField5);
-        jTextField5.setBounds(190, 230, 250, 20);
-
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Role", "Admin", "Teacher", "Student" }));
         jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
         jPanel2.add(jComboBox1);
-        jComboBox1.setBounds(190, 290, 250, 23);
-
-        jTextField9.setText("Enter Email or ID");
-        jTextField9.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jTextField9.addActionListener(this::jTextField9ActionPerformed);
-        jPanel2.add(jTextField9);
-        jTextField9.setBounds(190, 180, 250, 20);
+        jComboBox1.setBounds(190, 280, 250, 30);
 
         jButton1.setBackground(new java.awt.Color(0, 102, 255));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -105,7 +93,7 @@ public class loginpage extends javax.swing.JFrame {
         jLabel8.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
         jLabel8.setText("Role");
         jPanel2.add(jLabel8);
-        jLabel8.setBounds(40, 290, 80, 21);
+        jLabel8.setBounds(40, 290, 100, 21);
 
         jLabel10.setBackground(new java.awt.Color(249, 226, 226));
         jLabel10.setFont(new java.awt.Font("MS Reference Sans Serif", 0, 14)); // NOI18N
@@ -130,6 +118,46 @@ public class loginpage extends javax.swing.JFrame {
         jButton2.setBorder(null);
         jPanel2.add(jButton2);
         jButton2.setBounds(340, 420, 70, 30);
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        jPasswordField1.setBorder(null);
+        jPasswordField1.addActionListener(this::jPasswordField1ActionPerformed);
+
+        jToggleButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/eye-open.png"))); // NOI18N
+        jToggleButton1.setBorder(null);
+        jToggleButton1.setSelectedIcon(new javax.swing.ImageIcon(getClass().getResource("/view/eye-close.png"))); // NOI18N
+        jToggleButton1.addActionListener(this::jToggleButton1ActionPerformed);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(95, 95, 95))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jToggleButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        jPanel2.add(jPanel3);
+        jPanel3.setBounds(190, 230, 250, 30);
+
+        jTextField1.setText(" Enter email or ID");
+        jTextField1.setBorder(null);
+        jPanel2.add(jTextField1);
+        jTextField1.setBounds(190, 180, 250, 30);
+
+        jLabel9.setText("jLabel9");
+        jPanel2.add(jLabel9);
+        jLabel9.setBounds(410, 240, 30, 17);
 
         jPanel1.add(jPanel2);
         jPanel2.setBounds(230, -10, 520, 480);
@@ -160,7 +188,7 @@ public class loginpage extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 743, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 777, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,10 +201,6 @@ public class loginpage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -185,9 +209,18 @@ public class loginpage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void jTextField9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField9ActionPerformed
+    private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField9ActionPerformed
+    }//GEN-LAST:event_jPasswordField1ActionPerformed
+
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        // TODO add your handling code here:
+        if (jToggleButton1.isSelected()) {
+        jPasswordField1.setEchoChar((char) 0);  // show password
+    } else {
+        jPasswordField1.setEchoChar('•');  // hide password
+    }
+    }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -215,7 +248,6 @@ public class loginpage extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.awt.Checkbox checkbox1;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -230,9 +262,12 @@ public class loginpage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField9;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPasswordField jPasswordField1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 }
