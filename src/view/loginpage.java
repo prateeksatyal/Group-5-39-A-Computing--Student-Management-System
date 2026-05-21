@@ -63,7 +63,7 @@ public class loginpage extends javax.swing.JFrame {
         jTextField1.setBorder(null);
         jTextField1.addActionListener(this::jTextField1ActionPerformed);
         jPanel2.add(jTextField1);
-        jTextField1.setBounds(170, 40, 250, 44);
+        jTextField1.setBounds(130, 40, 290, 43);
 
         jTextField2.setBackground(new java.awt.Color(249, 226, 226));
         jTextField2.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
@@ -103,7 +103,7 @@ public class loginpage extends javax.swing.JFrame {
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Student", "Teacher", "Admin" }));
         jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
         jPanel2.add(jComboBox1);
-        jComboBox1.setBounds(362, 288, 80, 22);
+        jComboBox1.setBounds(362, 288, 80, 23);
 
         jTextField4.setBackground(new java.awt.Color(249, 226, 226));
         jTextField4.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
@@ -117,7 +117,7 @@ public class loginpage extends javax.swing.JFrame {
         jTextField6.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jTextField6.addActionListener(this::jTextField6ActionPerformed);
         jPanel2.add(jTextField6);
-        jTextField6.setBounds(200, 288, 240, 22);
+        jTextField6.setBounds(200, 288, 240, 23);
 
         jTextField7.setBackground(new java.awt.Color(249, 226, 226));
         jTextField7.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
