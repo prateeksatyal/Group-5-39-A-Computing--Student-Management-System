@@ -29,25 +29,25 @@ public class loginpage extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
         checkbox1 = new java.awt.Checkbox();
         jTextField5 = new javax.swing.JTextField();
         jToggleButton1 = new javax.swing.JToggleButton();
-        jTextField3 = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
-        jTextField4 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
         jTextField7 = new javax.swing.JTextField();
         jTextField8 = new javax.swing.JTextField();
         jTextField9 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
-        jTextField10 = new javax.swing.JTextField();
-        jTextField11 = new javax.swing.JTextField();
-        jTextField12 = new javax.swing.JTextField();
-        jTextField13 = new javax.swing.JTextField();
-        jTextField14 = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -57,31 +57,14 @@ public class loginpage extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(249, 226, 226));
         jPanel2.setLayout(null);
 
-        jTextField1.setBackground(new java.awt.Color(249, 226, 226));
-        jTextField1.setFont(new java.awt.Font("Calibri", 1, 36)); // NOI18N
-        jTextField1.setText("Welcome Back");
-        jTextField1.setBorder(null);
-        jTextField1.addActionListener(this::jTextField1ActionPerformed);
-        jPanel2.add(jTextField1);
-        jTextField1.setBounds(130, 40, 290, 43);
-
-        jTextField2.setBackground(new java.awt.Color(249, 226, 226));
-        jTextField2.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
-        jTextField2.setText("Role");
-        jTextField2.setBorder(null);
-        jTextField2.addActionListener(this::jTextField2ActionPerformed);
-        jPanel2.add(jTextField2);
-        jTextField2.setBounds(40, 290, 110, 20);
-
         checkbox1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.add(checkbox1);
-        checkbox1.setBounds(430, 230, 20, 20);
+        checkbox1.setBounds(420, 230, 20, 20);
 
-        jTextField5.setText("       Enter Password");
         jTextField5.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jTextField5.addActionListener(this::jTextField5ActionPerformed);
         jPanel2.add(jTextField5);
-        jTextField5.setBounds(200, 230, 250, 20);
+        jTextField5.setBounds(200, 230, 240, 20);
 
         jToggleButton1.setBackground(new java.awt.Color(249, 226, 226));
         jToggleButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -92,32 +75,17 @@ public class loginpage extends javax.swing.JFrame {
         jPanel2.add(jToggleButton1);
         jToggleButton1.setBounds(290, 420, 70, 30);
 
-        jTextField3.setBackground(new java.awt.Color(249, 226, 226));
-        jTextField3.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 14)); // NOI18N
-        jTextField3.setText("Don't have an account?");
-        jTextField3.setBorder(null);
-        jTextField3.addActionListener(this::jTextField3ActionPerformed);
-        jPanel2.add(jTextField3);
-        jTextField3.setBounds(140, 410, 180, 50);
-
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Student", "Teacher", "Admin" }));
         jComboBox1.addActionListener(this::jComboBox1ActionPerformed);
         jPanel2.add(jComboBox1);
-        jComboBox1.setBounds(362, 288, 80, 23);
+        jComboBox1.setBounds(362, 288, 80, 22);
 
-        jTextField4.setBackground(new java.awt.Color(249, 226, 226));
-        jTextField4.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
-        jTextField4.setText("Email or ID");
-        jTextField4.setBorder(null);
-        jTextField4.addActionListener(this::jTextField4ActionPerformed);
-        jPanel2.add(jTextField4);
-        jTextField4.setBounds(40, 180, 110, 20);
-
+        jTextField6.setEditable(false);
         jTextField6.setText("      Select Role");
         jTextField6.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jTextField6.addActionListener(this::jTextField6ActionPerformed);
         jPanel2.add(jTextField6);
-        jTextField6.setBounds(200, 288, 240, 23);
+        jTextField6.setBounds(200, 288, 240, 22);
 
         jTextField7.setBackground(new java.awt.Color(249, 226, 226));
         jTextField7.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
@@ -127,7 +95,6 @@ public class loginpage extends javax.swing.JFrame {
         jPanel2.add(jTextField7);
         jTextField7.setBounds(40, 230, 110, 20);
 
-        jTextField8.setText("       Enter Email or ID");
         jTextField8.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jTextField8.addActionListener(this::jTextField8ActionPerformed);
         jPanel2.add(jTextField8);
@@ -146,47 +113,66 @@ public class loginpage extends javax.swing.JFrame {
         jPanel2.add(jButton1);
         jButton1.setBounds(110, 350, 330, 23);
 
-        jTextField10.setBackground(new java.awt.Color(249, 226, 226));
-        jTextField10.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 24)); // NOI18N
-        jTextField10.setText("Sign in to your account");
-        jTextField10.setBorder(null);
-        jTextField10.addActionListener(this::jTextField10ActionPerformed);
-        jPanel2.add(jTextField10);
-        jTextField10.setBounds(150, 100, 245, 30);
+        jLabel2.setBackground(new java.awt.Color(249, 226, 226));
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        jLabel2.setText("Welcome Back");
+        jPanel2.add(jLabel2);
+        jLabel2.setBounds(140, 40, 280, 50);
 
-        jTextField11.setBackground(new java.awt.Color(249, 226, 226));
-        jTextField11.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 14)); // NOI18N
-        jTextField11.setText("Forgot Password?");
-        jTextField11.setBorder(null);
-        jTextField11.addActionListener(this::jTextField11ActionPerformed);
-        jPanel2.add(jTextField11);
-        jTextField11.setBounds(220, 380, 140, 30);
+        jLabel3.setBackground(new java.awt.Color(249, 226, 226));
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel3.setText("Sign in to your account");
+        jPanel2.add(jLabel3);
+        jLabel3.setBounds(140, 100, 260, 30);
+
+        jLabel4.setBackground(new java.awt.Color(249, 226, 226));
+        jLabel4.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
+        jLabel4.setText("Email or ID");
+        jPanel2.add(jLabel4);
+        jLabel4.setBounds(40, 180, 110, 21);
+
+        jLabel8.setBackground(new java.awt.Color(249, 226, 226));
+        jLabel8.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 18)); // NOI18N
+        jLabel8.setText("Role");
+        jPanel2.add(jLabel8);
+        jLabel8.setBounds(40, 290, 80, 21);
+
+        jLabel9.setBackground(new java.awt.Color(249, 226, 226));
+        jLabel9.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 14)); // NOI18N
+        jLabel9.setText("Forgot Password?");
+        jPanel2.add(jLabel9);
+        jLabel9.setBounds(220, 390, 130, 20);
+
+        jLabel10.setBackground(new java.awt.Color(249, 226, 226));
+        jLabel10.setFont(new java.awt.Font("MS Reference Sans Serif", 0, 14)); // NOI18N
+        jLabel10.setText("Don't have an account?");
+        jPanel2.add(jLabel10);
+        jLabel10.setBounds(120, 420, 180, 30);
 
         jPanel1.add(jPanel2);
         jPanel2.setBounds(230, 0, 510, 470);
 
-        jTextField12.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jTextField12.setText("System");
-        jTextField12.setBorder(null);
-        jPanel1.add(jTextField12);
-        jTextField12.setBounds(70, 290, 110, 40);
-
-        jTextField13.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jTextField13.setText("Student\n");
-        jTextField13.setBorder(null);
-        jPanel1.add(jTextField13);
-        jTextField13.setBounds(60, 210, 110, 50);
-
-        jTextField14.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jTextField14.setText("Management");
-        jTextField14.setBorder(null);
-        jTextField14.addActionListener(this::jTextField14ActionPerformed);
-        jPanel1.add(jTextField14);
-        jTextField14.setBounds(40, 250, 190, 40);
-
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/view/Ellipse 21.png"))); // NOI18N
         jPanel1.add(jLabel1);
         jLabel1.setBounds(50, 90, 130, 110);
+
+        jLabel5.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel5.setText("Student ");
+        jPanel1.add(jLabel5);
+        jLabel5.setBounds(60, 210, 120, 60);
+
+        jLabel6.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel6.setText("Management");
+        jPanel1.add(jLabel6);
+        jLabel6.setBounds(30, 250, 160, 40);
+
+        jLabel7.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel7.setText("System");
+        jPanel1.add(jLabel7);
+        jLabel7.setBounds(70, 290, 81, 32);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -205,25 +191,9 @@ public class loginpage extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField1ActionPerformed
-
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
-
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
-
     private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField5ActionPerformed
-
-    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void jTextField6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField6ActionPerformed
         // TODO add your handling code here:
@@ -245,21 +215,9 @@ public class loginpage extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void jTextField10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField10ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField10ActionPerformed
-
-    private void jTextField11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField11ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField11ActionPerformed
-
     private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jToggleButton1ActionPerformed
-
-    private void jTextField14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField14ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField14ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
@@ -295,17 +253,17 @@ public class loginpage extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField10;
-    private javax.swing.JTextField jTextField11;
-    private javax.swing.JTextField jTextField12;
-    private javax.swing.JTextField jTextField13;
-    private javax.swing.JTextField jTextField14;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField6;
     private javax.swing.JTextField jTextField7;
