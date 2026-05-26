@@ -40,17 +40,18 @@ public class ViewStudentProfile extends javax.swing.JFrame {
 
     private void addPlaceholder(javax.swing.JTextField field, String placeholder) {
         field.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 13));
+        field.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 10));
         field.setText(placeholder);
         field.setForeground(new java.awt.Color(180, 180, 180));
         field.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent e) {
-                if (field.getText().equals(placeholder)) {
+                if (field.getText().trim().equals(placeholder.trim())) {
                     field.setText("");
                     field.setForeground(new java.awt.Color(30, 30, 30));
                 }
             }
             public void focusLost(java.awt.event.FocusEvent e) {
-                if (field.getText().isEmpty()) {
+                if (field.getText().trim().isEmpty()) {
                     field.setText(placeholder);
                     field.setForeground(new java.awt.Color(180, 180, 180));
                 }
@@ -223,7 +224,7 @@ public class ViewStudentProfile extends javax.swing.JFrame {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         * For details see
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
