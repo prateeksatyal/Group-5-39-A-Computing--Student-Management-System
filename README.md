@@ -13,3 +13,4 @@ Model
 - Prateek Satyal (verified June 15)
 - Insha Dangol (verified May 26)
 - Karun Khatiwada (verified May 26)
+- Jenish Shrestha (verified May 26)
