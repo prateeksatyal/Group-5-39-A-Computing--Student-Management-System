@@ -1,435 +1,267 @@
 /*
- * Decompiled with CFR 0.152.
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package view;
 
-import controller.LogoutController;
-import controller.UserSession;
-import dao.StudentDAO;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Objects;
-import javax.swing.BorderFactory;
-import javax.swing.GroupLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
-import model.StudentData;
-import model.UserData;
+/**
+ *
+ * @author rohanbudha
+ */
+public class ViewStudentProfile extends javax.swing.JFrame {
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ViewStudentProfile.class.getName());
 
-public class ViewStudentProfile
-extends JFrame {
-
+    /**
+     * Creates new form ViewStudentProfile
+     */
     public ViewStudentProfile() {
-        this.initComponents();
-        this.setupMenuIcons();
-        LogoutController.wireLogout(this, this.getLogoutButton());
-        // this.jButtonDashboard.addActionListener(e -> {
-        //     this.dispose();
-        //     EventQueue.invokeLater(() -> new StudentDashboard().setVisible(true));
-        // });
-        // this.jButtonAttendance.addActionListener(e -> {
-        //     this.dispose();
-        //     EventQueue.invokeLater(() -> new AttendanceSummaryFrame().setVisible(true));
-        // });
-        // this.jButtonCourses.addActionListener(e -> {
-        //     this.dispose();
-        //     EventQueue.invokeLater(() -> new ViewAssignedCourseFrame().setVisible(true));
-        // });
-        // this.jButtonResults.addActionListener(e -> {
-        //     this.dispose();
-        //     EventQueue.invokeLater(() -> new ViewResultFrame().setVisible(true));
-        // });
-        this.loadProfileData();
-        try {
-            this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
-        }
-        catch (Exception exception) {
-            // empty catch block
-        }
+        initComponents();
+        setLocationRelativeTo(null); // Center the window on the screen
+        
+        // Connect Edit Profile button to EditPersonalDetails
+        jButton1.addActionListener(e -> {
+            new EditPersonalDetails().setVisible(true);
+            this.dispose();
+        });
+        
+        addPlaceholders();
     }
 
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
-
-        jPanelMain = new javax.swing.JPanel();
-        jPanelHeader = new javax.swing.JPanel();
-        jLabelProfileTitle = new javax.swing.JLabel();
-        jPanelProfileCard = new javax.swing.JPanel();
-        jLabelAddressLabel = new javax.swing.JLabel();
-        jLabelAddressVal = new javax.swing.JLabel();
-        jLabelCourseLabel = new javax.swing.JLabel();
-        jLabelCourseVal = new javax.swing.JLabel();
-        jLabelEmailLabel = new javax.swing.JLabel();
-        jLabelEmailVal = new javax.swing.JLabel();
-        jLabelGenderLabel = new javax.swing.JLabel();
-        jLabelGenderVal = new javax.swing.JLabel();
-        jLabelIdLabel = new javax.swing.JLabel();
-        jLabelIdVal = new javax.swing.JLabel();
-        jLabelNameLabel = new javax.swing.JLabel();
-        jLabelNameVal = new javax.swing.JLabel();
-        jLabelPhoneLabel = new javax.swing.JLabel();
-        jLabelPhoneVal = new javax.swing.JLabel();
-        jPanelSidebar = new javax.swing.JPanel();
-        jButtonAttendance = new javax.swing.JButton();
-        jButtonCourses = new javax.swing.JButton();
-        jButtonDashboard = new javax.swing.JButton();
-        jButtonLogout = new javax.swing.JButton();
-        jButtonProfile = new javax.swing.JButton();
-        jButtonResults = new javax.swing.JButton();
-        jLabelHeader = new javax.swing.JLabel();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Student Management System - Personal Profile");
-        setResizable(false);
-
-        jPanelMain.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelMain.setLayout(null);
-
-        jPanelHeader.setBackground(new java.awt.Color(243, 227, 225));
-        jPanelHeader.setLayout(null);
-
-        jLabelProfileTitle.setText("My Personal Profile");
-        jLabelProfileTitle.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
-        jLabelProfileTitle.setForeground(new java.awt.Color(28, 39, 50));
-        jPanelHeader.add(jLabelProfileTitle);
-        jLabelProfileTitle.setBounds(30, 15, 300, 30);
-
-        jPanelMain.add(jPanelHeader);
-        jPanelHeader.setBounds(240, 0, 710, 60);
-
-        jPanelProfileCard.setBackground(new java.awt.Color(248, 249, 250));
-        jPanelProfileCard.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(230, 230, 230)));
-        jPanelProfileCard.setLayout(null);
-
-        jLabelAddressLabel.setText("Address:");
-        jLabelAddressLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabelAddressLabel.setForeground(new java.awt.Color(28, 39, 50));
-        jPanelProfileCard.add(jLabelAddressLabel);
-        jLabelAddressLabel.setBounds(40, 270, 150, 25);
-
-        jLabelAddressVal.setText("N/A");
-        jLabelAddressVal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabelAddressVal.setForeground(new java.awt.Color(60, 60, 60));
-        jPanelProfileCard.add(jLabelAddressVal);
-        jLabelAddressVal.setBounds(200, 270, 400, 25);
-
-        jLabelCourseLabel.setText("Enrolled Course:");
-        jLabelCourseLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabelCourseLabel.setForeground(new java.awt.Color(28, 39, 50));
-        jPanelProfileCard.add(jLabelCourseLabel);
-        jLabelCourseLabel.setBounds(40, 190, 150, 25);
-
-        jLabelCourseVal.setText("N/A");
-        jLabelCourseVal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabelCourseVal.setForeground(new java.awt.Color(60, 60, 60));
-        jPanelProfileCard.add(jLabelCourseVal);
-        jLabelCourseVal.setBounds(200, 190, 400, 25);
-
-        jLabelEmailLabel.setText("Email:");
-        jLabelEmailLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabelEmailLabel.setForeground(new java.awt.Color(28, 39, 50));
-        jPanelProfileCard.add(jLabelEmailLabel);
-        jLabelEmailLabel.setBounds(40, 110, 150, 25);
-
-        jLabelEmailVal.setText("N/A");
-        jLabelEmailVal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabelEmailVal.setForeground(new java.awt.Color(60, 60, 60));
-        jPanelProfileCard.add(jLabelEmailVal);
-        jLabelEmailVal.setBounds(200, 110, 400, 25);
-
-        jLabelGenderLabel.setText("Gender:");
-        jLabelGenderLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabelGenderLabel.setForeground(new java.awt.Color(28, 39, 50));
-        jPanelProfileCard.add(jLabelGenderLabel);
-        jLabelGenderLabel.setBounds(40, 230, 150, 25);
-
-        jLabelGenderVal.setText("N/A");
-        jLabelGenderVal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabelGenderVal.setForeground(new java.awt.Color(60, 60, 60));
-        jPanelProfileCard.add(jLabelGenderVal);
-        jLabelGenderVal.setBounds(200, 230, 400, 25);
-
-        jLabelIdLabel.setText("Student ID:");
-        jLabelIdLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabelIdLabel.setForeground(new java.awt.Color(28, 39, 50));
-        jPanelProfileCard.add(jLabelIdLabel);
-        jLabelIdLabel.setBounds(40, 30, 150, 25);
-
-        jLabelIdVal.setText("N/A");
-        jLabelIdVal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabelIdVal.setForeground(new java.awt.Color(60, 60, 60));
-        jPanelProfileCard.add(jLabelIdVal);
-        jLabelIdVal.setBounds(200, 30, 400, 25);
-
-        jLabelNameLabel.setText("Full Name:");
-        jLabelNameLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabelNameLabel.setForeground(new java.awt.Color(28, 39, 50));
-        jPanelProfileCard.add(jLabelNameLabel);
-        jLabelNameLabel.setBounds(40, 70, 150, 25);
-
-        jLabelNameVal.setText("Guest User");
-        jLabelNameVal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabelNameVal.setForeground(new java.awt.Color(60, 60, 60));
-        jPanelProfileCard.add(jLabelNameVal);
-        jLabelNameVal.setBounds(200, 70, 400, 25);
-
-        jLabelPhoneLabel.setText("Phone Number:");
-        jLabelPhoneLabel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabelPhoneLabel.setForeground(new java.awt.Color(28, 39, 50));
-        jPanelProfileCard.add(jLabelPhoneLabel);
-        jLabelPhoneLabel.setBounds(40, 150, 150, 25);
-
-        jLabelPhoneVal.setText("N/A");
-        jLabelPhoneVal.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabelPhoneVal.setForeground(new java.awt.Color(60, 60, 60));
-        jPanelProfileCard.add(jLabelPhoneVal);
-        jLabelPhoneVal.setBounds(200, 150, 400, 25);
-
-        jPanelMain.add(jPanelProfileCard);
-        jPanelProfileCard.setBounds(280, 100, 630, 350);
-
-        jPanelSidebar.setBackground(new java.awt.Color(28, 39, 50));
-        jPanelSidebar.setLayout(null);
-
-        jButtonAttendance.setText("  Attendance Summary");
-        jButtonAttendance.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButtonAttendance.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonAttendance.setBorder(null);
-        jButtonAttendance.setContentAreaFilled(false);
-        jButtonAttendance.setFocusPainted(false);
-        jButtonAttendance.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanelSidebar.add(jButtonAttendance);
-        jButtonAttendance.setBounds(10, 160, 220, 32);
-
-        jButtonCourses.setText("  Enrolled Courses");
-        jButtonCourses.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButtonCourses.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonCourses.setBorder(null);
-        jButtonCourses.setContentAreaFilled(false);
-        jButtonCourses.setFocusPainted(false);
-        jButtonCourses.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanelSidebar.add(jButtonCourses);
-        jButtonCourses.setBounds(10, 200, 220, 32);
-
-        jButtonDashboard.setText("  Dashboard");
-        jButtonDashboard.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButtonDashboard.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonDashboard.setBorder(null);
-        jButtonDashboard.setContentAreaFilled(false);
-        jButtonDashboard.setFocusPainted(false);
-        jButtonDashboard.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanelSidebar.add(jButtonDashboard);
-        jButtonDashboard.setBounds(10, 80, 220, 32);
-
-        jButtonLogout.setText("  Logout");
-        jButtonLogout.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButtonLogout.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonLogout.setBorder(null);
-        jButtonLogout.setContentAreaFilled(false);
-        jButtonLogout.setFocusPainted(false);
-        jButtonLogout.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanelSidebar.add(jButtonLogout);
-        jButtonLogout.setBounds(10, 280, 220, 32);
-
-        jButtonProfile.setText("  View Profile");
-        jButtonProfile.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButtonProfile.setBackground(new java.awt.Color(243, 227, 225));
-        jButtonProfile.setForeground(new java.awt.Color(11, 27, 226));
-        jButtonProfile.setBorder(null);
-        jButtonProfile.setFocusPainted(false);
-        jButtonProfile.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanelSidebar.add(jButtonProfile);
-        jButtonProfile.setBounds(10, 120, 220, 32);
-
-        jButtonResults.setText("  View Results");
-        jButtonResults.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButtonResults.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonResults.setBorder(null);
-        jButtonResults.setContentAreaFilled(false);
-        jButtonResults.setFocusPainted(false);
-        jButtonResults.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanelSidebar.add(jButtonResults);
-        jButtonResults.setBounds(10, 240, 220, 32);
-
-        jLabelHeader.setText("SMS STUDENT");
-        jLabelHeader.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabelHeader.setForeground(new java.awt.Color(255, 255, 255));
-        jLabelHeader.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jPanelSidebar.add(jLabelHeader);
-        jLabelHeader.setBounds(0, 20, 240, 30);
-
-        jPanelMain.add(jPanelSidebar);
-        jPanelSidebar.setBounds(0, 0, 240, 500);
-
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanelMain, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 990, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanelMain, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 1030, Short.MAX_VALUE)
-        );
-
-        pack();
-        setLocationRelativeTo(null);
-    }// </editor-fold>//GEN-END:initComponents
-private void setupSidebarButton(JButton btn, String text, int y, boolean isActive) {
-        btn.setFont(new Font("Segoe UI", 0, 14));
-        btn.setForeground(new Color(255, 255, 255));
-        btn.setText(text);
-        btn.setBorder(null);
-        btn.setContentAreaFilled(false);
-        btn.setFocusPainted(false);
-        btn.setHorizontalAlignment(2);
-        btn.setBounds(10, y, 220, 32);
-        btn.setCursor(new Cursor(12));
-        if (isActive) {
-            btn.setBackground(new Color(243, 227, 225));
-            btn.setForeground(new Color(11, 27, 226));
-            btn.setContentAreaFilled(true);
-        } else {
-            this.addSidebarHoverEffects(btn);
-        }
+    private void addPlaceholders() {
+        addPlaceholder(jTextField1, "Enter student ID");
+        addPlaceholder(jTextField2, "Enter full name");
+        addPlaceholder(jTextField3, "Enter your email");
+        addPlaceholder(jTextField4, "Enter your program");
+        addPlaceholder(jTextField5, "Enter your year level");
+        addPlaceholder(jTextField6, "Enter your courses");
+        addPlaceholder(jTextField7, "Enter your address");
     }
 
-    private void addSidebarHoverEffects(final JButton btn) {
-        btn.addMouseListener(new MouseAdapter(){
-            
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                btn.setContentAreaFilled(true);
-                btn.setBackground(new Color(40, 55, 70));
+    private void addPlaceholder(javax.swing.JTextField field, String placeholder) {
+        field.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 13));
+        field.setText(placeholder);
+        field.setForeground(new java.awt.Color(180, 180, 180));
+        field.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (field.getText().equals(placeholder)) {
+                    field.setText("");
+                    field.setForeground(new java.awt.Color(30, 30, 30));
+                }
             }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!btn.isFocusOwner()) {
-                    btn.setContentAreaFilled(false);
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (field.getText().isEmpty()) {
+                    field.setText(placeholder);
+                    field.setForeground(new java.awt.Color(180, 180, 180));
                 }
             }
         });
-        btn.addFocusListener(new FocusListener(){
-            
+    }
 
-            @Override
-            public void focusGained(FocusEvent e) {
-                btn.setContentAreaFilled(true);
-                btn.setBackground(new Color(50, 70, 90));
-            }
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
 
-            @Override
-            public void focusLost(FocusEvent e) {
-                btn.setContentAreaFilled(false);
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jTextField4 = new javax.swing.JTextField();
+        jTextField5 = new javax.swing.JTextField();
+        jTextField6 = new javax.swing.JTextField();
+        jTextField7 = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setPreferredSize(new java.awt.Dimension(910, 720));
+        setSize(new java.awt.Dimension(910, 720));
+        getContentPane().setLayout(null);
+
+        jLabel1.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel1.setText("Student Id:");
+        getContentPane().add(jLabel1);
+        jLabel1.setBounds(203, 157, 77, 35);
+
+        jLabel2.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel2.setText("Full Name:");
+        getContentPane().add(jLabel2);
+        jLabel2.setBounds(203, 211, 77, 35);
+
+        jLabel3.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel3.setText("Email:");
+        getContentPane().add(jLabel3);
+        jLabel3.setBounds(203, 265, 77, 35);
+
+        jLabel4.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel4.setText("Program:");
+        getContentPane().add(jLabel4);
+        jLabel4.setBounds(203, 319, 77, 35);
+
+        jLabel5.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel5.setText("Year Level:");
+        getContentPane().add(jLabel5);
+        jLabel5.setBounds(203, 373, 77, 35);
+
+        jLabel6.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel6.setText("Courses:");
+        getContentPane().add(jLabel6);
+        jLabel6.setBounds(203, 427, 77, 35);
+
+        jLabel7.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
+        jLabel7.setText("Address:");
+        getContentPane().add(jLabel7);
+        jLabel7.setBounds(203, 481, 77, 35);
+
+        jTextField1.setText("Enter student ID");
+        getContentPane().add(jTextField1);
+        jTextField1.setBounds(325, 158, 391, 35);
+
+        jTextField2.setText("Enter full name");
+        getContentPane().add(jTextField2);
+        jTextField2.setBounds(325, 212, 391, 35);
+
+        jTextField3.setText("Enter your email");
+        getContentPane().add(jTextField3);
+        jTextField3.setBounds(325, 266, 391, 35);
+
+        jTextField4.setText("Enter your program");
+        jTextField4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField4ActionPerformed(evt);
             }
         });
-    }
+        getContentPane().add(jTextField4);
+        jTextField4.setBounds(325, 320, 391, 35);
 
-    private void setupProfileRow(JLabel lbl, String text, JLabel valLbl, String valText, int y) {
-        lbl.setFont(new Font("Segoe UI", 1, 14));
-        lbl.setForeground(new Color(28, 39, 50));
-        lbl.setText(text);
-        lbl.setBounds(40, y, 150, 25);
-        valLbl.setFont(new Font("Segoe UI", 0, 14));
-        valLbl.setForeground(new Color(60, 60, 60));
-        valLbl.setText(valText);
-        valLbl.setBounds(200, y, 400, 25);
-    }
+        jTextField5.setText("Enter your year level");
+        getContentPane().add(jTextField5);
+        jTextField5.setBounds(325, 374, 391, 35);
 
-    private void setupMenuIcons() {
-        try {
-            this.jButtonDashboard.setIcon(new ImageIcon(this.getClass().getResource("/images/home.png")));
-            this.jButtonProfile.setIcon(new ImageIcon(this.getClass().getResource("/images/user.png")));
-            this.jButtonAttendance.setIcon(new ImageIcon(this.getClass().getResource("/images/attendance.png")));
-            this.jButtonCourses.setIcon(new ImageIcon(this.getClass().getResource("/images/course.png")));
-            this.jButtonResults.setIcon(new ImageIcon(this.getClass().getResource("/images/result.png")));
-            this.jButtonLogout.setIcon(new ImageIcon(this.getClass().getResource("/images/logout.png")));
-        }
-        catch (Exception exception) {
-            // empty catch block
-        }
-    }
+        jTextField6.setText("Enter your courses");
+        getContentPane().add(jTextField6);
+        jTextField6.setBounds(325, 428, 391, 35);
 
-    private void loadProfileData() {
-        UserData user = UserSession.getCurrentUser();
-        if (user != null) {
-            StudentDAO dao = new StudentDAO();
-            String studentId = user.getUserName();
-            StudentData student = dao.searchStudentById(studentId);
-            if (student != null) {
-                this.jLabelIdVal.setText(student.getStudentId());
-                this.jLabelNameVal.setText(student.getFullName());
-                this.jLabelEmailVal.setText(student.getEmail());
-                this.jLabelPhoneVal.setText(student.getPhoneNumber());
-                this.jLabelCourseVal.setText(student.getCourse());
-                this.jLabelGenderVal.setText(student.getGender());
-                this.jLabelAddressVal.setText(student.getAddress());
-            } else {
-                this.jLabelIdVal.setText(studentId);
-                this.jLabelNameVal.setText(user.getUserName());
-                this.jLabelEmailVal.setText(user.getEmail());
+        jTextField7.setText("Enter your address");
+        jTextField7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField7ActionPerformed(evt);
             }
-        }
-    }
+        });
+        getContentPane().add(jTextField7);
+        jTextField7.setBounds(325, 482, 391, 35);
 
-    public JButton getLogoutButton() {
-        return this.jButtonLogout;
-    }
+        jLabel8.setFont(new java.awt.Font("Arial Black", 1, 24)); // NOI18N
+        jLabel8.setText("My Profile");
+        getContentPane().add(jLabel8);
+        jLabel8.setBounds(73, 11, 131, 35);
 
-    public static void main(String[] args) {
+        jButton1.setBackground(new java.awt.Color(51, 51, 255));
+        jButton1.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Edit Profile");
+        getContentPane().add(jButton1);
+        jButton1.setBounds(203, 584, 121, 35);
+
+        jButton2.setBackground(new java.awt.Color(51, 51, 255));
+        jButton2.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 14)); // NOI18N
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Save");
+        getContentPane().add(jButton2);
+        jButton2.setBounds(430, 584, 91, 35);
+
+        jButton3.setBackground(new java.awt.Color(51, 51, 255));
+        jButton3.setFont(new java.awt.Font("Microsoft Sans Serif", 1, 14)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setText("Reset");
+        getContentPane().add(jButton3);
+        jButton3.setBounds(624, 584, 92, 35);
+        getContentPane().add(jLabel10);
+        jLabel10.setBounds(95, 52, 0, 0);
+
+        jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/ProfileP.png"))); // NOI18N
+        getContentPane().add(jLabel9);
+        jLabel9.setBounds(101, 52, 87, 78);
+
+        jLabel11.setBackground(new java.awt.Color(249, 226, 226));
+        jLabel11.setOpaque(true);
+        jLabel11.setPreferredSize(new java.awt.Dimension(910, 720));
+        getContentPane().add(jLabel11);
+        jLabel11.setBounds(0, 0, 910, 720);
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField4ActionPerformed
+
+    private void jTextField7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField7ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField7ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
         try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (!"Nimbus".equals(info.getName())) continue;
-                UIManager.setLookAndFeel(info.getClassName());
-                break;
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
             }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        catch (Exception exception) {
-            // empty catch block
-        }
-        EventQueue.invokeLater(() -> new ViewStudentProfile().setVisible(true));
-    }
+        //</editor-fold>
 
-                       
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new ViewStudentProfile().setVisible(true));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButtonAttendance;
-    private javax.swing.JButton jButtonCourses;
-    private javax.swing.JButton jButtonDashboard;
-    private javax.swing.JButton jButtonLogout;
-    private javax.swing.JButton jButtonProfile;
-    private javax.swing.JButton jButtonResults;
-    private javax.swing.JLabel jLabelAddressLabel;
-    private javax.swing.JLabel jLabelAddressVal;
-    private javax.swing.JLabel jLabelCourseLabel;
-    private javax.swing.JLabel jLabelCourseVal;
-    private javax.swing.JLabel jLabelEmailLabel;
-    private javax.swing.JLabel jLabelEmailVal;
-    private javax.swing.JLabel jLabelGenderLabel;
-    private javax.swing.JLabel jLabelGenderVal;
-    private javax.swing.JLabel jLabelHeader;
-    private javax.swing.JLabel jLabelIdLabel;
-    private javax.swing.JLabel jLabelIdVal;
-    private javax.swing.JLabel jLabelNameLabel;
-    private javax.swing.JLabel jLabelNameVal;
-    private javax.swing.JLabel jLabelPhoneLabel;
-    private javax.swing.JLabel jLabelPhoneVal;
-    private javax.swing.JLabel jLabelProfileTitle;
-    private javax.swing.JPanel jPanelHeader;
-    private javax.swing.JPanel jPanelMain;
-    private javax.swing.JPanel jPanelProfileCard;
-    private javax.swing.JPanel jPanelSidebar;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextField6;
+    private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables
 }
