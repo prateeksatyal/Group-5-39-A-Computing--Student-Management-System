@@ -1,37 +1,41 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
 
-
 import dao.UserDao;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import model.UserData;
 import view.Login;
-import view.signup;
+import view.Signup;
 
-
-/**
- *
- * @author User
- */
 public class SignupController {
     private final UserDao userDao = new UserDao();
-    private final signup userView;
+    private final Signup userView;
 
-    public SignupController(signup userView) {
+    public SignupController(Signup userView) {
         this.userView = userView;
 
-        userView.addAddUserListener(new AddUserListener());
-        userView.addLoginListener(new LoginListener());
-        
+        userView.getSignUpButton().addActionListener(new AddUserListener());
+        userView.getCancelButton().addActionListener(new CancelListener());
 
+        // Redirect back to Login view
+        userView.getLoginButton().addActionListener(e -> {
+            close();
+            java.awt.EventQueue.invokeLater(() -> {
+                Login loginView = new Login();
+                LoginController loginController = new LoginController(loginView);
+                loginController.open();
+            });
+        });
     }
 
     public void open() {
+        this.userView.pack();
+        this.userView.setLocationRelativeTo(null);
         this.userView.setVisible(true);
     }
 
@@ -45,35 +49,59 @@ public class SignupController {
             try {
                 String name = userView.getUsernameField().getText();
                 String email = userView.getEmailField().getText();
-                String password = userView.getPasswordField().getText();
-                UserData user = new UserData(name, email, password);
+                String password = new String(userView.getPasswordField().getPassword());
+                String confirmPassword = new String(userView.getConfirmPasswordField().getPassword());
+                String role = userView.getRoleComboBox().getSelectedItem().toString();
+
+                if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || 
+                    "Enter full name".equalsIgnoreCase(name) || "Enter email".equalsIgnoreCase(email) || 
+                    "Enter password".equalsIgnoreCase(password) || "Confirm Password".equalsIgnoreCase(confirmPassword)) {
+                    JOptionPane.showMessageDialog(userView, "Please fill in all fields.");
+                    return;
+                }
+
+                if (!password.equals(confirmPassword)) {
+                    JOptionPane.showMessageDialog(userView, "Passwords do not match.");
+                    return;
+                }
+
+                if (role == null || "Select Role".equals(role) || role.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(userView, "Please select a valid role!");
+                    return;
+                }
+
+                UserData user = new UserData(name, password, email, role);
                
                 boolean check = userDao.checkUser(user);
 
                 if (check) {
-                    JOptionPane.showMessageDialog(userView, "Duplicate user");
+                    JOptionPane.showMessageDialog(userView, "Duplicate user: A user with this username/email already exists.");
                 } else {
                     userDao.createUser(user);
-                    JOptionPane.showMessageDialog(userView, "Succesful");
-
+                    JOptionPane.showMessageDialog(userView, "Registration Successful!");
+                    close();
+                    
+                    java.awt.EventQueue.invokeLater(() -> {
+                        Login loginView = new Login();
+                        LoginController loginController = new LoginController(loginView);
+                        loginController.open();
+                    });
                 }
             } catch (Exception ex) {
-                System.out.println("Error adding user: " + ex.getMessage());
+                JOptionPane.showMessageDialog(userView, "Error adding user: " + ex.getMessage());
             }
-
         }
-
     }
 
-    class LoginListener implements ActionListener {
+    class CancelListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            Login loginView = new Login();
-            LoginController login = new LoginController(loginView);
             close();
-            login.open();
+            java.awt.EventQueue.invokeLater(() -> {
+                Login loginView = new Login();
+                LoginController loginController = new LoginController(loginView);
+                loginController.open();
+            });
         }
     }
-    
-
 }

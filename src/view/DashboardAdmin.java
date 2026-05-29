@@ -18,6 +18,7 @@ public class DashboardAdmin extends javax.swing.JFrame {
     public DashboardAdmin() {
         initComponents();
         setupNavPanels();
+        setLocationRelativeTo(null);
 }
 
 private void setupNavPanels() {
@@ -94,8 +95,13 @@ private void setupNavPanels() {
     });
 
     jButton8.addActionListener(e -> {
-        // new EditPersonalDetails().setVisible(true);
-        // this.dispose();
+         try {
+            ViewStudentProfile vsp = new ViewStudentProfile();
+            vsp.setVisible(true);
+            this.dispose();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+    }
     });
 
     // Logout
@@ -107,7 +113,7 @@ private void setupNavPanels() {
             javax.swing.JOptionPane.YES_NO_OPTION
         );
         if (confirm == javax.swing.JOptionPane.YES_OPTION) {
-            new LoginPage().setVisible(true);
+            new Login().setVisible(true);
             this.dispose();
         }
     });

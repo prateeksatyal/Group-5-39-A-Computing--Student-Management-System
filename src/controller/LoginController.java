@@ -1,25 +1,68 @@
 package controller;
 
 import dao.UserDao;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
 import model.UserData;
-import view.loginpage;
+import view.Login;
 
 public class LoginController {
 
     private final UserDao userDao = new UserDao();
-    private final loginpage userView;
+    private final Login userView;
 
-    public LoginController(loginpage userView) {
+    public LoginController(Login userView) {
         this.userView = userView;
 
         // Login Button Listener
         this.userView.getLoginButton().addActionListener(new LoginListener());
+
+        // Register Button Listener
+        this.userView.getRegisterButton().addActionListener(e -> {
+            close();
+            java.awt.EventQueue.invokeLater(() -> {
+                view.Signup signupView = new view.Signup();
+                SignupController signupController = new SignupController(signupView);
+                signupController.open();
+            });
+        });
+
+        // Forget Password Button Listener
+        this.userView.getForgetPasswordButton().addActionListener(e -> {
+            close();
+            java.awt.EventQueue.invokeLater(() -> {
+                view.ForgotPassword forgotView = new view.ForgotPassword();
+                ForgotPasswordController forgotController = new ForgotPasswordController(forgotView);
+                forgotController.open();
+            });
+        });
+
+        // Password Toggle Button Listener
+        this.userView.getEyeToggleButton().addActionListener(e -> {
+            if (this.userView.getEyeToggleButton().isSelected()) {
+                this.userView.getPasswordField().setEchoChar('\u0000');
+                this.userView.getEyeToggleButton().setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/eye-close.png")));
+            } else {
+                String passText = new String(this.userView.getPasswordField().getPassword());
+                if (!"Enter password".equals(passText)) {
+                    this.userView.getPasswordField().setEchoChar('\u2022');
+                } else {
+                    this.userView.getPasswordField().setEchoChar('\u0000');
+                }
+                this.userView.getEyeToggleButton().setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/eye-open.png")));
+            }
+        });
+
     }
 
     public void open() {
+        this.userView.pack();
+        this.userView.setLocationRelativeTo(null);
         this.userView.setVisible(true);
     }
 
@@ -31,22 +74,24 @@ public class LoginController {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-
-            // Get values from form
             String email = userView.getEmailField().getText();
-
-            String password = userView.getPasswordField().getText();
-
+            String password = new String(userView.getPasswordField().getPassword());
             String role = userView.getSelectedRole();
 
             // Validation
-            if (email.isEmpty() || password.isEmpty()) {
-
+            if (email.isEmpty() || password.isEmpty() || "Enter email or ID".equals(email) || "Enter password".equals(password)) {
                 JOptionPane.showMessageDialog(
                         userView,
                         "Please fill all fields!"
                 );
+                return;
+            }
 
+            if (role == null || "Select Role".equals(role) || role.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        userView,
+                        "Please select a valid role!"
+                );
                 return;
             }
 
@@ -54,6 +99,8 @@ public class LoginController {
             UserData user = userDao.loginUser(email, password, role);
 
             if (user != null) {
+                // Set the active user session!
+                UserSession.setCurrentUser(user);
 
                 JOptionPane.showMessageDialog(
                         userView,
@@ -62,8 +109,22 @@ public class LoginController {
 
                 close();
 
-            } else {
+                // Transition to target frame based on role
+                java.awt.EventQueue.invokeLater(() -> {
+                    if ("Administrator".equalsIgnoreCase(role) || "Admin".equalsIgnoreCase(role)) {
+                        view.AdminDashboard adminView = new view.AdminDashboard();
+                        adminView.pack();
+                        adminView.setLocationRelativeTo(null);
+                        adminView.setVisible(true);
+                    } else {
+                        view.ViewStudentProfile profileView = new view.ViewStudentProfile();
+                        profileView.pack();
+                        profileView.setLocationRelativeTo(null);
+                        profileView.setVisible(true);
+                    }
+                });
 
+            } else {
                 JOptionPane.showMessageDialog(
                         userView,
                         "Invalid Email or Password!"

@@ -432,4 +432,9 @@ private void setupSidebarButton(JButton btn, String text, int y, boolean isActiv
     private javax.swing.JPanel jPanelProfileCard;
     private javax.swing.JPanel jPanelSidebar;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public java.awt.Dimension getPreferredSize() {
+        return new java.awt.Dimension(780, 480);
+    }
 }
