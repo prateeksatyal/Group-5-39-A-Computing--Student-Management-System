@@ -1,29 +1,53 @@
 package controller;
 
 import view.AcademicPerformanceFrame;
-import view.DashboardAdmin;
+import view.AdminDashboard;
+import view.StudentManagementFrame;
+import view.CourseManagementFrame;
+import view.AttendanceSummaryFrame;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import database.MySqlConnector;
+import database.MySqlConnection;
+import model.UserData;
 
 public class MarksController {
     private final AcademicPerformanceFrame view;
     private final String role;
-    private final MySqlConnector mysql = new MySqlConnector();
+    private final MySqlConnection mysql = new MySqlConnection();
 
     public MarksController(AcademicPerformanceFrame view, String role) {
         this.view = view;
         this.role = role;
         
+        // pack, enable resizing, and center natively
+        this.view.setResizable(true);
         this.view.pack();
         this.view.setLocationRelativeTo(null);
 
+        // Enforce Role hard stops
+        if (!UserSession.isAdmin()) {
+            this.view.getCoursesButton().setEnabled(false);
+            this.view.getGradeComputationButton().setEnabled(false);
+            this.view.getResultGenerationButton().setEnabled(false);
+            this.view.getReportsExportButton().setEnabled(false);
+        }
+
         initController();
+        setupSidebarNavigation();
+        setupSidebarEffects();
+        LogoutController.wireLogout(view, view.getLogoutButton());
     }
 
     private void initController() {
@@ -34,8 +58,31 @@ public class MarksController {
         view.getBackButton().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new DashboardAdmin().setVisible(true);
                 view.dispose();
+                EventQueue.invokeLater(() -> {
+                    if (UserSession.isAdmin()) {
+                        AdminDashboard admin = new AdminDashboard();
+                        new AdminDashboardController(admin);
+                        admin.setResizable(true);
+                        admin.pack();
+                        admin.setLocationRelativeTo(null);
+                        admin.setVisible(true);
+                    } else if (UserSession.isTeacher()) {
+                        view.TeacherDashboard teacher = new view.TeacherDashboard();
+                        new TeacherDashboardController(teacher);
+                        teacher.setResizable(true);
+                        teacher.pack();
+                        teacher.setLocationRelativeTo(null);
+                        teacher.setVisible(true);
+                    } else {
+                        view.StudentDashboard student = new view.StudentDashboard();
+                        new StudentDashboardController(student);
+                        student.setResizable(true);
+                        student.pack();
+                        student.setLocationRelativeTo(null);
+                        student.setVisible(true);
+                    }
+                });
             }
         });
 
@@ -73,6 +120,148 @@ public class MarksController {
 
         // Initial load
         loadMarksTable();
+    }
+
+    private void setupSidebarNavigation() {
+        // Dashboard Button
+        view.getDashboardButton().addActionListener(e -> {
+            view.dispose();
+            EventQueue.invokeLater(() -> {
+                if (UserSession.isAdmin()) {
+                    AdminDashboard admin = new AdminDashboard();
+                    new AdminDashboardController(admin);
+                    admin.setResizable(true);
+                    admin.pack();
+                    admin.setLocationRelativeTo(null);
+                    admin.setVisible(true);
+                } else if (UserSession.isTeacher()) {
+                    view.TeacherDashboard teacher = new view.TeacherDashboard();
+                    new TeacherDashboardController(teacher);
+                    teacher.setResizable(true);
+                    teacher.pack();
+                    teacher.setLocationRelativeTo(null);
+                    teacher.setVisible(true);
+                } else {
+                    view.StudentDashboard student = new view.StudentDashboard();
+                    new StudentDashboardController(student);
+                    student.setResizable(true);
+                    student.pack();
+                    student.setLocationRelativeTo(null);
+                    student.setVisible(true);
+                }
+            });
+        });
+
+        // Students Management Button
+        view.getStudentsButton().addActionListener(e -> {
+            if (UserSession.isAdmin() || UserSession.isTeacher()) {
+                view.dispose();
+                EventQueue.invokeLater(() -> {
+                    StudentManagementFrame frame = new StudentManagementFrame();
+                    new controller.StudentController(frame);
+                    frame.setVisible(true);
+                });
+            } else {
+                JOptionPane.showMessageDialog(view, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        // Courses Management Button
+        view.getCoursesButton().addActionListener(e -> {
+            if (UserSession.isAdmin()) {
+                view.dispose();
+                EventQueue.invokeLater(() -> {
+                    CourseManagementFrame frame = new CourseManagementFrame();
+                    new controller.CourseController(frame);
+                    frame.setVisible(true);
+                });
+            } else {
+                JOptionPane.showMessageDialog(view, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        // Attendance Management Button
+        view.getAttendanceButton().addActionListener(e -> {
+            if (UserSession.isAdmin() || UserSession.isTeacher()) {
+                view.dispose();
+                EventQueue.invokeLater(() -> {
+                    AttendanceSummaryFrame frame = new AttendanceSummaryFrame();
+                    new controller.AttendanceController(frame);
+                    frame.setVisible(true);
+                });
+            } else {
+                view.dispose();
+                EventQueue.invokeLater(() -> {
+                    AttendanceSummaryFrame f = new AttendanceSummaryFrame();
+                    AttendanceController ac = new AttendanceController(f);
+                    UserData user = UserSession.getCurrentUser();
+                    if (user != null) {
+                        dao.StudentDAO studentDAO = new dao.StudentDAO();
+                        model.StudentData s = studentDAO.searchStudentByEmail(user.getUserName());
+                        String studentId = (s != null) ? s.getStudentId() : user.getUserName();
+                        ac.searchAttendance(studentId);
+                    }
+                    f.getMarkSaveButton().setEnabled(false);
+                    f.getMarkSaveButton().setToolTipText("Only teachers and admins can mark attendance.");
+                    f.setVisible(true);
+                });
+            }
+        });
+    }
+
+    private void setupSidebarEffects() {
+        JButton[] buttons = new JButton[]{
+            view.getDashboardButton(),
+            view.getStudentsButton(),
+            view.getCoursesButton(),
+            view.getAttendanceButton(),
+            view.getAcademicPerformanceButton(),
+            view.getGradeComputationButton(),
+            view.getResultGenerationButton(),
+            view.getReportsExportButton(),
+            view.getProfileButton(),
+            view.getLogoutButton()
+        };
+
+        for (JButton btn : buttons) {
+            btn.addActionListener(e -> view.setActiveMenuItem(btn));
+            addHoverAndFocusEffects(btn);
+        }
+    }
+
+    private void addHoverAndFocusEffects(final JButton btn) {
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                btn.setBorder(null);
+            }
+        });
+
+        btn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (btn.getBackground().equals(new Color(224, 242, 248))) {
+                    btn.setBackground(new Color(200, 235, 245));
+                } else if (btn.getBackground().equals(new Color(243, 227, 225))) {
+                    btn.setBackground(new Color(233, 212, 209));
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (btn.getBackground().equals(new Color(200, 235, 245))) {
+                    btn.setBackground(new Color(224, 242, 248));
+                } else if (btn.getBackground().equals(new Color(233, 212, 209))) {
+                    btn.setBackground(new Color(243, 227, 225));
+                }
+            }
+        });
     }
 
     private void setupComboBoxData() {
