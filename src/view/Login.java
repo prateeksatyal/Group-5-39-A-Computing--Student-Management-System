@@ -396,23 +396,7 @@ private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {
         return new java.awt.Dimension(680, 480);
     }
 
-    public static void main(String[] args) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (!"Nimbus".equals(info.getName())) continue;
-                UIManager.setLookAndFeel(info.getClassName());
-                break;
-            }
-        }
-        catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        EventQueue.invokeLater(() -> {
-            Login loginView = new Login();
-            LoginController controller = new LoginController(loginView);
-            controller.open();
-        });
-    }
+
 
                        
 
