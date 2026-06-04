@@ -412,22 +412,67 @@ private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
         }
     }
 
-    public JButton getLogoutButton() {
+    public javax.swing.JButton getLogoutButton() {
         return this.jButtonLogout;
     }
 
-    public static void main(String[] args) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (!"Nimbus".equals(info.getName())) continue;
-                UIManager.setLookAndFeel(info.getClassName());
-                break;
-            }
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-        EventQueue.invokeLater(() -> new EditProfileFrame().setVisible(true));
+    public javax.swing.JLabel getIdValueLabel() {
+        return this.jLabelIdVal;
     }
+
+    public javax.swing.JTextField getNameField() {
+        return this.jTextFieldName;
+    }
+
+    public javax.swing.JTextField getEmailField() {
+        return this.jTextFieldEmail;
+    }
+
+    public javax.swing.JTextField getPhoneField() {
+        return this.jTextFieldPhone;
+    }
+
+    public javax.swing.JLabel getCourseValueLabel() {
+        return this.jLabelCourseVal;
+    }
+
+    public javax.swing.JComboBox getGenderCombo() {
+        return this.jComboBoxGender;
+    }
+
+    public javax.swing.JTextField getAddressField() {
+        return this.jTextFieldAddress;
+    }
+
+    public javax.swing.JButton getSaveButton() {
+        return this.jButtonSave;
+    }
+
+    public javax.swing.JButton getCancelButton() {
+        return this.jButtonCancel;
+    }
+
+    public javax.swing.JButton getProfileButton() {
+        return this.jButtonProfile;
+    }
+
+    public javax.swing.JButton getAttendanceButton() {
+        return this.jButtonAttendance;
+    }
+
+    public javax.swing.JButton getCoursesButton() {
+        return this.jButtonCourses;
+    }
+
+    public javax.swing.JButton getDashboardButton() {
+        return this.jButtonDashboard;
+    }
+
+    public javax.swing.JButton getResultsButton() {
+        return this.jButtonResults;
+    }
+
+
 
                        
 

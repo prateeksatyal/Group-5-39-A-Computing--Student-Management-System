@@ -85,22 +85,22 @@ public class EditPersonalDetails extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel3.setText("Full Name:");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(150, 160, 320, 17);
+        jLabel3.setBounds(150, 160, 320, 19);
 
         jLabel4.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel4.setText("Email:");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(150, 210, 270, 17);
+        jLabel4.setBounds(150, 210, 270, 19);
 
         jLabel5.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel5.setText("Phone:");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(150, 260, 260, 17);
+        jLabel5.setBounds(150, 260, 260, 19);
 
         jLabel6.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel6.setText("Address:");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(150, 310, 280, 17);
+        jLabel6.setBounds(150, 310, 280, 19);
 
         btnSaveProfile.setBackground(new java.awt.Color(51, 51, 255));
         btnSaveProfile.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
@@ -122,30 +122,7 @@ public class EditPersonalDetails extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new EditPersonalDetails().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
