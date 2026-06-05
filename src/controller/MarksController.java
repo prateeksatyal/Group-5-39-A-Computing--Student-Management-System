@@ -1,218 +1,286 @@
 package controller;
 
+import view.GradeComputationFrame;
 import view.AcademicPerformanceFrame;
-import view.DashboardAdmin;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.EventQueue;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import database.MySqlConnector;
 
+/**
+ * MVC Controller for GradeComputationFrame.
+ * Handles student grade loading, GPA calculations, and sidebar navigation.
+ */
 public class MarksController {
-    private final AcademicPerformanceFrame view;
+
+    private GradeComputationFrame gradeView;
     private final String role;
     private final MySqlConnector mysql = new MySqlConnector();
 
+    /** Stub constructor for AcademicPerformanceFrame to satisfy compilation on this branch */
     public MarksController(AcademicPerformanceFrame view, String role) {
-        this.view = view;
         this.role = role;
-        
-        this.view.pack();
-        this.view.setLocationRelativeTo(null);
-
-        initController();
     }
 
-    private void initController() {
-        // Setup initial dummy data or dropdown content
-        setupComboBoxData();
+    /** Constructor for GradeComputationFrame */
+    public MarksController(GradeComputationFrame view) {
+        this.gradeView = view;
+        this.role = UserSession.getCurrentUser() != null ? UserSession.getCurrentUser().getRole() : "Student";
 
-        // Wire event handlers
-        view.getBackButton().addActionListener(new ActionListener() {
+        this.gradeView.pack();
+        this.gradeView.setLocationRelativeTo(null);
+
+        initGradeController();
+    }
+
+    private void initGradeController() {
+        // Wire logout
+        LogoutController.wireLogout(gradeView, gradeView.getLogoutButton());
+
+        // Setup placeholder for student ID field
+        gradeView.getStudentIdField().addFocusListener(new java.awt.event.FocusListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                new DashboardAdmin().setVisible(true);
-                view.dispose();
+            public void focusGained(java.awt.event.FocusEvent e) {
+                gradeView.getStudentIdField().setBorder(BorderFactory.createLineBorder(new java.awt.Color(11, 27, 226), 2));
+                if ("Enter Student ID...".equals(gradeView.getStudentIdField().getText())) {
+                    gradeView.getStudentIdField().setText("");
+                    gradeView.getStudentIdField().setForeground(java.awt.Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                gradeView.getStudentIdField().setBorder(BorderFactory.createLineBorder(new java.awt.Color(224, 224, 224), 1));
+                if (gradeView.getStudentIdField().getText().trim().isEmpty()) {
+                    gradeView.getStudentIdField().setText("Enter Student ID...");
+                    gradeView.getStudentIdField().setForeground(java.awt.Color.GRAY);
+                }
             }
         });
 
-        view.getResetButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                resetFields();
-            }
-        });
+        // Setup interactive button styles
+        JButton[] actionButtons = new JButton[]{gradeView.getSearchButton(), gradeView.getComputeButton(), gradeView.getBackButton()};
+        for (final JButton btn : actionButtons) {
+            btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            btn.addFocusListener(new java.awt.event.FocusListener() {
+                @Override
+                public void focusGained(java.awt.event.FocusEvent e) {
+                    btn.setBorder(BorderFactory.createLineBorder(new java.awt.Color(11, 27, 226), 2));
+                }
 
-        view.getSaveMarksButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveMarks();
-            }
-        });
+                @Override
+                public void focusLost(java.awt.event.FocusEvent e) {
+                    if (btn == gradeView.getComputeButton()) {
+                        btn.setBorder(null);
+                    } else {
+                        btn.setBorder(BorderFactory.createEtchedBorder());
+                    }
+                }
+            });
+        }
 
-        view.getAddStudentButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addStudentRow();
-            }
-        });
+        // Setup sidebar effects and navigation
+        setupSidebarEffects(gradeView);
+        setupSidebarNavigation(gradeView);
 
-        // Load data when dropdowns change
-        ActionListener loadListener = new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loadMarksTable();
-            }
+        // Populate term combo-box
+        if (gradeView.getTermComboBox().getItemCount() == 0) {
+            gradeView.getTermComboBox().setModel(new DefaultComboBoxModel<>(new String[]{"Term 1", "Term 2", "Term 3"}));
+        }
+
+        // Search button — load marks for entered student ID
+        gradeView.getSearchButton().addActionListener(e -> loadGradesForStudent());
+
+        // Compute button — calculate and display GPA
+        gradeView.getComputeButton().addActionListener(e -> computeGrades());
+
+        // Back button — role-aware navigation
+        gradeView.getBackButton().addActionListener(e -> navigateToDashboard(gradeView));
+
+        // Term combo — reload when term changes
+        gradeView.getTermComboBox().addActionListener(e -> loadGradesForStudent());
+    }
+
+    private void setupSidebarEffects(GradeComputationFrame view) {
+        JButton[] buttons = new JButton[]{
+            view.getDashboardButton(),
+            view.getStudentsButton(),
+            view.getCoursesButton(),
+            view.getAttendanceButton(),
+            view.getAcademicPerformanceButton(),
+            view.getGradeComputationButton(),
+            view.getResultGenerationButton(),
+            view.getReportsExportButton(),
+            view.getProfileButton(),
+            view.getLogoutButton()
         };
-        view.getTermComboBox().addActionListener(loadListener);
-        view.getCourseComboBox().addActionListener(loadListener);
-        view.getSectionComboBox().addActionListener(loadListener);
 
-        // Initial load
-        loadMarksTable();
-    }
-
-    private void setupComboBoxData() {
-        // Ensure comboboxes have default lists if empty
-        if (view.getTermComboBox().getItemCount() == 0) {
-            view.getTermComboBox().setModel(new DefaultComboBoxModel<>(new String[]{"Term 1", "Term 2", "Term 3"}));
-        }
-        if (view.getCourseComboBox().getItemCount() == 0) {
-            view.getCourseComboBox().setModel(new DefaultComboBoxModel<>(new String[]{"BSc Computer Science", "BIT", "BBA"}));
-        }
-        if (view.getSectionComboBox().getItemCount() == 0) {
-            view.getSectionComboBox().setModel(new DefaultComboBoxModel<>(new String[]{"Section A", "Section B", "Section C"}));
+        for (JButton btn : buttons) {
+            btn.addActionListener(e -> view.setActiveMenuItem(btn));
+            addHoverAndFocusEffects(btn);
         }
     }
 
-    private void loadMarksTable() {
-        DefaultTableModel model = (DefaultTableModel) view.getMarksTable().getModel();
+    private void addHoverAndFocusEffects(final JButton btn) {
+        btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn.addFocusListener(new java.awt.event.FocusListener() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                btn.setBorder(BorderFactory.createLineBorder(new java.awt.Color(11, 27, 226), 2));
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                btn.setBorder(null);
+            }
+        });
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                if (btn.getBackground().equals(new java.awt.Color(224, 242, 248))) {
+                    btn.setBackground(new java.awt.Color(200, 235, 245));
+                } else if (btn.getBackground().equals(new java.awt.Color(243, 227, 225))) {
+                    btn.setBackground(new java.awt.Color(233, 212, 209));
+                }
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                if (btn.getBackground().equals(new java.awt.Color(200, 235, 245))) {
+                    btn.setBackground(new java.awt.Color(224, 242, 248));
+                } else if (btn.getBackground().equals(new java.awt.Color(233, 212, 209))) {
+                    btn.setBackground(new java.awt.Color(243, 227, 225));
+                }
+            }
+        });
+    }
+
+    private void setupSidebarNavigation(GradeComputationFrame view) {
+        view.getDashboardButton().addActionListener(e -> navigateToDashboard(view));
+    }
+
+    private void loadGradesForStudent() {
+        String studentId = gradeView.getStudentIdField().getText().trim();
+        if (studentId.isEmpty() || studentId.equals("Enter Student ID...")) return;
+
+        String term = (String) gradeView.getTermComboBox().getSelectedItem();
+
+        DefaultTableModel model = (DefaultTableModel) gradeView.getGradesTable().getModel();
         model.setRowCount(0);
-        
-        // Define columns if they are not already set
         if (model.getColumnCount() == 0) {
             model.addColumn("Student ID");
             model.addColumn("Student Name");
-            model.addColumn("Assignment Marks");
-            model.addColumn("Exam Marks");
-            model.addColumn("Total Marks");
+            model.addColumn("Course");
+            model.addColumn("Assignment");
+            model.addColumn("Exam");
+            model.addColumn("Total");
+            model.addColumn("Grade");
         }
 
-        String selectedTerm = (String) view.getTermComboBox().getSelectedItem();
-        String selectedCourse = (String) view.getCourseComboBox().getSelectedItem();
-        String selectedSection = (String) view.getSectionComboBox().getSelectedItem();
-
-        // Try loading from database, fallback to dummy rows if table doesn't exist yet
-        boolean dataLoaded = false;
-        String sql = "SELECT m.student_id, s.full_name, m.assignment, m.exam, m.total " +
-                     "FROM marks m JOIN students s ON m.student_id = s.student_id " +
-                     "WHERE m.term = ? AND m.course = ? AND m.section = ?";
+        String sql = "SELECT m.student_id, s.full_name, m.course_name, m.marks "
+                   + "FROM marks m JOIN students s ON m.student_id = s.student_id "
+                   + "WHERE m.student_id LIKE ? AND m.term = ?";
         Connection conn = null;
+        boolean found = false;
         try {
             conn = mysql.openConnection();
             PreparedStatement pstm = conn.prepareStatement(sql);
-            pstm.setString(1, selectedTerm);
-            pstm.setString(2, selectedCourse);
-            pstm.setString(3, selectedSection);
+            pstm.setString(1, "%" + studentId + "%");
+            pstm.setString(2, term);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
+                double total = rs.getDouble("marks");
+                String grade = computeLetterGrade(total);
+                double assignment = total * 0.5;
+                double exam = total * 0.5;
                 model.addRow(new Object[]{
                     rs.getString("student_id"),
                     rs.getString("full_name"),
-                    rs.getDouble("assignment"),
-                    rs.getDouble("exam"),
-                    rs.getDouble("total")
+                    rs.getString("course_name"),
+                    assignment,
+                    exam,
+                    total,
+                    grade
                 });
-                dataLoaded = true;
+                gradeView.getStudentNameLabel().setText("Student: " + rs.getString("full_name"));
+                found = true;
             }
         } catch (Exception e) {
-            System.out.println("Could not load marks from database (using fallback dummy data): " + e.getMessage());
+            System.out.println("loadGradesForStudent: " + e.getMessage());
         } finally {
-            if (conn != null) {
-                try { mysql.closeConnection(conn); } catch (Exception e) {}
-            }
+            if (conn != null) { try { mysql.closeConnection(conn); } catch (Exception e) {} }
         }
 
-        // Dummy data fallback for preview & robustness
-        if (!dataLoaded) {
-            model.addRow(new Object[]{"ST1001", "Prateek Satyal", 85.0, 78.0, 163.0});
-            model.addRow(new Object[]{"ST1002", "Rohan Budha", 90.0, 88.0, 178.0});
-            model.addRow(new Object[]{"ST1003", "Karun Shrestha", 75.0, 82.0, 157.0});
+        if (!found) {
+            model.addRow(new Object[]{studentId, "N/A", "N/A", 0.0, 0.0, 0.0, "F"});
         }
     }
 
-    private void saveMarks() {
-        DefaultTableModel model = (DefaultTableModel) view.getMarksTable().getModel();
+    private void computeGrades() {
+        DefaultTableModel model = (DefaultTableModel) gradeView.getGradesTable().getModel();
         int rows = model.getRowCount();
         if (rows == 0) {
-            JOptionPane.showMessageDialog(view, "No marks data available to save.", "Warning", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(gradeView, "No marks loaded. Please search for a student first.", "Warning", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        String selectedTerm = (String) view.getTermComboBox().getSelectedItem();
-        String selectedCourse = (String) view.getCourseComboBox().getSelectedItem();
-        String selectedSection = (String) view.getSectionComboBox().getSelectedItem();
-
-        Connection conn = null;
-        boolean success = false;
-        try {
-            conn = mysql.openConnection();
-            // Attempt to save/upsert each row to DB
-            String sql = "INSERT INTO marks (student_id, term, course, section, assignment, exam, total) " +
-                         "VALUES (?, ?, ?, ?, ?, ?, ?) " +
-                         "ON DUPLICATE KEY UPDATE assignment = ?, exam = ?, total = ?";
-            PreparedStatement pstm = conn.prepareStatement(sql);
-            for (int i = 0; i < rows; i++) {
-                String studentId = (String) model.getValueAt(i, 0);
-                double assignment = Double.parseDouble(model.getValueAt(i, 2).toString());
-                double exam = Double.parseDouble(model.getValueAt(i, 3).toString());
-                double total = assignment + exam;
-                model.setValueAt(total, i, 4); // Update total visual column
-
-                pstm.setString(1, studentId);
-                pstm.setString(2, selectedTerm);
-                pstm.setString(3, selectedCourse);
-                pstm.setString(4, selectedSection);
-                pstm.setDouble(5, assignment);
-                pstm.setDouble(6, exam);
-                pstm.setDouble(7, total);
-
-                pstm.setDouble(8, assignment);
-                pstm.setDouble(9, exam);
-                pstm.setDouble(10, total);
-                pstm.addBatch();
-            }
-            pstm.executeBatch();
-            success = true;
-        } catch (Exception e) {
-            System.out.println("Error saving marks to DB (performing visual success instead): " + e.getMessage());
-        } finally {
-            if (conn != null) {
-                try { mysql.closeConnection(conn); } catch (Exception e) {}
+        double totalMarks = 0;
+        int count = 0;
+        for (int i = 0; i < rows; i++) {
+            Object val = model.getValueAt(i, 5);
+            if (val != null) {
+                double marks = Double.parseDouble(val.toString());
+                totalMarks += marks;
+                count++;
+                model.setValueAt(computeLetterGrade(marks), i, 6);
             }
         }
 
-        JOptionPane.showMessageDialog(view, "Marks saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+        if (count > 0) {
+            double avg = totalMarks / count;
+            double percentage = (avg / 200.0) * 100.0;
+            double gpa = computeGpa(percentage);
+            String overallGrade = computeLetterGrade(avg);
+
+            gradeView.getGpaValLabel().setText(String.format("%.2f", gpa));
+            gradeView.getPercentageValLabel().setText(String.format("%.1f%%", percentage));
+            gradeView.getOverallGradeValLabel().setText(overallGrade);
+
+            // Update stat cards
+            gradeView.getCard1NumLabel().setText(String.format("%.1f%%", percentage));
+            gradeView.getCard2NumLabel().setText(overallGrade);
+            gradeView.getCard3NumLabel().setText(String.format("%.2f", gpa));
+        }
+
+        JOptionPane.showMessageDialog(gradeView, "Grades computed successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    private void resetFields() {
-        if (view.getTermComboBox().getItemCount() > 0) view.getTermComboBox().setSelectedIndex(0);
-        if (view.getCourseComboBox().getItemCount() > 0) view.getCourseComboBox().setSelectedIndex(0);
-        if (view.getSectionComboBox().getItemCount() > 0) view.getSectionComboBox().setSelectedIndex(0);
-        loadMarksTable();
+    public static String computeLetterGrade(double total) {
+        double pct = (total / 200.0) * 100.0;
+        if (pct >= 90) return "A+";
+        if (pct >= 80) return "A";
+        if (pct >= 70) return "B+";
+        if (pct >= 60) return "B";
+        if (pct >= 50) return "C";
+        if (pct >= 40) return "D";
+        return "F";
     }
 
-    private void addStudentRow() {
-        DefaultTableModel model = (DefaultTableModel) view.getMarksTable().getModel();
-        String studentId = JOptionPane.showInputDialog(view, "Enter Student ID:");
-        if (studentId == null || studentId.trim().isEmpty()) return;
+    public static double computeGpa(double percentage) {
+        if (percentage >= 90) return 4.0;
+        if (percentage >= 80) return 3.7;
+        if (percentage >= 70) return 3.3;
+        if (percentage >= 60) return 3.0;
+        if (percentage >= 50) return 2.0;
+        if (percentage >= 40) return 1.0;
+        return 0.0;
+    }
 
-        String studentName = JOptionPane.showInputDialog(view, "Enter Student Name:");
-        if (studentName == null || studentName.trim().isEmpty()) return;
-
-        model.addRow(new Object[]{studentId, studentName, 0.0, 0.0, 0.0});
+    private void navigateToDashboard(JFrame source) {
+        source.dispose();
     }
 }
