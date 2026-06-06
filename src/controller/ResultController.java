@@ -122,6 +122,7 @@ public class ResultController {
 
     private void printScorecard() {
         try {
+            // Trigger native printer dialog for student scorecard
             downloadView.getReportTextArea().print();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(downloadView, "Print failed: " + e.getMessage(), "Print Error", JOptionPane.ERROR_MESSAGE);
