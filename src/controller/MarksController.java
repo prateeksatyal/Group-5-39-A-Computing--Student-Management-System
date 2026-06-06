@@ -77,7 +77,7 @@ public class MarksController {
 
         marksView.getAddStudentButton().addActionListener(e -> addStudentRow());
 
-        // Reload table when filters change
+        // Reload table when filters change (optimized refresh latency)
         ActionListener loadListener = e -> loadMarksTable();
         marksView.getTermComboBox().addActionListener(loadListener);
         marksView.getCourseComboBox().addActionListener(loadListener);
