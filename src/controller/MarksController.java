@@ -240,6 +240,7 @@ public class MarksController {
             }
         }
 
+        // Guard against division by zero for student grade averages
         if (count > 0) {
             double avg = totalMarks / count;
             double percentage = (avg / 200.0) * 100.0;
