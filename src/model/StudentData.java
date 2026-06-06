@@ -27,6 +27,18 @@ public class StudentData {
         this.gender = gender;
     }
 
+    public StudentData(String studentId, String fullName, String email, String phoneNumber, String course, String gender, String address) {
+        this.studentId = studentId;
+        this.fullName = fullName;
+        this.email = email;
+        this.program = "";
+        this.yearLevel = "";
+        this.course = course;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
+    }
+
     public String getStudentId() {
         return studentId;
     }
