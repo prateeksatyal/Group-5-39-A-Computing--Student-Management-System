@@ -92,7 +92,6 @@ public class MarksController {
         DefaultTableModel model = (DefaultTableModel) view.getMarksTable().getModel();
         model.setRowCount(0);
         
-        // Define columns if they are not already set
         if (model.getColumnCount() == 0) {
             model.addColumn("Student ID");
             model.addColumn("Student Name");
@@ -105,11 +104,10 @@ public class MarksController {
         String selectedCourse = (String) view.getCourseComboBox().getSelectedItem();
         String selectedSection = (String) view.getSectionComboBox().getSelectedItem();
 
-        // Try loading from database, fallback to dummy rows if table doesn't exist yet
         boolean dataLoaded = false;
-        String sql = "SELECT m.student_id, s.full_name, m.assignment, m.exam, m.total " +
-                     "FROM marks m JOIN students s ON m.student_id = s.student_id " +
-                     "WHERE m.term = ? AND m.course = ? AND m.section = ?";
+        String sql = "SELECT m.student_id, s.full_name, m.marks "
+                   + "FROM marks m JOIN students s ON m.student_id = s.student_id "
+                   + "WHERE m.term = ? AND m.course_name = ? AND m.section_name = ?";
         Connection conn = null;
         try {
             conn = mysql.openConnection();
@@ -119,12 +117,15 @@ public class MarksController {
             pstm.setString(3, selectedSection);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
+                double total = rs.getDouble("marks");
+                double assignment = total * 0.5;
+                double exam = total * 0.5;
                 model.addRow(new Object[]{
                     rs.getString("student_id"),
                     rs.getString("full_name"),
-                    rs.getDouble("assignment"),
-                    rs.getDouble("exam"),
-                    rs.getDouble("total")
+                    assignment,
+                    exam,
+                    total
                 });
                 dataLoaded = true;
             }
@@ -136,7 +137,6 @@ public class MarksController {
             }
         }
 
-        // Dummy data fallback for preview & robustness
         if (!dataLoaded) {
             model.addRow(new Object[]{"ST1001", "Prateek Satyal", 85.0, 78.0, 163.0});
             model.addRow(new Object[]{"ST1002", "Rohan Budha", 90.0, 88.0, 178.0});
@@ -157,45 +157,97 @@ public class MarksController {
         String selectedSection = (String) view.getSectionComboBox().getSelectedItem();
 
         Connection conn = null;
-        boolean success = false;
+        PreparedStatement checkPstm = null;
+        PreparedStatement insertPstm = null;
+        PreparedStatement updatePstm = null;
         try {
             conn = mysql.openConnection();
-            // Attempt to save/upsert each row to DB
-            String sql = "INSERT INTO marks (student_id, term, course, section, assignment, exam, total) " +
-                         "VALUES (?, ?, ?, ?, ?, ?, ?) " +
-                         "ON DUPLICATE KEY UPDATE assignment = ?, exam = ?, total = ?";
-            PreparedStatement pstm = conn.prepareStatement(sql);
+            String checkSql = "SELECT id FROM marks WHERE student_id = ? AND term = ? AND course_name = ? AND section_name = ?";
+            String insertSql = "INSERT INTO marks (student_id, student_name, course_name, term, section_name, marks, grade, grade_point, percentage) "
+                             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String updateSql = "UPDATE marks SET student_name = ?, marks = ?, grade = ?, grade_point = ?, percentage = ? "
+                             + "WHERE id = ?";
+
+            checkPstm = conn.prepareStatement(checkSql);
+            insertPstm = conn.prepareStatement(insertSql);
+            updatePstm = conn.prepareStatement(updateSql);
+
             for (int i = 0; i < rows; i++) {
                 String studentId = (String) model.getValueAt(i, 0);
+                String studentName = (String) model.getValueAt(i, 1);
                 double assignment = Double.parseDouble(model.getValueAt(i, 2).toString());
-                double exam = Double.parseDouble(model.getValueAt(i, 3).toString());
-                double total = assignment + exam;
-                model.setValueAt(total, i, 4); // Update total visual column
+                double exam       = Double.parseDouble(model.getValueAt(i, 3).toString());
+                double total      = assignment + exam;
+                model.setValueAt(total, i, 4);
 
-                pstm.setString(1, studentId);
-                pstm.setString(2, selectedTerm);
-                pstm.setString(3, selectedCourse);
-                pstm.setString(4, selectedSection);
-                pstm.setDouble(5, assignment);
-                pstm.setDouble(6, exam);
-                pstm.setDouble(7, total);
+                double percentage = (total / 200.0) * 100.0;
+                String grade = computeLetterGrade(total);
+                double gpa = computeGpa(percentage);
 
-                pstm.setDouble(8, assignment);
-                pstm.setDouble(9, exam);
-                pstm.setDouble(10, total);
-                pstm.addBatch();
+                checkPstm.setString(1, studentId);
+                checkPstm.setString(2, selectedTerm);
+                checkPstm.setString(3, selectedCourse);
+                checkPstm.setString(4, selectedSection);
+
+                int existingId = -1;
+                try (ResultSet rs = checkPstm.executeQuery()) {
+                    if (rs.next()) {
+                        existingId = rs.getInt("id");
+                    }
+                }
+
+                if (existingId != -1) {
+                    updatePstm.setString(1, studentName);
+                    updatePstm.setDouble(2, total);
+                    updatePstm.setString(3, grade);
+                    updatePstm.setDouble(4, gpa);
+                    updatePstm.setDouble(5, percentage);
+                    updatePstm.setInt(6, existingId);
+                    updatePstm.executeUpdate();
+                } else {
+                    insertPstm.setString(1, studentId);
+                    insertPstm.setString(2, studentName);
+                    insertPstm.setString(3, selectedCourse);
+                    insertPstm.setString(4, selectedTerm);
+                    insertPstm.setString(5, selectedSection);
+                    insertPstm.setDouble(6, total);
+                    insertPstm.setString(7, grade);
+                    insertPstm.setDouble(8, gpa);
+                    insertPstm.setDouble(9, percentage);
+                    insertPstm.executeUpdate();
+                }
             }
-            pstm.executeBatch();
-            success = true;
         } catch (Exception e) {
-            System.out.println("Error saving marks to DB (performing visual success instead): " + e.getMessage());
+            System.out.println("saveMarks error: " + e.getMessage());
         } finally {
-            if (conn != null) {
-                try { mysql.closeConnection(conn); } catch (Exception e) {}
-            }
+            if (checkPstm != null) { try { checkPstm.close(); } catch(Exception e){} }
+            if (insertPstm != null) { try { insertPstm.close(); } catch(Exception e){} }
+            if (updatePstm != null) { try { updatePstm.close(); } catch(Exception e){} }
+            if (conn != null) { try { mysql.closeConnection(conn); } catch (Exception e) {} }
         }
 
         JOptionPane.showMessageDialog(view, "Marks saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static String computeLetterGrade(double total) {
+        double pct = (total / 200.0) * 100.0;
+        if (pct >= 90) return "A+";
+        if (pct >= 80) return "A";
+        if (pct >= 70) return "B+";
+        if (pct >= 60) return "B";
+        if (pct >= 50) return "C";
+        if (pct >= 40) return "D";
+        return "F";
+    }
+
+    public static double computeGpa(double percentage) {
+        if (percentage >= 90) return 4.0;
+        if (percentage >= 80) return 3.7;
+        if (percentage >= 70) return 3.3;
+        if (percentage >= 60) return 3.0;
+        if (percentage >= 50) return 2.0;
+        if (percentage >= 40) return 1.0;
+        return 0.0;
     }
 
     private void resetFields() {
