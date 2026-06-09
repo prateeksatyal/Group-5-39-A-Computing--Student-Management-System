@@ -1,25 +1,11 @@
 package view;
 
-import controller.LogoutController;
-import controller.MarksController;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.util.Objects;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.GroupLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -29,10 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
-public class AcademicPerformanceFrame
-extends JFrame {
+public class AcademicPerformanceFrame extends javax.swing.JFrame {
     private String userRole = "Admin";
 
     public AcademicPerformanceFrame() {
@@ -41,106 +25,42 @@ extends JFrame {
 
     public AcademicPerformanceFrame(String role) {
         this.userRole = role;
-        this.initComponents();
-        this.setupMenuIcons();
-        LogoutController.wireLogout(this, this.getLogoutButton());
-        new MarksController(this, role);
+        initComponents();
+        this.setResizable(false);
+        this.jButtonSaveMarks.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.jButtonSaveMarks.setBorder(null);
+        setupMenuIcons();
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             // empty catch block
         }
-        this.addWindowListener(new WindowAdapter(){
-
-            @Override
-            public void windowOpened(WindowEvent e) {
-                AcademicPerformanceFrame.this.getContentPane().setFocusable(true);
-                AcademicPerformanceFrame.this.getContentPane().requestFocusInWindow();
-            }
-        });
     }
 
     public String getUserRole() {
         return this.userRole;
     }
 
-    public JButton getDashboardButton() {
-        return this.jButton1;
-    }
-
-    public JButton getStudentsButton() {
-        return this.jButton2;
-    }
-
-    public JButton getCoursesButton() {
-        return this.jButton3;
-    }
-
-    public JButton getAttendanceButton() {
-        return this.jButton4;
-    }
-
-    public JButton getAcademicPerformanceButton() {
-        return this.jButton5;
-    }
-
-    public JButton getGradeComputationButton() {
-        return this.jButton6;
-    }
-
-    public JButton getResultGenerationButton() {
-        return this.jButton7;
-    }
-
-    public JButton getReportsExportButton() {
-        return this.jButton8;
-    }
-
-    public JButton getProfileButton() {
-        return this.jButton9;
-    }
-
-    public JButton getLogoutButton() {
-        return this.jButton10;
-    }
-
-    public JComboBox<String> getTermComboBox() {
-        return this.jComboBoxTerm;
-    }
-
-    public JComboBox<String> getCourseComboBox() {
-        return this.jComboBoxCourse;
-    }
-
-    public JComboBox<String> getSectionComboBox() {
-        return this.jComboBoxSection;
-    }
-
-    public JTable getMarksTable() {
-        return this.jTableMarks;
-    }
-
-    public JButton getAddStudentButton() {
-        return this.jButtonAddStudent;
-    }
-
-    public JButton getSaveMarksButton() {
-        return this.jButtonSaveMarks;
-    }
-
-    public JButton getResetButton() {
-        return this.jButtonReset;
-    }
-
-    public JButton getBackButton() {
-        return this.jButtonBack;
-    }
+    public JButton getDashboardButton() { return this.jButton1; }
+    public JButton getStudentsButton() { return this.jButton2; }
+    public JButton getCoursesButton() { return this.jButton3; }
+    public JButton getAttendanceButton() { return this.jButton4; }
+    public JButton getAcademicPerformanceButton() { return this.jButton5; }
+    public JButton getGradeComputationButton() { return this.jButton6; }
+    public JButton getResultGenerationButton() { return this.jButton7; }
+    public JButton getReportsExportButton() { return this.jButton8; }
+    public JButton getProfileButton() { return this.jButton9; }
+    public JButton getLogoutButton() { return this.jButton10; }
+    public JComboBox<String> getTermComboBox() { return this.jComboBoxTerm; }
+    public JComboBox<String> getCourseComboBox() { return this.jComboBoxCourse; }
+    public JComboBox<String> getSectionComboBox() { return this.jComboBoxSection; }
+    public JTable getMarksTable() { return this.jTableMarks; }
+    public JButton getAddStudentButton() { return this.jButtonAddStudent; }
+    public JButton getSaveMarksButton() { return this.jButtonSaveMarks; }
+    public JButton getResetButton() { return this.jButtonReset; }
+    public JButton getBackButton() { return this.jButtonBack; }
 
     private void setupMenuIcons() {
-        JButton[] actionButtons;
-        JButton[] sidebarButtons;
-        JButton[] pageTabs;
         Color whiteColor = Color.WHITE;
         Color activeColor = new Color(11, 27, 226);
         this.jLabel1.setText("SMS");
@@ -167,73 +87,6 @@ extends JFrame {
         this.jButton10.setText("Logout");
         this.jButton10.setIconTextGap(12);
         this.setActiveMenuItem(this.jButton5);
-        for (JButton btn : pageTabs = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9}) {
-            btn.addActionListener(e -> this.setActiveMenuItem(btn));
-        }
-        for (JButton btn : sidebarButtons = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9, this.jButton10}) {
-            this.addInteractiveEffects(btn);
-        }
-        for (final JButton btn : actionButtons = new JButton[]{this.jButtonAddStudent, this.jButtonSaveMarks, this.jButtonReset, this.jButtonBack}) {
-            btn.setCursor(new Cursor(12));
-            btn.addFocusListener(new FocusListener(){
-
-                @Override
-                public void focusGained(FocusEvent e) {
-                    btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-                }
-
-                @Override
-                public void focusLost(FocusEvent e) {
-                    if (btn == AcademicPerformanceFrame.this.jButtonSaveMarks) {
-                        btn.setBorder(null);
-                    } else {
-                        btn.setBorder(BorderFactory.createEtchedBorder());
-                    }
-                }
-            });
-        }
-    }
-
-    private void addInteractiveEffects(final JButton btn) {
-        btn.setCursor(new Cursor(12));
-        btn.addFocusListener(new FocusListener(){
-            {
-                Objects.requireNonNull(AcademicPerformanceFrame.this);
-            }
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                btn.setBorder(null);
-            }
-        });
-        btn.addMouseListener(new MouseAdapter(){
-            {
-                Objects.requireNonNull(AcademicPerformanceFrame.this);
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (btn.getBackground().equals(new Color(224, 242, 248))) {
-                    btn.setBackground(new Color(200, 235, 245));
-                } else if (btn.getBackground().equals(new Color(243, 227, 225))) {
-                    btn.setBackground(new Color(233, 212, 209));
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (btn.getBackground().equals(new Color(200, 235, 245))) {
-                    btn.setBackground(new Color(224, 242, 248));
-                } else if (btn.getBackground().equals(new Color(233, 212, 209))) {
-                    btn.setBackground(new Color(243, 227, 225));
-                }
-            }
-        });
     }
 
     public void setActiveMenuItem(JButton activeBtn) {
@@ -290,9 +143,9 @@ extends JFrame {
         jLabelTerm = new javax.swing.JLabel();
         jScrollPaneTable = new javax.swing.JScrollPane();
         jTableMarks = new javax.swing.JTable();
-        jComboBoxCourse = new javax.swing.JComboBox();
-        jComboBoxSection = new javax.swing.JComboBox();
-        jComboBoxTerm = new javax.swing.JComboBox();
+        jComboBoxCourse = new javax.swing.JComboBox<>();
+        jComboBoxSection = new javax.swing.JComboBox<>();
+        jComboBoxTerm = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Student Management System - Academic Performance");
@@ -304,9 +157,9 @@ extends JFrame {
         jPanel2.setBackground(new java.awt.Color(28, 39, 50));
         jPanel2.setLayout(null);
 
-        jButton10.setText("  Logout");
         jButton10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton10.setForeground(new java.awt.Color(255, 255, 255));
+        jButton10.setText("  Logout");
         jButton10.setBorder(null);
         jButton10.setContentAreaFilled(false);
         jButton10.setFocusPainted(false);
@@ -314,9 +167,9 @@ extends JFrame {
         jPanel2.add(jButton10);
         jButton10.setBounds(10, 440, 220, 32);
 
-        jButton1.setText("  Dashboard");
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("  Dashboard");
         jButton1.setBorder(null);
         jButton1.setContentAreaFilled(false);
         jButton1.setFocusPainted(false);
@@ -324,9 +177,9 @@ extends JFrame {
         jPanel2.add(jButton1);
         jButton1.setBounds(10, 80, 220, 32);
 
-        jButton2.setText("  Students Management");
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("  Students Management");
         jButton2.setBorder(null);
         jButton2.setContentAreaFilled(false);
         jButton2.setFocusPainted(false);
@@ -334,9 +187,9 @@ extends JFrame {
         jPanel2.add(jButton2);
         jButton2.setBounds(10, 120, 220, 32);
 
-        jButton3.setText("  Courses Management");
         jButton3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setText("  Courses Management");
         jButton3.setBorder(null);
         jButton3.setContentAreaFilled(false);
         jButton3.setFocusPainted(false);
@@ -344,9 +197,9 @@ extends JFrame {
         jPanel2.add(jButton3);
         jButton3.setBounds(10, 160, 220, 32);
 
-        jButton4.setText("  Attendance Management");
         jButton4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
+        jButton4.setText("  Attendance Management");
         jButton4.setBorder(null);
         jButton4.setContentAreaFilled(false);
         jButton4.setFocusPainted(false);
@@ -354,19 +207,19 @@ extends JFrame {
         jPanel2.add(jButton4);
         jButton4.setBounds(10, 200, 220, 32);
 
-        jButton5.setText("  Academic Performance");
         jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton5.setBackground(new java.awt.Color(243, 227, 225));
         jButton5.setForeground(new java.awt.Color(11, 27, 226));
+        jButton5.setText("  Academic Performance");
+        jButton5.setBackground(new java.awt.Color(243, 227, 225));
         jButton5.setBorder(null);
         jButton5.setFocusPainted(false);
         jButton5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jPanel2.add(jButton5);
         jButton5.setBounds(10, 240, 220, 32);
 
-        jButton6.setText("  Grade Computation");
         jButton6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
+        jButton6.setText("  Grade Computation");
         jButton6.setBorder(null);
         jButton6.setContentAreaFilled(false);
         jButton6.setFocusPainted(false);
@@ -374,9 +227,9 @@ extends JFrame {
         jPanel2.add(jButton6);
         jButton6.setBounds(10, 280, 220, 32);
 
-        jButton7.setText("  Result Generation");
         jButton7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
+        jButton7.setText("  Result Generation");
         jButton7.setBorder(null);
         jButton7.setContentAreaFilled(false);
         jButton7.setFocusPainted(false);
@@ -384,9 +237,9 @@ extends JFrame {
         jPanel2.add(jButton7);
         jButton7.setBounds(10, 320, 220, 32);
 
-        jButton8.setText("  Reports Export");
         jButton8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton8.setForeground(new java.awt.Color(255, 255, 255));
+        jButton8.setText("  Reports Export");
         jButton8.setBorder(null);
         jButton8.setContentAreaFilled(false);
         jButton8.setFocusPainted(false);
@@ -394,9 +247,9 @@ extends JFrame {
         jPanel2.add(jButton8);
         jButton8.setBounds(10, 360, 220, 32);
 
-        jButton9.setText("  Profile");
         jButton9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton9.setForeground(new java.awt.Color(255, 255, 255));
+        jButton9.setText("  Profile");
         jButton9.setBorder(null);
         jButton9.setContentAreaFilled(false);
         jButton9.setFocusPainted(false);
@@ -404,9 +257,9 @@ extends JFrame {
         jPanel2.add(jButton9);
         jButton9.setBounds(10, 400, 220, 32);
 
-        jLabel1.setText("  SMS");
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setText("  SMS");
         jPanel2.add(jLabel1);
         jLabel1.setBounds(20, 20, 200, 40);
 
@@ -416,49 +269,49 @@ extends JFrame {
         jPanel3.setBackground(new java.awt.Color(243, 227, 225));
         jPanel3.setLayout(null);
 
-        jButtonAddStudent.setText("Add Student");
         jButtonAddStudent.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jButtonAddStudent.setText("Add Student");
         jButtonAddStudent.setFocusPainted(false);
         jPanel3.add(jButtonAddStudent);
         jButtonAddStudent.setBounds(30, 410, 115, 35);
 
-        jButtonBack.setText("Back");
         jButtonBack.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jButtonBack.setText("Back");
         jButtonBack.setFocusPainted(false);
         jPanel3.add(jButtonBack);
         jButtonBack.setBounds(410, 410, 100, 35);
 
-        jButtonReset.setText("Reset");
         jButtonReset.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jButtonReset.setText("Reset");
         jButtonReset.setFocusPainted(false);
         jPanel3.add(jButtonReset);
         jButtonReset.setBounds(290, 410, 100, 35);
 
-        jButtonSaveMarks.setText("Save Marks");
         jButtonSaveMarks.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jButtonSaveMarks.setBackground(new java.awt.Color(11, 27, 226));
         jButtonSaveMarks.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonSaveMarks.setText("Save Marks");
+        jButtonSaveMarks.setBackground(new java.awt.Color(11, 27, 226));
         jButtonSaveMarks.setFocusPainted(false);
         jPanel3.add(jButtonSaveMarks);
         jButtonSaveMarks.setBounds(160, 410, 115, 35);
 
-        jLabel2.setText("Academic Performance");
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setText("Academic Performance");
         jPanel3.add(jLabel2);
         jLabel2.setBounds(30, 15, 350, 35);
 
-        jLabelCourse.setText("Course");
         jLabelCourse.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabelCourse.setText("Course");
         jPanel3.add(jLabelCourse);
         jLabelCourse.setBounds(190, 65, 100, 16);
 
-        jLabelSection.setText("Section");
         jLabelSection.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabelSection.setText("Section");
         jPanel3.add(jLabelSection);
         jLabelSection.setBounds(370, 65, 100, 16);
 
-        jLabelTerm.setText("Term");
         jLabelTerm.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabelTerm.setText("Term");
         jPanel3.add(jLabelTerm);
         jLabelTerm.setBounds(30, 65, 100, 16);
 
@@ -479,23 +332,22 @@ extends JFrame {
         jPanel1.add(jPanel3);
         jPanel3.setBounds(240, 0, 540, 480);
 
-        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 940, Short.MAX_VALUE)
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
-    }
+    }// </editor-fold>//GEN-END:initComponents
 
-    private static class VectorIcon
-    implements Icon {
+    private static class VectorIcon implements Icon {
         private final String type;
         private final int size;
         private final Color color;
@@ -507,20 +359,15 @@ extends JFrame {
         }
 
         @Override
-        public int getIconWidth() {
-            return this.size;
-        }
-
+        public int getIconWidth() { return this.size; }
         @Override
-        public int getIconHeight() {
-            return this.size;
-        }
+        public int getIconHeight() { return this.size; }
 
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
             Color shapeColor;
             Color circleBg;
-            Graphics2D g2 = (Graphics2D)g.create();
+            Graphics2D g2 = (Graphics2D) g.create();
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             if (this.type.equalsIgnoreCase("hamburger")) {
                 g2.setColor(this.color);
@@ -548,67 +395,59 @@ extends JFrame {
             g2.setColor(shapeColor);
             g2.setStroke(new BasicStroke(1.5f, 1, 1));
             switch (this.type.toLowerCase()) {
-                case "dashboard": {
+                case "dashboard":
                     g2.drawLine(cx + shapeSize / 2, cy + 1, cx + 1, cy + shapeSize / 2);
                     g2.drawLine(cx + shapeSize / 2, cy + 1, cx + shapeSize - 1, cy + shapeSize / 2);
                     g2.drawLine(cx + 2, cy + shapeSize / 2, cx + 2, cy + shapeSize - 1);
                     g2.drawLine(cx + shapeSize - 2, cy + shapeSize / 2, cx + shapeSize - 2, cy + shapeSize - 1);
                     g2.drawLine(cx + 2, cy + shapeSize - 1, cx + shapeSize - 2, cy + shapeSize - 1);
                     break;
-                }
-                case "students": {
-                    int hSize = (int)((double)shapeSize * 0.4);
+                case "students":
+                    int hSize = (int) ((double) shapeSize * 0.4);
                     g2.drawOval(cx + shapeSize / 2 - hSize / 2, cy + 2, hSize, hSize);
                     g2.drawArc(cx + 1, cy + shapeSize / 2 + 1, shapeSize - 2, shapeSize / 2, 0, 180);
                     break;
-                }
-                case "courses": {
+                case "courses":
                     int bookH = shapeSize / 3;
                     g2.drawRoundRect(cx + 1, cy + 1, shapeSize - 2, bookH, 2, 2);
                     g2.drawRoundRect(cx + 2, cy + 1 + bookH, shapeSize - 4, bookH, 2, 2);
                     g2.drawRoundRect(cx + 1, cy + 1 + 2 * bookH, shapeSize - 2, bookH, 2, 2);
                     break;
-                }
-                case "attendance": {
+                case "attendance":
                     g2.drawRoundRect(cx + 1, cy + 2, shapeSize - 2, shapeSize - 3, 2, 2);
                     g2.drawLine(cx + 1, cy + 2 + shapeSize / 3, cx + shapeSize - 1, cy + 2 + shapeSize / 3);
                     break;
-                }
-                case "performance": {
+                case "performance":
                     g2.drawOval(cx + 1, cy + 1, shapeSize - 2, shapeSize - 2);
                     g2.drawLine(cx + 3, cy + shapeSize - 3, cx + shapeSize / 2, cy + shapeSize / 2);
                     g2.drawLine(cx + shapeSize / 2, cy + shapeSize / 2, cx + shapeSize - 3, cy + 3);
                     break;
-                }
-                case "grade": {
-                    g2.drawRoundRect(cx + 1, cy + 1, shapeSize - 2, (int)((double)shapeSize * 0.7), 2, 2);
-                    g2.drawLine(cx + shapeSize / 2, cy + (int)((double)shapeSize * 0.7), cx + shapeSize / 2, cy + shapeSize - 1);
+                case "grade":
+                    g2.drawRoundRect(cx + 1, cy + 1, shapeSize - 2, (int) ((double) shapeSize * 0.7), 2, 2);
+                    g2.drawLine(cx + shapeSize / 2, cy + (int) ((double) shapeSize * 0.7), cx + shapeSize / 2, cy + shapeSize - 1);
                     break;
-                }
-                case "result": {
+                case "result":
                     g2.drawRoundRect(cx + 2, cy + 1, shapeSize - 4, shapeSize - 2, 2, 2);
                     break;
-                }
-                case "reports": {
+                case "reports":
                     g2.drawRoundRect(cx + 2, cy + 3, shapeSize - 4, shapeSize - 4, 2, 2);
                     break;
-                }
-                case "profile": {
-                    int pHead = (int)((double)shapeSize * 0.45);
+                case "profile":
+                    int pHead = (int) ((double) shapeSize * 0.45);
                     g2.drawOval(cx + shapeSize / 2 - pHead / 2, cy + 1, pHead, pHead);
                     g2.drawArc(cx + 1, cy + shapeSize / 2 + 2, shapeSize - 2, shapeSize / 2, 0, 180);
                     break;
-                }
-                case "logout": {
+                case "logout":
                     g2.drawPolyline(new int[]{cx + shapeSize / 2, cx + 1, cx + 1, cx + shapeSize / 2}, new int[]{cy + 1, cy + 1, cy + shapeSize - 1, cy + shapeSize - 1}, 4);
                     int arrowY = cy + shapeSize / 2;
                     g2.drawLine(cx + 3, arrowY, cx + shapeSize - 1, arrowY);
-                }
+                    break;
             }
             g2.dispose();
         }
     }
 
+    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
@@ -623,9 +462,9 @@ extends JFrame {
     private javax.swing.JButton jButtonBack;
     private javax.swing.JButton jButtonReset;
     private javax.swing.JButton jButtonSaveMarks;
-    private javax.swing.JComboBox jComboBoxCourse;
-    private javax.swing.JComboBox jComboBoxSection;
-    private javax.swing.JComboBox jComboBoxTerm;
+    private javax.swing.JComboBox<String> jComboBoxCourse;
+    private javax.swing.JComboBox<String> jComboBoxSection;
+    private javax.swing.JComboBox<String> jComboBoxTerm;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabelCourse;
@@ -636,6 +475,7 @@ extends JFrame {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPaneTable;
     private javax.swing.JTable jTableMarks;
+    // End of variables declaration//GEN-END:variables
 
     @Override
     public java.awt.Dimension getPreferredSize() {
