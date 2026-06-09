@@ -116,9 +116,7 @@ public class MarksController {
             }
 
             @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                btn.setBorder(null);
-            }
+            public void focusLost(btn.setBorder(null));
         });
 
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -161,7 +159,7 @@ public class MarksController {
     private void loadMarksTable() {
         DefaultTableModel model = (DefaultTableModel) marksView.getMarksTable().getModel();
         model.setRowCount(0);
-
+        
         if (model.getColumnCount() == 0) {
             model.addColumn("Student ID");
             model.addColumn("Student Name");
@@ -170,29 +168,32 @@ public class MarksController {
             model.addColumn("Total Marks");
         }
 
-        String term    = (String) marksView.getTermComboBox().getSelectedItem();
-        String course  = (String) marksView.getCourseComboBox().getSelectedItem();
-        String section = (String) marksView.getSectionComboBox().getSelectedItem();
+        String selectedTerm = (String) marksView.getTermComboBox().getSelectedItem();
+        String selectedCourse = (String) marksView.getCourseComboBox().getSelectedItem();
+        String selectedSection = (String) marksView.getSectionComboBox().getSelectedItem();
 
         boolean dataLoaded = false;
-        String sql = "SELECT m.student_id, s.full_name, m.assignment, m.exam, m.total " +
-                     "FROM marks m JOIN students s ON m.student_id = s.student_id " +
-                     "WHERE m.term = ? AND m.course = ? AND m.section = ?";
+        String sql = "SELECT m.student_id, s.full_name, m.marks "
+                   + "FROM marks m JOIN students s ON m.student_id = s.student_id "
+                   + "WHERE m.term = ? AND m.course_name = ? AND m.section_name = ?";
         Connection conn = null;
         try {
             conn = mysql.openConnection();
             PreparedStatement pstm = conn.prepareStatement(sql);
-            pstm.setString(1, term);
-            pstm.setString(2, course);
-            pstm.setString(3, section);
+            pstm.setString(1, selectedTerm);
+            pstm.setString(2, selectedCourse);
+            pstm.setString(3, selectedSection);
             ResultSet rs = pstm.executeQuery();
             while (rs.next()) {
+                double total = rs.getDouble("marks");
+                double assignment = total * 0.5;
+                double exam = total * 0.5;
                 model.addRow(new Object[]{
                     rs.getString("student_id"),
                     rs.getString("full_name"),
-                    rs.getDouble("assignment"),
-                    rs.getDouble("exam"),
-                    rs.getDouble("total")
+                    assignment,
+                    exam,
+                    total
                 });
                 dataLoaded = true;
             }
@@ -217,45 +218,102 @@ public class MarksController {
             return;
         }
 
-        String term    = (String) marksView.getTermComboBox().getSelectedItem();
-        String course  = (String) marksView.getCourseComboBox().getSelectedItem();
-        String section = (String) marksView.getSectionComboBox().getSelectedItem();
+        String selectedTerm = (String) marksView.getTermComboBox().getSelectedItem();
+        String selectedCourse = (String) marksView.getCourseComboBox().getSelectedItem();
+        String selectedSection = (String) marksView.getSectionComboBox().getSelectedItem();
 
         Connection conn = null;
+        PreparedStatement checkPstm = null;
+        PreparedStatement insertPstm = null;
+        PreparedStatement updatePstm = null;
         try {
             conn = mysql.openConnection();
-            String sql = "INSERT INTO marks (student_id, term, course, section, assignment, exam, total) " +
-                         "VALUES (?, ?, ?, ?, ?, ?, ?) " +
-                         "ON DUPLICATE KEY UPDATE assignment = ?, exam = ?, total = ?";
-            PreparedStatement pstm = conn.prepareStatement(sql);
+            String checkSql = "SELECT id FROM marks WHERE student_id = ? AND term = ? AND course_name = ? AND section_name = ?";
+            String insertSql = "INSERT INTO marks (student_id, student_name, course_name, term, section_name, marks, grade, grade_point, percentage) "
+                             + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String updateSql = "UPDATE marks SET student_name = ?, marks = ?, grade = ?, grade_point = ?, percentage = ? "
+                             + "WHERE id = ?";
+
+            checkPstm = conn.prepareStatement(checkSql);
+            insertPstm = conn.prepareStatement(insertSql);
+            updatePstm = conn.prepareStatement(updateSql);
+
             for (int i = 0; i < rows; i++) {
                 String studentId = (String) model.getValueAt(i, 0);
+                String studentName = (String) model.getValueAt(i, 1);
                 double assignment = Double.parseDouble(model.getValueAt(i, 2).toString());
-                double exam = Double.parseDouble(model.getValueAt(i, 3).toString());
-                double total = assignment + exam;
+                double exam       = Double.parseDouble(model.getValueAt(i, 3).toString());
+                double total      = assignment + exam;
                 model.setValueAt(total, i, 4);
 
-                pstm.setString(1, studentId);
-                pstm.setString(2, term);
-                pstm.setString(3, course);
-                pstm.setString(4, section);
-                pstm.setDouble(5, assignment);
-                pstm.setDouble(6, exam);
-                pstm.setDouble(7, total);
+                double percentage = (total / 200.0) * 100.0;
+                String grade = computeLetterGrade(total);
+                double gpa = computeGpa(percentage);
 
-                pstm.setDouble(8, assignment);
-                pstm.setDouble(9, exam);
-                pstm.setDouble(10, total);
-                pstm.addBatch();
+                checkPstm.setString(1, studentId);
+                checkPstm.setString(2, selectedTerm);
+                checkPstm.setString(3, selectedCourse);
+                checkPstm.setString(4, selectedSection);
+
+                int existingId = -1;
+                try (ResultSet rs = checkPstm.executeQuery()) {
+                    if (rs.next()) {
+                        existingId = rs.getInt("id");
+                    }
+                }
+
+                if (existingId != -1) {
+                    updatePstm.setString(1, studentName);
+                    updatePstm.setDouble(2, total);
+                    updatePstm.setString(3, grade);
+                    updatePstm.setDouble(4, gpa);
+                    updatePstm.setDouble(5, percentage);
+                    updatePstm.setInt(6, existingId);
+                    updatePstm.executeUpdate();
+                } else {
+                    insertPstm.setString(1, studentId);
+                    insertPstm.setString(2, studentName);
+                    insertPstm.setString(3, selectedCourse);
+                    insertPstm.setString(4, selectedTerm);
+                    insertPstm.setString(5, selectedSection);
+                    insertPstm.setDouble(6, total);
+                    insertPstm.setString(7, grade);
+                    insertPstm.setDouble(8, gpa);
+                    insertPstm.setDouble(9, percentage);
+                    insertPstm.executeUpdate();
+                }
             }
-            pstm.executeBatch();
         } catch (Exception e) {
             System.out.println("saveMarks error: " + e.getMessage());
         } finally {
+            if (checkPstm != null) { try { checkPstm.close(); } catch(Exception e){} }
+            if (insertPstm != null) { try { insertPstm.close(); } catch(Exception e){} }
+            if (updatePstm != null) { try { updatePstm.close(); } catch(Exception e){} }
             if (conn != null) { try { mysql.closeConnection(conn); } catch (Exception e) {} }
         }
 
         JOptionPane.showMessageDialog(marksView, "Marks saved successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public static String computeLetterGrade(double total) {
+        double pct = (total / 200.0) * 100.0;
+        if (pct >= 90) return "A+";
+        if (pct >= 80) return "A";
+        if (pct >= 70) return "B+";
+        if (pct >= 60) return "B";
+        if (pct >= 50) return "C";
+        if (pct >= 40) return "D";
+        return "F";
+    }
+
+    public static double computeGpa(double percentage) {
+        if (percentage >= 90) return 4.0;
+        if (percentage >= 80) return 3.7;
+        if (percentage >= 70) return 3.3;
+        if (percentage >= 60) return 3.0;
+        if (percentage >= 50) return 2.0;
+        if (percentage >= 40) return 1.0;
+        return 0.0;
     }
 
     private void resetMarksFields() {
