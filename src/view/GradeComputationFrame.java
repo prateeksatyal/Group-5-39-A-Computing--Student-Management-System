@@ -15,20 +15,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 
-public class AcademicPerformanceFrame extends javax.swing.JFrame {
-    private String userRole = "Admin";
+public class GradeComputationFrame extends javax.swing.JFrame {
 
-    public AcademicPerformanceFrame() {
-        this("Admin");
-    }
-
-    public AcademicPerformanceFrame(String role) {
-        this.userRole = role;
+    public GradeComputationFrame() {
         initComponents();
         this.setResizable(false);
-        this.jButtonSaveMarks.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        this.jButtonSaveMarks.setBorder(null);
         setupMenuIcons();
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
@@ -37,28 +30,29 @@ public class AcademicPerformanceFrame extends javax.swing.JFrame {
         }
     }
 
-    public String getUserRole() {
-        return this.userRole;
-    }
-
-    public JButton getDashboardButton() { return this.jButton1; }
-    public JButton getStudentsButton() { return this.jButton2; }
-    public JButton getCoursesButton() { return this.jButton3; }
-    public JButton getAttendanceButton() { return this.jButton4; }
-    public JButton getAcademicPerformanceButton() { return this.jButton5; }
-    public JButton getGradeComputationButton() { return this.jButton6; }
-    public JButton getResultGenerationButton() { return this.jButton7; }
-    public JButton getReportsExportButton() { return this.jButton8; }
-    public JButton getProfileButton() { return this.jButton9; }
-    public JButton getLogoutButton() { return this.jButton10; }
-    public JComboBox<String> getTermComboBox() { return this.jComboBoxTerm; }
-    public JComboBox<String> getCourseComboBox() { return this.jComboBoxCourse; }
-    public JComboBox<String> getSectionComboBox() { return this.jComboBoxSection; }
-    public JTable getMarksTable() { return this.jTableMarks; }
-    public JButton getAddStudentButton() { return this.jButtonAddStudent; }
-    public JButton getSaveMarksButton() { return this.jButtonSaveMarks; }
-    public JButton getResetButton() { return this.jButtonReset; }
-    public JButton getBackButton() { return this.jButtonBack; }
+    public JButton getDashboardButton() { return jButton1; }
+    public JButton getStudentsButton() { return jButton2; }
+    public JButton getCoursesButton() { return jButton3; }
+    public JButton getAttendanceButton() { return jButton4; }
+    public JButton getAcademicPerformanceButton() { return jButton5; }
+    public JButton getGradeComputationButton() { return jButton6; }
+    public JButton getResultGenerationButton() { return jButton7; }
+    public JButton getReportsExportButton() { return jButton8; }
+    public JButton getProfileButton() { return jButton9; }
+    public JButton getLogoutButton() { return jButton10; }
+    public JTextField getStudentIdField() { return jTextFieldStudentId; }
+    public JButton getSearchButton() { return jButtonSearch; }
+    public JComboBox<String> getTermComboBox() { return jComboBoxTerm; }
+    public JTable getGradesTable() { return jTableGrades; }
+    public JButton getComputeButton() { return jButtonCompute; }
+    public JButton getBackButton() { return jButtonBack; }
+    public JLabel getCard1NumLabel() { return jLabelCard1Num; }
+    public JLabel getCard2NumLabel() { return jLabelCard2Num; }
+    public JLabel getCard3NumLabel() { return jLabelCard3Num; }
+    public JLabel getGpaValLabel() { return jLabelGpaVal; }
+    public JLabel getPercentageValLabel() { return jLabelPercentVal; }
+    public JLabel getOverallGradeValLabel() { return jLabelGradeVal; }
+    public JLabel getStudentNameLabel() { return jLabelStudentNameVal; }
 
     private void setupMenuIcons() {
         Color whiteColor = Color.WHITE;
@@ -86,7 +80,14 @@ public class AcademicPerformanceFrame extends javax.swing.JFrame {
         this.jButton9.setIconTextGap(12);
         this.jButton10.setText("Logout");
         this.jButton10.setIconTextGap(12);
-        this.setActiveMenuItem(this.jButton5);
+        this.setActiveMenuItem(this.jButton6);
+
+        this.jLabelCard1Icon.setText("");
+        this.jLabelCard1Icon.setIcon(new VectorIcon("students", 35, activeColor));
+        this.jLabelCard2Icon.setText("");
+        this.jLabelCard2Icon.setIcon(new VectorIcon("courses", 35, activeColor));
+        this.jLabelCard3Icon.setText("");
+        this.jLabelCard3Icon.setIcon(new VectorIcon("performance", 35, activeColor));
     }
 
     public void setActiveMenuItem(JButton activeBtn) {
@@ -133,22 +134,37 @@ public class AcademicPerformanceFrame extends javax.swing.JFrame {
         jButton9 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
-        jButtonAddStudent = new javax.swing.JButton();
         jButtonBack = new javax.swing.JButton();
-        jButtonReset = new javax.swing.JButton();
-        jButtonSaveMarks = new javax.swing.JButton();
+        jButtonCompute = new javax.swing.JButton();
+        jButtonSearch = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
-        jLabelCourse = new javax.swing.JLabel();
-        jLabelSection = new javax.swing.JLabel();
-        jLabelTerm = new javax.swing.JLabel();
+        jLabelStudentNameVal = new javax.swing.JLabel();
+        jPanelBottom = new javax.swing.JPanel();
+        jLabelGpa = new javax.swing.JLabel();
+        jLabelGpaVal = new javax.swing.JLabel();
+        jLabelGrade = new javax.swing.JLabel();
+        jLabelGradeVal = new javax.swing.JLabel();
+        jLabelPercent = new javax.swing.JLabel();
+        jLabelPercentVal = new javax.swing.JLabel();
+        jPanelCard1 = new javax.swing.JPanel();
+        jLabelCard1Icon = new javax.swing.JLabel();
+        jLabelCard1Label = new javax.swing.JLabel();
+        jLabelCard1Num = new javax.swing.JLabel();
+        jPanelCard2 = new javax.swing.JPanel();
+        jLabelCard2Icon = new javax.swing.JLabel();
+        jLabelCard2Label = new javax.swing.JLabel();
+        jLabelCard2Num = new javax.swing.JLabel();
+        jPanelCard3 = new javax.swing.JPanel();
+        jLabelCard3Icon = new javax.swing.JLabel();
+        jLabelCard3Label = new javax.swing.JLabel();
+        jLabelCard3Num = new javax.swing.JLabel();
         jScrollPaneTable = new javax.swing.JScrollPane();
-        jTableMarks = new javax.swing.JTable();
-        jComboBoxCourse = new javax.swing.JComboBox<>();
-        jComboBoxSection = new javax.swing.JComboBox<>();
+        jTableGrades = new javax.swing.JTable();
+        jTextFieldStudentId = new javax.swing.JTextField();
         jComboBoxTerm = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Student Management System - Academic Performance");
+        setTitle("Student Management System - Grade Computation");
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -207,21 +223,21 @@ public class AcademicPerformanceFrame extends javax.swing.JFrame {
         jPanel2.add(jButton4);
         jButton4.setBounds(10, 200, 220, 32);
 
-        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton5.setForeground(new java.awt.Color(11, 27, 226));
+        jButton5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setText("  Academic Performance");
-        jButton5.setBackground(new java.awt.Color(243, 227, 225));
         jButton5.setBorder(null);
+        jButton5.setContentAreaFilled(false);
         jButton5.setFocusPainted(false);
         jButton5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jPanel2.add(jButton5);
         jButton5.setBounds(10, 240, 220, 32);
 
-        jButton6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton6.setForeground(new java.awt.Color(255, 255, 255));
+        jButton6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton6.setForeground(new java.awt.Color(11, 27, 226));
         jButton6.setText("  Grade Computation");
+        jButton6.setBackground(new java.awt.Color(243, 227, 225));
         jButton6.setBorder(null);
-        jButton6.setContentAreaFilled(false);
         jButton6.setFocusPainted(false);
         jButton6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jPanel2.add(jButton6);
@@ -269,65 +285,143 @@ public class AcademicPerformanceFrame extends javax.swing.JFrame {
         jPanel3.setBackground(new java.awt.Color(243, 227, 225));
         jPanel3.setLayout(null);
 
-        jButtonAddStudent.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jButtonAddStudent.setText("Add Student");
-        jButtonAddStudent.setFocusPainted(false);
-        jPanel3.add(jButtonAddStudent);
-        jButtonAddStudent.setBounds(30, 410, 115, 35);
-
         jButtonBack.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonBack.setText("Back");
         jButtonBack.setFocusPainted(false);
         jPanel3.add(jButtonBack);
         jButtonBack.setBounds(410, 410, 100, 35);
 
-        jButtonReset.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jButtonReset.setText("Reset");
-        jButtonReset.setFocusPainted(false);
-        jPanel3.add(jButtonReset);
-        jButtonReset.setBounds(290, 410, 100, 35);
+        jButtonCompute.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        jButtonCompute.setForeground(new java.awt.Color(255, 255, 255));
+        jButtonCompute.setText("Compute Grades");
+        jButtonCompute.setBackground(new java.awt.Color(11, 27, 226));
+        jButtonCompute.setFocusPainted(false);
+        jPanel3.add(jButtonCompute);
+        jButtonCompute.setBounds(30, 410, 145, 35);
 
-        jButtonSaveMarks.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        jButtonSaveMarks.setForeground(new java.awt.Color(255, 255, 255));
-        jButtonSaveMarks.setText("Save Marks");
-        jButtonSaveMarks.setBackground(new java.awt.Color(11, 27, 226));
-        jButtonSaveMarks.setFocusPainted(false);
-        jPanel3.add(jButtonSaveMarks);
-        jButtonSaveMarks.setBounds(160, 410, 115, 35);
+        jButtonSearch.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButtonSearch.setText("Search");
+        jButtonSearch.setFocusPainted(false);
+        jPanel3.add(jButtonSearch);
+        jButtonSearch.setBounds(170, 50, 80, 25);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        jLabel2.setText("Academic Performance");
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        jLabel2.setText("Grade Computation");
         jPanel3.add(jLabel2);
-        jLabel2.setBounds(30, 15, 350, 35);
+        jLabel2.setBounds(30, 10, 350, 30);
 
-        jLabelCourse.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabelCourse.setText("Course");
-        jPanel3.add(jLabelCourse);
-        jLabelCourse.setBounds(190, 65, 100, 16);
+        jLabelStudentNameVal.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabelStudentNameVal.setText("Student: ");
+        jPanel3.add(jLabelStudentNameVal);
+        jLabelStudentNameVal.setBounds(395, 52, 125, 20);
 
-        jLabelSection.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabelSection.setText("Section");
-        jPanel3.add(jLabelSection);
-        jLabelSection.setBounds(370, 65, 100, 16);
+        jPanelBottom.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelBottom.setLayout(null);
 
-        jLabelTerm.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabelTerm.setText("Term");
-        jPanel3.add(jLabelTerm);
-        jLabelTerm.setBounds(30, 65, 100, 16);
+        jLabelGpa.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabelGpa.setText("GPA:");
+        jPanelBottom.add(jLabelGpa);
+        jLabelGpa.setBounds(15, 10, 50, 20);
 
-        jScrollPaneTable.setViewportView(jTableMarks);
+        jLabelGpaVal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabelGpaVal.setForeground(new java.awt.Color(11, 27, 226));
+        jLabelGpaVal.setText("0.00");
+        jPanelBottom.add(jLabelGpaVal);
+        jLabelGpaVal.setBounds(65, 10, 70, 20);
+
+        jLabelGrade.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabelGrade.setText("Overall Grade:");
+        jPanelBottom.add(jLabelGrade);
+        jLabelGrade.setBounds(315, 10, 90, 20);
+
+        jLabelGradeVal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabelGradeVal.setForeground(new java.awt.Color(11, 27, 226));
+        jLabelGradeVal.setText("N/A");
+        jPanelBottom.add(jLabelGradeVal);
+        jLabelGradeVal.setBounds(415, 10, 50, 20);
+
+        jLabelPercent.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jLabelPercent.setText("Percent:");
+        jPanelBottom.add(jLabelPercent);
+        jLabelPercent.setBounds(150, 10, 70, 20);
+
+        jLabelPercentVal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabelPercentVal.setForeground(new java.awt.Color(11, 27, 226));
+        jLabelPercentVal.setText("0.0%");
+        jPanelBottom.add(jLabelPercentVal);
+        jLabelPercentVal.setBounds(220, 10, 90, 20);
+
+        jPanel3.add(jPanelBottom);
+        jPanelBottom.setBounds(30, 345, 480, 40);
+
+        jPanelCard1.setBackground(new java.awt.Color(224, 242, 248));
+        jPanelCard1.setLayout(null);
+        jPanelCard1.add(jLabelCard1Icon);
+        jLabelCard1Icon.setBounds(110, 5, 35, 35);
+
+        jLabelCard1Label.setFont(new java.awt.Font("Segoe UI", 1, 9)); // NOI18N
+        jLabelCard1Label.setText("Total Records");
+        jPanelCard1.add(jLabelCard1Label);
+        jLabelCard1Label.setBounds(10, 25, 90, 15);
+
+        jLabelCard1Num.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabelCard1Num.setText("0");
+        jPanelCard1.add(jLabelCard1Num);
+        jLabelCard1Num.setBounds(10, 5, 80, 20);
+
+        jPanel3.add(jPanelCard1);
+        jPanelCard1.setBounds(30, 85, 150, 45);
+
+        jPanelCard2.setBackground(new java.awt.Color(230, 248, 235));
+        jPanelCard2.setLayout(null);
+        jPanelCard2.add(jLabelCard2Icon);
+        jLabelCard2Icon.setBounds(110, 5, 35, 35);
+
+        jLabelCard2Label.setFont(new java.awt.Font("Segoe UI", 1, 9)); // NOI18N
+        jLabelCard2Label.setText("Total Courses");
+        jPanelCard2.add(jLabelCard2Label);
+        jLabelCard2Label.setBounds(10, 25, 90, 15);
+
+        jLabelCard2Num.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabelCard2Num.setText("0");
+        jPanelCard2.add(jLabelCard2Num);
+        jLabelCard2Num.setBounds(10, 5, 80, 20);
+
+        jPanel3.add(jPanelCard2);
+        jPanelCard2.setBounds(195, 85, 150, 45);
+
+        jPanelCard3.setBackground(new java.awt.Color(254, 243, 225));
+        jPanelCard3.setLayout(null);
+        jPanelCard3.add(jLabelCard3Icon);
+        jLabelCard3Icon.setBounds(110, 5, 35, 35);
+
+        jLabelCard3Label.setFont(new java.awt.Font("Segoe UI", 1, 9)); // NOI18N
+        jLabelCard3Label.setText("Avg Score");
+        jPanelCard3.add(jLabelCard3Label);
+        jLabelCard3Label.setBounds(10, 25, 90, 15);
+
+        jLabelCard3Num.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        jLabelCard3Num.setText("0.0%");
+        jPanelCard3.add(jLabelCard3Num);
+        jLabelCard3Num.setBounds(10, 5, 80, 20);
+
+        jPanel3.add(jPanelCard3);
+        jPanelCard3.setBounds(360, 85, 150, 45);
+
+        jScrollPaneTable.setViewportView(jTableGrades);
 
         jPanel3.add(jScrollPaneTable);
-        jScrollPaneTable.setBounds(30, 130, 480, 250);
+        jScrollPaneTable.setBounds(30, 140, 480, 190);
 
-        jPanel3.add(jComboBoxCourse);
-        jComboBoxCourse.setBounds(190, 85, 160, 25);
-
-        jPanel3.add(jComboBoxSection);
-        jComboBoxSection.setBounds(370, 85, 140, 25);
+        jTextFieldStudentId.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        jTextFieldStudentId.setForeground(new java.awt.Color(128, 128, 128));
+        jTextFieldStudentId.setText("Enter Student ID...");
+        jTextFieldStudentId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(224, 224, 224)));
+        jPanel3.add(jTextFieldStudentId);
+        jTextFieldStudentId.setBounds(30, 50, 130, 25);
 
         jPanel3.add(jComboBoxTerm);
-        jComboBoxTerm.setBounds(30, 85, 140, 25);
+        jComboBoxTerm.setBounds(260, 50, 120, 25);
 
         jPanel1.add(jPanel3);
         jPanel3.setBounds(240, 0, 540, 480);
@@ -359,9 +453,14 @@ public class AcademicPerformanceFrame extends javax.swing.JFrame {
         }
 
         @Override
-        public int getIconWidth() { return this.size; }
+        public int getIconWidth() {
+            return this.size;
+        }
+
         @Override
-        public int getIconHeight() { return this.size; }
+        public int getIconHeight() {
+            return this.size;
+        }
 
         @Override
         public void paintIcon(Component c, Graphics g, int x, int y) {
@@ -458,23 +557,38 @@ public class AcademicPerformanceFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton9;
-    private javax.swing.JButton jButtonAddStudent;
     private javax.swing.JButton jButtonBack;
-    private javax.swing.JButton jButtonReset;
-    private javax.swing.JButton jButtonSaveMarks;
-    private javax.swing.JComboBox<String> jComboBoxCourse;
-    private javax.swing.JComboBox<String> jComboBoxSection;
+    private javax.swing.JButton jButtonCompute;
+    private javax.swing.JButton jButtonSearch;
     private javax.swing.JComboBox<String> jComboBoxTerm;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabelCourse;
-    private javax.swing.JLabel jLabelSection;
-    private javax.swing.JLabel jLabelTerm;
+    private javax.swing.JLabel jLabelCard1Icon;
+    private javax.swing.JLabel jLabelCard1Label;
+    private javax.swing.JLabel jLabelCard1Num;
+    private javax.swing.JLabel jLabelCard2Icon;
+    private javax.swing.JLabel jLabelCard2Label;
+    private javax.swing.JLabel jLabelCard2Num;
+    private javax.swing.JLabel jLabelCard3Icon;
+    private javax.swing.JLabel jLabelCard3Label;
+    private javax.swing.JLabel jLabelCard3Num;
+    private javax.swing.JLabel jLabelGpa;
+    private javax.swing.JLabel jLabelGpaVal;
+    private javax.swing.JLabel jLabelGrade;
+    private javax.swing.JLabel jLabelGradeVal;
+    private javax.swing.JLabel jLabelPercent;
+    private javax.swing.JLabel jLabelPercentVal;
+    private javax.swing.JLabel jLabelStudentNameVal;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanelBottom;
+    private javax.swing.JPanel jPanelCard1;
+    private javax.swing.JPanel jPanelCard2;
+    private javax.swing.JPanel jPanelCard3;
     private javax.swing.JScrollPane jScrollPaneTable;
-    private javax.swing.JTable jTableMarks;
+    private javax.swing.JTable jTableGrades;
+    private javax.swing.JTextField jTextFieldStudentId;
     // End of variables declaration//GEN-END:variables
 
     @Override
