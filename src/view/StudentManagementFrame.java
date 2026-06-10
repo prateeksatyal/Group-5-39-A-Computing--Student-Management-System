@@ -19,7 +19,12 @@ extends JFrame {
 
     public StudentManagementFrame() {
         this.initComponents();
-        this.setupMenuIcons();
+        this.setResizable(true);
+        this.jPanel1.setPreferredSize(new java.awt.Dimension(780, 480));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(this.jPanel1);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        this.setContentPane(scrollPane);
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         }
@@ -27,6 +32,10 @@ extends JFrame {
             // empty catch block
         }
     }
+
+    public javax.swing.JLabel getTitleLabel() { return jLabel1; }
+    public javax.swing.JLabel getCardIconLabel() { return jLabelCardIcon; }
+
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -198,7 +207,7 @@ extends JFrame {
         jButtonAdd.setForeground(new java.awt.Color(255, 255, 255));
         jButtonAdd.setFocusPainted(false);
         jPanelCRUD.add(jButtonAdd);
-        jButtonAdd.setBounds(30, 15, 115, 35);
+        jButtonAdd.setBounds(15, 15, 115, 35);
 
         jButtonUpdate.setText("Update/Search");
         jButtonUpdate.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -206,19 +215,19 @@ extends JFrame {
         jButtonUpdate.setForeground(new java.awt.Color(255, 255, 255));
         jButtonUpdate.setFocusPainted(false);
         jPanelCRUD.add(jButtonUpdate);
-        jButtonUpdate.setBounds(160, 15, 125, 35);
+        jButtonUpdate.setBounds(145, 15, 125, 35);
 
         jButtonDelete.setText("Delete");
         jButtonDelete.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonDelete.setFocusPainted(false);
         jPanelCRUD.add(jButtonDelete);
-        jButtonDelete.setBounds(300, 15, 80, 35);
+        jButtonDelete.setBounds(285, 15, 85, 35);
 
         jButtonBack.setText("Back");
         jButtonBack.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonBack.setFocusPainted(false);
         jPanelCRUD.add(jButtonBack);
-        jButtonBack.setBounds(395, 15, 70, 35);
+        jButtonBack.setBounds(385, 15, 80, 35);
 
         jPanel3.add(jPanelCRUD);
         jPanelCRUD.setBounds(30, 395, 480, 65);
@@ -283,11 +292,11 @@ extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 940, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         pack();
@@ -366,67 +375,9 @@ extends JFrame {
         return this.jButtonBack;
     }
 
-    private void setupMenuIcons() {
-        Color whiteColor = Color.WHITE;
-        Color activeColor = new Color(11, 27, 226);
-        this.jLabel1.setText("SMS");
-        this.jLabel1.setIcon(new VectorIcon("hamburger", 20, whiteColor));
-        this.jLabel1.setIconTextGap(12);
-        this.jButton1.setText("Dashboard");
-        this.jButton1.setIconTextGap(12);
-        this.jButton2.setText("Students Management");
-        this.jButton2.setIconTextGap(12);
-        this.jButton3.setText("Courses Management");
-        this.jButton3.setIconTextGap(12);
-        this.jButton4.setText("Attendance Management");
-        this.jButton4.setIconTextGap(12);
-        this.jButton5.setText("Academic Performance");
-        this.jButton5.setIconTextGap(12);
-        this.jButton6.setText("Grade Computation");
-        this.jButton6.setIconTextGap(12);
-        this.jButton7.setText("Result Generation");
-        this.jButton7.setIconTextGap(12);
-        this.jButton8.setText("Reports Export");
-        this.jButton8.setIconTextGap(12);
-        this.jButton9.setText("Profile");
-        this.jButton9.setIconTextGap(12);
-        this.jButton10.setText("Logout");
-        this.jButton10.setIconTextGap(12);
-        this.setActiveMenuItem(this.jButton2);
 
-        this.jLabelCardIcon.setText("");
-        this.jLabelCardIcon.setIcon(new VectorIcon("students", 40, activeColor));
-        this.jButtonRefresh.setIcon(new VectorIcon("reports", 20, activeColor));
-    }
 
-    public void setActiveMenuItem(JButton activeBtn) {
-        Color whiteColor = Color.WHITE;
-        Color activeColor = new Color(11, 27, 226);
-        Color activeBg = new Color(243, 227, 225);
-        Color normalColor = new Color(11, 27, 226);
-        Color normalBg = new Color(224, 242, 248);
-        JButton[] buttons = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9, this.jButton10};
-        String[] types = new String[]{"dashboard", "students", "courses", "attendance", "performance", "grade", "result", "reports", "profile", "logout"};
-        for (int i = 0; i < buttons.length; ++i) {
-            JButton btn = buttons[i];
-            String type = types[i];
-            if (btn == activeBtn) {
-                btn.setBackground(activeBg);
-                btn.setForeground(activeColor);
-                btn.setContentAreaFilled(true);
-                btn.setOpaque(true);
-                btn.setIcon(new VectorIcon(type, 28, whiteColor));
-                continue;
-            }
-            btn.setBackground(normalBg);
-            btn.setForeground(normalColor);
-            btn.setContentAreaFilled(true);
-            btn.setOpaque(true);
-            btn.setIcon(new VectorIcon(type, 28, activeColor));
-        }
-    }
-
-    private static class VectorIcon
+    public static class VectorIcon
     implements Icon {
         private final String type;
         private final int size;
@@ -591,4 +542,11 @@ extends JFrame {
     private javax.swing.JTable jTableStudents;
     private javax.swing.JTextField jTextFieldSearch;
     // End of variables declaration//GEN-END:variables
+
+
+
+    @Override
+    public java.awt.Dimension getPreferredSize() {
+        return new java.awt.Dimension(780, 480);
+    }
 }
