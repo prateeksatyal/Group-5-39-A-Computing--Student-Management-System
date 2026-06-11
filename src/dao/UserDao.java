@@ -19,12 +19,12 @@ public class UserDao {
         try (Connection conn = mysql.openConnection();
              PreparedStatement pstm = conn.prepareStatement(sql)) {
             
-            pstm.setString(1, user.getUserName());
-            pstm.setString(2, user.getEmail());
-            pstm.setString(3, user.getEmail());
-            pstm.setString(4, user.getPassword());
-            pstm.setString(5, user.getPassword());
-            pstm.setString(6, user.getRole());
+            pstm.setString(1, user.getUserName());       // full_name column
+            pstm.setString(2, user.getEmail());           // username column (email as login ID)
+            pstm.setString(3, user.getEmail());           // email column
+            pstm.setString(4, user.getPassword());        // password column
+            pstm.setString(5, user.getPassword());        // confirm_password column
+            pstm.setString(6, user.getRole());            // role column
             pstm.executeUpdate();
             return true;
            
@@ -64,10 +64,13 @@ public class UserDao {
             
             try (ResultSet rs = pstm.executeQuery()) {
                 if (rs.next()) {
+                    // IMPORTANT: UserData(username, password, email, role)
+                    // getUserName() must return the login email so controllers
+                    // can look up student records by email.
                     UserData user = new UserData(
-                        rs.getString("full_name"),
+                        rs.getString("email"),      // username = login email
                         rs.getString("password"),
-                        rs.getString("email"),
+                        rs.getString("email"),       // email
                         rs.getString("role")
                     );
                     user.setUserId(rs.getInt("user_id"));
@@ -94,5 +97,22 @@ public class UserDao {
             System.out.println("Error in updatePassword: " + e.getMessage());
             return false;
         }
+    }
+
+    // === GET FULL NAME BY EMAIL ===
+    public String getFullNameByEmail(String email) {
+        String sql = "SELECT full_name FROM users WHERE email = ?";
+        try (Connection conn = mysql.openConnection();
+             PreparedStatement pstm = conn.prepareStatement(sql)) {
+            pstm.setString(1, email);
+            try (ResultSet rs = pstm.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("full_name");
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error in getFullNameByEmail: " + e.getMessage());
+        }
+        return null;
     }
 }
