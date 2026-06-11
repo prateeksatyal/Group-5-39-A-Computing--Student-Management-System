@@ -17,20 +17,26 @@ public class EditPersonalDetails extends javax.swing.JFrame {
      */
     public EditPersonalDetails() {
         initComponents();
+        this.setResizable(true);
+        btnSaveProfile.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        btnSaveProfile.setBorder(null);
         setupNavPanels();
         addPlaceholders();
+
+        java.awt.Container cp = getContentPane();
+        javax.swing.JPanel mainPanel = new javax.swing.JPanel(null);
+        mainPanel.setBackground(new java.awt.Color(249, 226, 226));
+        mainPanel.setPreferredSize(new java.awt.Dimension(480, 520));
+        java.awt.Component[] comps = cp.getComponents();
+        for (java.awt.Component comp : comps) {
+            mainPanel.add(comp);
+        }
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(mainPanel);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        setContentPane(scrollPane);
+
         setLocationRelativeTo(null);
-         // Profile button → goes to AdminDashboard
-        btnSaveProfile.addActionListener(e -> {
-            new AdminDashboard().setVisible(true);
-            dispose();
-        });
-    
-        // Cancel button → goes back to AdminDashboard
-        btnCancel.addActionListener(e -> {
-            new AdminDashboard().setVisible(true);
-            dispose();
-        });
     }
 
     /**
@@ -57,95 +63,71 @@ public class EditPersonalDetails extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(249, 226, 226));
-        setPreferredSize(new java.awt.Dimension(910, 720));
-        setSize(new java.awt.Dimension(910, 720));
+        setSize(new java.awt.Dimension(480, 520));
         getContentPane().setLayout(null);
 
         jLabel2.setFont(new java.awt.Font("Arial Black", 1, 18)); // NOI18N
         jLabel2.setText("Edit Profile");
         getContentPane().add(jLabel2);
-        jLabel2.setBounds(90, 10, 340, 26);
+        jLabel2.setBounds(30, 20, 420, 35);
 
         txtFullName.setText("Enter your full name");
         getContentPane().add(txtFullName);
-        txtFullName.setBounds(260, 160, 450, 33);
+        txtFullName.setBounds(130, 90, 320, 30);
 
         txtEmail.setText("Enter your email");
         getContentPane().add(txtEmail);
-        txtEmail.setBounds(260, 210, 450, 33);
+        txtEmail.setBounds(130, 150, 320, 30);
 
         txtPhoneNumber.setText("Enter your number");
         getContentPane().add(txtPhoneNumber);
-        txtPhoneNumber.setBounds(260, 260, 450, 33);
+        txtPhoneNumber.setBounds(130, 210, 320, 30);
 
         txtAddress.setText("Enter your address");
         getContentPane().add(txtAddress);
-        txtAddress.setBounds(260, 310, 450, 33);
+        txtAddress.setBounds(130, 270, 320, 30);
 
         jLabel3.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel3.setText("Full Name:");
         getContentPane().add(jLabel3);
-        jLabel3.setBounds(150, 160, 320, 17);
+        jLabel3.setBounds(30, 90, 100, 30);
 
         jLabel4.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel4.setText("Email:");
         getContentPane().add(jLabel4);
-        jLabel4.setBounds(150, 210, 270, 17);
+        jLabel4.setBounds(30, 150, 100, 30);
 
         jLabel5.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel5.setText("Phone:");
         getContentPane().add(jLabel5);
-        jLabel5.setBounds(150, 260, 260, 17);
+        jLabel5.setBounds(30, 210, 100, 30);
 
         jLabel6.setFont(new java.awt.Font("SansSerif", 1, 14)); // NOI18N
         jLabel6.setText("Address:");
         getContentPane().add(jLabel6);
-        jLabel6.setBounds(150, 310, 280, 17);
+        jLabel6.setBounds(30, 270, 100, 30);
 
         btnSaveProfile.setBackground(new java.awt.Color(51, 51, 255));
         btnSaveProfile.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         btnSaveProfile.setForeground(new java.awt.Color(255, 255, 255));
         btnSaveProfile.setText("Save Profile");
         getContentPane().add(btnSaveProfile);
-        btnSaveProfile.setBounds(220, 400, 160, 32);
+        btnSaveProfile.setBounds(30, 400, 190, 35);
 
         btnCancel.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         btnCancel.setText("Cancel");
         getContentPane().add(btnCancel);
-        btnCancel.setBounds(570, 400, 150, 32);
+        btnCancel.setBounds(260, 400, 190, 35);
 
         jLabel1.setBackground(new java.awt.Color(249, 226, 226));
         jLabel1.setOpaque(true);
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(0, 0, 910, 720);
+        jLabel1.setBounds(0, 0, 480, 520);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new EditPersonalDetails().setVisible(true));
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancel;
@@ -211,5 +193,34 @@ private void addPlaceholder(javax.swing.JTextField field, String placeholder) {
             }
         }
     });
+}
+
+@Override
+public java.awt.Dimension getPreferredSize() {
+    return new java.awt.Dimension(480, 520);
+}
+
+public javax.swing.JButton getSaveProfileButton() {
+    return btnSaveProfile;
+}
+
+public javax.swing.JButton getCancelButton() {
+    return btnCancel;
+}
+
+public javax.swing.JTextField getFullNameField() {
+    return txtFullName;
+}
+
+public javax.swing.JTextField getEmailField() {
+    return txtEmail;
+}
+
+public javax.swing.JTextField getPhoneNumberField() {
+    return txtPhoneNumber;
+}
+
+public javax.swing.JTextField getAddressField() {
+    return txtAddress;
 }
 }
