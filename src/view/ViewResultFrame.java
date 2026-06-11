@@ -42,55 +42,12 @@ extends JFrame {
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         this.setContentPane(scrollPane);
-        this.setupMenuIcons();
-        // Wire stat card labels into their panels
-        setupStatCards();
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         }
         catch (Exception exception) {
             // empty catch block
         }
-    }
-
-    private void setupStatCards() {
-        // Initialise card panels with summary labels so ResultController can update them
-        java.awt.Font numFont = new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 20);
-        java.awt.Font lblFont = new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 11);
-        java.awt.Color numColor = new java.awt.Color(28, 39, 50);
-
-        jLabelGpaVal.setFont(numFont); jLabelGpaVal.setForeground(numColor);
-        jLabelGpaVal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
-        jLabelPercentVal.setFont(numFont); jLabelPercentVal.setForeground(numColor);
-        jLabelPercentVal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
-        jLabelGradeVal.setFont(numFont); jLabelGradeVal.setForeground(numColor);
-        jLabelGradeVal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-
-        // Add to card panels
-        jPanelCard1.setBackground(new java.awt.Color(248,249,250));
-        jPanelCard1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220,220,220)));
-        jPanelCard1.setLayout(new java.awt.BorderLayout());
-        javax.swing.JLabel l1 = new javax.swing.JLabel("Overall GPA", javax.swing.SwingConstants.CENTER);
-        l1.setFont(lblFont); jPanelCard1.add(jLabelGpaVal, java.awt.BorderLayout.CENTER); jPanelCard1.add(l1, java.awt.BorderLayout.SOUTH);
-
-        jPanelCard2.setBackground(new java.awt.Color(248,249,250));
-        jPanelCard2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220,220,220)));
-        jPanelCard2.setLayout(new java.awt.BorderLayout());
-        javax.swing.JLabel l2 = new javax.swing.JLabel("Percentage", javax.swing.SwingConstants.CENTER);
-        l2.setFont(lblFont); jPanelCard2.add(jLabelPercentVal, java.awt.BorderLayout.CENTER); jPanelCard2.add(l2, java.awt.BorderLayout.SOUTH);
-
-        jPanelCard3.setBackground(new java.awt.Color(248,249,250));
-        jPanelCard3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220,220,220)));
-        jPanelCard3.setLayout(new java.awt.BorderLayout());
-        javax.swing.JLabel l3 = new javax.swing.JLabel("Overall Grade", javax.swing.SwingConstants.CENTER);
-        l3.setFont(lblFont); jPanelCard3.add(jLabelGradeVal, java.awt.BorderLayout.CENTER); jPanelCard3.add(l3, java.awt.BorderLayout.SOUTH);
-
-        // Position card panels on the main panel
-        jPanelCard1.setBounds(270,  70, 190, 110);
-        jPanelCard2.setBounds(470,  70, 190, 110);
-        jPanelCard3.setBounds(670,  70, 190, 110);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -252,89 +209,24 @@ extends JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-private void setupSidebarButton(JButton btn, String text, int y, boolean isActive) {
-        btn.setFont(new Font("Segoe UI", 0, 14));
-        btn.setForeground(new Color(255, 255, 255));
-        btn.setText(text);
-        btn.setBorder(null);
-        btn.setContentAreaFilled(false);
-        btn.setFocusPainted(false);
-        btn.setHorizontalAlignment(2);
-        btn.setBounds(10, y, 220, 32);
-        btn.setCursor(new Cursor(12));
-        if (isActive) {
-            btn.setBackground(new Color(243, 227, 225));
-            btn.setForeground(new Color(11, 27, 226));
-            btn.setContentAreaFilled(true);
-        } else {
-            this.addSidebarHoverEffects(btn);
-        }
+
+    public javax.swing.JLabel getTitleLabel() {
+        return this.jLabelHeader;
     }
 
-    private void addSidebarHoverEffects(final JButton btn) {
-        btn.addMouseListener(new MouseAdapter(){
-            
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                btn.setContentAreaFilled(true);
-                btn.setBackground(new Color(40, 55, 70));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!btn.isFocusOwner()) {
-                    btn.setContentAreaFilled(false);
-                }
-            }
-        });
-        btn.addFocusListener(new FocusListener(){
-            
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                btn.setContentAreaFilled(true);
-                btn.setBackground(new Color(50, 70, 90));
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                btn.setContentAreaFilled(false);
-            }
-        });
+    public javax.swing.JPanel getCard1Panel() {
+        return this.jPanelCard1;
     }
 
-    private void setupScoreCard(JPanel card, JLabel valLbl, String val, JLabel lbl, String text, int x, int y) {
-        card.setBackground(new Color(248, 249, 250));
-        card.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
-        card.setLayout(null);
-        card.setBounds(x, y, 190, 110);
-        valLbl.setFont(new Font("Segoe UI", 1, 28));
-        valLbl.setForeground(new Color(28, 39, 50));
-        valLbl.setHorizontalAlignment(0);
-        valLbl.setText(val);
-        card.add(valLbl);
-        valLbl.setBounds(10, 15, 170, 40);
-        lbl.setFont(new Font("Segoe UI", 0, 13));
-        lbl.setForeground(new Color(120, 120, 120));
-        lbl.setHorizontalAlignment(0);
-        lbl.setText(text);
-        card.add(lbl);
-        lbl.setBounds(10, 65, 170, 20);
+    public javax.swing.JPanel getCard2Panel() {
+        return this.jPanelCard2;
     }
 
-    private void setupMenuIcons() {
-        try {
-            this.jButtonDashboard.setIcon(new ImageIcon(this.getClass().getResource("/images/home.png")));
-            this.jButtonProfile.setIcon(new ImageIcon(this.getClass().getResource("/images/user.png")));
-            this.jButtonAttendance.setIcon(new ImageIcon(this.getClass().getResource("/images/attendance.png")));
-            this.jButtonCourses.setIcon(new ImageIcon(this.getClass().getResource("/images/course.png")));
-            this.jButtonDownloadResult.setIcon(new ImageIcon(this.getClass().getResource("/images/result.png")));
-        }
-        catch (Exception exception) {
-            // empty catch block
-        }
+    public javax.swing.JPanel getCard3Panel() {
+        return this.jPanelCard3;
     }
+
+
 
     public JLabel getStudentIdLabel() {
         return this.jLabelStudentId;
