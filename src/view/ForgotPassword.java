@@ -23,61 +23,21 @@ public class ForgotPassword extends JFrame {
 
     public ForgotPassword() {
         this.initComponents();
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-                ForgotPassword.this.getContentPane().setFocusable(true);
-                ForgotPassword.this.getContentPane().requestFocusInWindow();
-            }
-        });
-        this.addButtonEffects();
+        this.setResizable(true);
+        this.jPanel1.setPreferredSize(new java.awt.Dimension(680, 480));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(this.jPanel1);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        this.setContentPane(scrollPane);
+
+        // Set BasicButtonUI for Update and Cancel buttons to render solid background under Nimbus
+        this.jButton1.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.jButton1.setBorder(null);
+        this.jButton2.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.jButton2.setBorder(javax.swing.BorderFactory.createLineBorder(java.awt.Color.WHITE));
     }
 
-    private void addButtonEffects() {
-        this.jButton1.setCursor(new Cursor(12));
-        this.jButton1.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                jButton1.setBorder(BorderFactory.createLineBorder(Color.WHITE, 2));
-            }
-            @Override
-            public void focusLost(FocusEvent e) {
-                jButton1.setBorder(null);
-            }
-        });
-        this.jButton1.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                jButton1.setBackground(new Color(5, 18, 180));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                jButton1.setBackground(new Color(11, 27, 226));
-            }
-        });
 
-        this.jButton2.setCursor(new Cursor(12));
-        this.jButton2.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                jButton2.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-            }
-            @Override
-            public void focusLost(FocusEvent e) {
-                jButton2.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
-            }
-        });
-        this.jButton2.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                jButton2.setBackground(new Color(240, 240, 240));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                jButton2.setBackground(Color.WHITE);
-            }
-        });
-    }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -183,83 +143,6 @@ public class ForgotPassword extends JFrame {
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
-
-        // Wire Focus Listeners programmatically
-        jTextField1.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                jTextField1.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-                if ("Enter email".equals(jTextField1.getText())) {
-                    jTextField1.setText("");
-                    jTextField1.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                jTextField1.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
-                if (jTextField1.getText().trim().isEmpty()) {
-                    jTextField1.setText("Enter email");
-                    jTextField1.setForeground(new Color(128, 128, 128));
-                }
-            }
-        });
-
-        jPasswordField1.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                jPasswordField1.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-                String pass = new String(jPasswordField1.getPassword());
-                if ("New password".equals(pass)) {
-                    jPasswordField1.setText("");
-                    jPasswordField1.setEchoChar('\u2022');
-                    jPasswordField1.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                jPasswordField1.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
-                String pass = new String(jPasswordField1.getPassword());
-                if (pass.trim().isEmpty()) {
-                    jPasswordField1.setText("New password");
-                    jPasswordField1.setEchoChar('\u0000');
-                    jPasswordField1.setForeground(new Color(128, 128, 128));
-                }
-            }
-        });
-
-        jPasswordField2.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                jPasswordField2.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-                String pass = new String(jPasswordField2.getPassword());
-                if ("Confirm password".equals(pass)) {
-                    jPasswordField2.setText("");
-                    jPasswordField2.setEchoChar('\u2022');
-                    jPasswordField2.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                jPasswordField2.setBorder(BorderFactory.createLineBorder(Color.WHITE, 1));
-                String pass = new String(jPasswordField2.getPassword());
-                if (pass.trim().isEmpty()) {
-                    jPasswordField2.setText("Confirm password");
-                    jPasswordField2.setEchoChar('\u0000');
-                    jPasswordField2.setForeground(new Color(128, 128, 128));
-                }
-            }
-        });
-
-        // Setup clear-text placeholders initially
-        jPasswordField1.setEchoChar('\u0000');
-        jPasswordField2.setEchoChar('\u0000');
-
-        // Apply BasicButtonUI for flat Nimbus rendering
-        jButton1.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        jButton2.setUI(new javax.swing.plaf.basic.BasicButtonUI());
 
         pack();
         setLocationRelativeTo(null);

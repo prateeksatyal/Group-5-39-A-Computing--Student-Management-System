@@ -3,7 +3,7 @@
  */
 package view;
 
-import controller.LoginController;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.EventQueue;
@@ -38,128 +38,17 @@ extends JFrame {
 
     public Login() {
         this.initComponents();
+        this.setResizable(true);
+        this.jPanel1.setPreferredSize(new java.awt.Dimension(680, 480));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(this.jPanel1);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        this.setContentPane(scrollPane);
         this.jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Role", "Student", "Admin", "Teacher" }));
-        this.addWindowListener(new WindowAdapter(){
-
-            @Override
-            public void windowOpened(WindowEvent e) {
-                Login.this.getContentPane().setFocusable(true);
-                Login.this.getContentPane().requestFocusInWindow();
-            }
-        });
-
-        // Register focus listeners to invoke the view's focus design methods
-        this.jTextField1.addFocusListener(new java.awt.event.FocusListener() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                jTextField1FocusGained(e);
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                jTextField1FocusLost(e);
-            }
-        });
-
-        this.jPasswordField1.addFocusListener(new java.awt.event.FocusListener() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                jPasswordField1FocusGained(e);
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                jPasswordField1FocusLost(e);
-            }
-        });
-
-        // Set initial echo char for password field placeholder to plain text
-        this.jPasswordField1.setEchoChar('\u0000');
 
         // Set BasicButtonUI for Login button to render solid blue background under Nimbus
         this.jButton1.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-
-        this.addLoginButtonEffects();
-    }
-
-    private void addLoginButtonEffects() {
-        this.jButton1.setCursor(new Cursor(12));
-        this.jButton1.addFocusListener(new FocusListener(){
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                Login.this.jButton1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 2));
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                Login.this.jButton1.setBorder(null);
-            }
-        });
-        this.jButton1.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                Login.this.jButton1.setBackground(new Color(5, 18, 180));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                Login.this.jButton1.setBackground(new Color(11, 27, 226));
-            }
-        });
-        this.jButton2.setCursor(new Cursor(12));
-        this.jButton2.addFocusListener(new FocusListener(){
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                Login.this.jButton2.setForeground(new Color(11, 27, 226));
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                Login.this.jButton2.setForeground(new Color(0, 0, 0));
-            }
-        });
-        this.jButton2.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                Login.this.jButton2.setForeground(new Color(11, 27, 226));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!Login.this.jButton2.isFocusOwner()) {
-                    Login.this.jButton2.setForeground(new Color(0, 0, 0));
-                }
-            }
-        });
-        this.jButton3.setCursor(new Cursor(12));
-        this.jButton3.addFocusListener(new FocusListener(){
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                Login.this.jButton3.setForeground(new Color(11, 27, 226));
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                Login.this.jButton3.setForeground(new Color(0, 51, 255));
-            }
-        });
-        this.jButton3.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                Login.this.jButton3.setForeground(new Color(11, 27, 226));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!Login.this.jButton3.isFocusOwner()) {
-                    Login.this.jButton3.setForeground(new Color(0, 51, 255));
-                }
-            }
-        });
+        this.jButton1.setBorder(null);
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -218,11 +107,12 @@ extends JFrame {
         jPanel2.setBackground(new java.awt.Color(243, 227, 225));
         jPanel2.setLayout(null);
 
-        jButton1.setText("Login");
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jButton1.setBackground(new java.awt.Color(11, 27, 226));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 15)); // NOI18N
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Login");
         jButton1.setFocusPainted(false);
+        jButton1.addActionListener(this::jButton1ActionPerformed);
         jPanel2.add(jButton1);
         jButton1.setBounds(40, 285, 370, 32);
 
@@ -307,7 +197,7 @@ extends JFrame {
         jComboBox1.setBounds(180, 230, 230, 30);
 
         jPanel1.add(jPanel2);
-        jPanel2.setBounds(230, 0, 450, 430);
+        jPanel2.setBounds(230, 0, 450, 480);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -317,54 +207,24 @@ extends JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 429, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 480, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {                                                                                
-        this.jTextField1.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-        if (this.jTextField1.getText().equals("Enter email or ID")) {
-            this.jTextField1.setText("");
-            this.jTextField1.setForeground(new Color(0, 0, 0));
-        }
-    }                                                                              
 
-    private void jTextField1FocusLost(java.awt.event.FocusEvent evt) {                                                                            
-        this.jTextField1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
-        if (this.jTextField1.getText().isEmpty()) {
-            this.jTextField1.setText("Enter email or ID");
-            this.jTextField1.setForeground(new Color(128, 128, 128));
-        }
-    }                                                                          
-
-    private void jPasswordField1FocusGained(java.awt.event.FocusEvent evt) {                                                                                        
-        this.jPanel3.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-        String pass = new String(this.jPasswordField1.getPassword());
-        if (pass.equals("Enter password")) {
-            this.jPasswordField1.setText("");
-            if (!this.jToggleButton1.isSelected()) {
-                this.jPasswordField1.setEchoChar('\u2022');
-            } else {
-                this.jPasswordField1.setEchoChar('\u0000');
-            }
-            this.jPasswordField1.setForeground(new Color(0, 0, 0));
-        }
-    }                                                                                      
-
-    private void jPasswordField1FocusLost(java.awt.event.FocusEvent evt) {                                                                                    
-        this.jPanel3.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
-        String pass = new String(this.jPasswordField1.getPassword());
-        if (pass.isEmpty()) {
-            this.jPasswordField1.setText("Enter password");
-            this.jPasswordField1.setEchoChar('\u0000');
-            this.jPasswordField1.setForeground(new Color(128, 128, 128));
-        }
-    }                                                                                  
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+    // Focus and styling behaviors refactored to LoginController                                                                                  
 
     public JToggleButton getEyeToggleButton() {
         return this.jToggleButton1;
+    }
+
+    public javax.swing.JPanel getPasswordPanel() {
+        return this.jPanel3;
     }
 
     public JButton getLoginButton() {
@@ -396,23 +256,7 @@ private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {
         return new java.awt.Dimension(680, 480);
     }
 
-    public static void main(String[] args) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (!"Nimbus".equals(info.getName())) continue;
-                UIManager.setLookAndFeel(info.getClassName());
-                break;
-            }
-        }
-        catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        EventQueue.invokeLater(() -> {
-            Login loginView = new Login();
-            LoginController controller = new LoginController(loginView);
-            controller.open();
-        });
-    }
+
 
                        
 

@@ -1,15 +1,9 @@
 package view;
 
-import controller.LogoutController;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import controller.UserSession;
-import dao.StudentDAO;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
@@ -20,47 +14,26 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.UIManager;
 import javax.swing.border.SoftBevelBorder;
-import model.StudentData;
-import model.UserData;
 
 public class EditProfileFrame
 extends JFrame {
-    private static final Logger logger = Logger.getLogger(EditProfileFrame.class.getName());
-    private final StudentDAO studentDAO = new StudentDAO();
-    private StudentData currentStudent;
 
     public EditProfileFrame() {
         this.initComponents();
-        this.setupMenuIcons();
-        this.addHoverEffects();
-        this.loadProfileData();
-        LogoutController.wireLogout(this, this.getLogoutButton());
-        
-        // this.jButtonDashboard.addActionListener(e -> {
-        //     this.dispose();
-        //     EventQueue.invokeLater(() -> new StudentDashboard().setVisible(true));
-        // });
-        this.jButtonProfile.addActionListener(e -> {
-            this.dispose();
-            EventQueue.invokeLater(() -> new ViewStudentProfile().setVisible(true));
-        });
-        // this.jButtonAttendance.addActionListener(e -> {
-        //     this.dispose();
-        //     EventQueue.invokeLater(() -> new AttendanceSummaryFrame().setVisible(true));
-        // });
-        // this.jButtonCourses.addActionListener(e -> {
-        //     this.dispose();
-        //     EventQueue.invokeLater(() -> new ViewAssignedCourseFrame().setVisible(true));
-        // });
-        // this.jButtonResults.addActionListener(e -> {
-        //     this.dispose();
-        //     EventQueue.invokeLater(() -> new ViewResultFrame().setVisible(true));
-        // });
+        this.setResizable(true);
+
+
+        this.jPanelMain.setPreferredSize(new java.awt.Dimension(950, 500));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(this.jPanelMain);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        this.setContentPane(scrollPane);
+
+        // All navigation, profile loading, hover effects, icons, and logout
+        // are wired by EditProfileController (MVC pattern).
         
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
@@ -299,135 +272,34 @@ extends JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanelMain, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 990, Short.MAX_VALUE)
+            .add(jPanelMain, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
-        if (this.currentStudent == null) {
-            return;
-        }
-        
-        String name = this.jTextFieldName.getText().trim();
-        String email = this.jTextFieldEmail.getText().trim();
-        String phone = this.jTextFieldPhone.getText().trim();
-        String gender = (String) this.jComboBoxGender.getSelectedItem();
-        String address = this.jTextFieldAddress.getText().trim();
-        
-        if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || address.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please fill in all details!", "Validation Error", 2);
-            return;
-        }
-        
-        // Update StudentData object
-        this.currentStudent.setFullName(name);
-        this.currentStudent.setEmail(email);
-        this.currentStudent.setPhoneNumber(phone);
-        this.currentStudent.setGender(gender);
-        this.currentStudent.setAddress(address);
-        
-        boolean success = this.studentDAO.updateStudent(this.currentStudent);
-        if (success) {
-            JOptionPane.showMessageDialog(this, "Profile updated successfully!", "Success", 1);
-            this.dispose();
-            EventQueue.invokeLater(() -> new ViewStudentProfile().setVisible(true));
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to update profile. Please try again.", "Error", 0);
-        }
-    }//GEN-LAST:event_jButtonSaveActionPerformed
+    // All business logic (save, cancel, profile loading, hover effects, icons)
+    // is handled by EditProfileController — MVC pattern.
 
-    private void jButtonCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelActionPerformed
-        this.dispose();
-        EventQueue.invokeLater(() -> new ViewStudentProfile().setVisible(true));
-    }//GEN-LAST:event_jButtonCancelActionPerformed
+    public JButton getLogoutButton()     { return this.jButtonLogout; }
+    public JButton getSaveButton()       { return this.jButtonSave; }
+    public JButton getCancelButton()     { return this.jButtonCancel; }
+    public JButton getDashboardButton()  { return this.jButtonDashboard; }
+    public JButton getProfileButton()    { return this.jButtonProfile; }
+    public JButton getAttendanceButton() { return this.jButtonAttendance; }
+    public JButton getCoursesButton()    { return this.jButtonCourses; }
+    public JButton getResultsButton()    { return this.jButtonResults; }
 
-    private void setupMenuIcons() {
-        try {
-            this.jButtonDashboard.setIcon(new ImageIcon(this.getClass().getResource("/images/home.png")));
-            this.jButtonProfile.setIcon(new ImageIcon(this.getClass().getResource("/images/user.png")));
-            this.jButtonAttendance.setIcon(new ImageIcon(this.getClass().getResource("/images/attendance.png")));
-            this.jButtonCourses.setIcon(new ImageIcon(this.getClass().getResource("/images/course.png")));
-            this.jButtonResults.setIcon(new ImageIcon(this.getClass().getResource("/images/result.png")));
-            this.jButtonLogout.setIcon(new ImageIcon(this.getClass().getResource("/images/logout.png")));
-        } catch (Exception e) {
-            // ignore
-        }
-    }
+    public JTextField getNameField()    { return this.jTextFieldName; }
+    public JTextField getEmailField()   { return this.jTextFieldEmail; }
+    public JTextField getPhoneField()   { return this.jTextFieldPhone; }
+    public JTextField getAddressField() { return this.jTextFieldAddress; }
+    public JComboBox  getGenderCombo()  { return this.jComboBoxGender; }
 
-    private void addHoverEffects() {
-        JButton[] buttons = {this.jButtonDashboard, this.jButtonAttendance, this.jButtonCourses, this.jButtonResults, this.jButtonLogout};
-        for (JButton btn : buttons) {
-            btn.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseEntered(MouseEvent e) {
-                    btn.setContentAreaFilled(true);
-                    btn.setBackground(new Color(40, 55, 70));
-                }
-                @Override
-                public void mouseExited(MouseEvent e) {
-                    btn.setContentAreaFilled(false);
-                }
-            });
-        }
-        
-        this.jButtonSave.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                jButtonSave.setBackground(new Color(9, 21, 180));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                jButtonSave.setBackground(new Color(11, 27, 226));
-            }
-        });
-        
-        this.jButtonCancel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                jButtonCancel.setBackground(new Color(245, 245, 245));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                jButtonCancel.setBackground(new Color(255, 255, 255));
-            }
-        });
-    }
+    public JLabel getIdValueLabel()     { return this.jLabelIdVal; }
+    public JLabel getCourseValueLabel() { return this.jLabelCourseVal; }
 
-    private void loadProfileData() {
-        UserData user = UserSession.getCurrentUser();
-        if (user != null) {
-            String studentId = user.getUserName();
-            this.currentStudent = this.studentDAO.searchStudentById(studentId);
-            if (this.currentStudent != null) {
-                this.jLabelIdVal.setText(this.currentStudent.getStudentId());
-                this.jTextFieldName.setText(this.currentStudent.getFullName());
-                this.jTextFieldEmail.setText(this.currentStudent.getEmail());
-                this.jTextFieldPhone.setText(this.currentStudent.getPhoneNumber());
-                this.jLabelCourseVal.setText(this.currentStudent.getCourse());
-                this.jComboBoxGender.setSelectedItem(this.currentStudent.getGender());
-                this.jTextFieldAddress.setText(this.currentStudent.getAddress());
-            }
-        }
-    }
 
-    public JButton getLogoutButton() {
-        return this.jButtonLogout;
-    }
-
-    public static void main(String[] args) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (!"Nimbus".equals(info.getName())) continue;
-                UIManager.setLookAndFeel(info.getClassName());
-                break;
-            }
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-        EventQueue.invokeLater(() -> new EditProfileFrame().setVisible(true));
-    }
 
                        
 
@@ -461,4 +333,9 @@ private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-F
     private javax.swing.JTextField jTextFieldName;
     private javax.swing.JTextField jTextFieldPhone;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public java.awt.Dimension getPreferredSize() {
+        return new java.awt.Dimension(950, 500);
+    }
 }

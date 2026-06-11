@@ -3,7 +3,7 @@
  */
 package view;
 
-import controller.SignupController;
+
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.EventQueue;
@@ -38,151 +38,20 @@ extends JFrame {
 
     public Signup() {
         this.initComponents();
+        this.setResizable(true);
+        this.jPanel1.setPreferredSize(new java.awt.Dimension(680, 480));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(this.jPanel1);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        this.setContentPane(scrollPane);
         this.jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Role", "Student", "Admin", "Teacher" }));
         this.dummyImagePathField = new JTextField("");
-        this.addWindowListener(new WindowAdapter(){
-
-            @Override
-            public void windowOpened(WindowEvent e) {
-                Signup.this.getContentPane().setFocusable(true);
-                Signup.this.getContentPane().requestFocusInWindow();
-            }
-        });
-
-        // Register focus listeners to invoke the view's focus design methods
-        this.jTextField1.addFocusListener(new java.awt.event.FocusListener() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                jTextField1FocusGained(e);
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                jTextField1FocusLost(e);
-            }
-        });
-
-        this.jTextField2.addFocusListener(new java.awt.event.FocusListener() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                jTextField2FocusGained(e);
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                jTextField2FocusLost(e);
-            }
-        });
-
-        this.jPasswordField1.addFocusListener(new java.awt.event.FocusListener() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                jPasswordField1FocusGained(e);
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                jPasswordField1FocusLost(e);
-            }
-        });
-
-        this.jPasswordField2.addFocusListener(new java.awt.event.FocusListener() {
-            @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
-                jPasswordField2FocusGained(e);
-            }
-            @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
-                jPasswordField2FocusLost(e);
-            }
-        });
-
-        // Set initial echo char for password fields placeholders to plain text
-        this.jPasswordField1.setEchoChar('\u0000');
-        this.jPasswordField2.setEchoChar('\u0000');
 
         // Set BasicButtonUI for Register and Cancel buttons to render solid background under Nimbus
         this.jButton1.setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.jButton1.setBorder(null);
         this.jButton2.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-
-        this.addSignupButtonEffects();
-    }
-
-    private void addSignupButtonEffects() {
-        this.jButton1.setCursor(new Cursor(12));
-        this.jButton1.addFocusListener(new FocusListener(){
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                Signup.this.jButton1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 2));
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                Signup.this.jButton1.setBorder(null);
-            }
-        });
-        this.jButton1.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                Signup.this.jButton1.setBackground(new Color(5, 18, 180));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                Signup.this.jButton1.setBackground(new Color(11, 27, 226));
-            }
-        });
-        this.jButton2.setCursor(new Cursor(12));
-        this.jButton2.addFocusListener(new FocusListener(){
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                Signup.this.jButton2.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                Signup.this.jButton2.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
-            }
-        });
-        this.jButton2.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                Signup.this.jButton2.setBackground(new Color(240, 240, 240));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                Signup.this.jButton2.setBackground(new Color(255, 255, 255));
-            }
-        });
-        this.jButton3.setCursor(new Cursor(12));
-        this.jButton3.addFocusListener(new FocusListener(){
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                Signup.this.jButton3.setForeground(new Color(11, 27, 226));
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                Signup.this.jButton3.setForeground(new Color(0, 0, 0));
-            }
-        });
-        this.jButton3.addMouseListener(new MouseAdapter(){
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                Signup.this.jButton3.setForeground(new Color(11, 27, 226));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!Signup.this.jButton3.isFocusOwner()) {
-                    Signup.this.jButton3.setForeground(new Color(0, 0, 0));
-                }
-            }
-        });
+        this.jButton2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
     }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -302,6 +171,7 @@ extends JFrame {
         jPanel1.add(jTextField2);
         jTextField2.setBounds(280, 145, 320, 30);
 
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "", "", "", "" }));
         jComboBox1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jPanel1.add(jComboBox1);
         jComboBox1.setBounds(280, 280, 320, 30);
@@ -310,87 +180,17 @@ extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 800, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 680, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {                                                                                
-        this.jTextField1.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-        if (this.jTextField1.getText().equals("Enter full name")) {
-            this.jTextField1.setText("");
-            this.jTextField1.setForeground(new Color(0, 0, 0));
-        }
-    }                                                                              
-
-    private void jTextField1FocusLost(java.awt.event.FocusEvent evt) {                                                                            
-        this.jTextField1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
-        if (this.jTextField1.getText().isEmpty()) {
-            this.jTextField1.setText("Enter full name");
-            this.jTextField1.setForeground(new Color(128, 128, 128));
-        }
-    }                                                                          
-
-    private void jTextField2FocusGained(java.awt.event.FocusEvent evt) {                                                                                
-        this.jTextField2.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-        if (this.jTextField2.getText().equals("Enter email")) {
-            this.jTextField2.setText("");
-            this.jTextField2.setForeground(new Color(0, 0, 0));
-        }
-    }                                                                              
-
-    private void jTextField2FocusLost(java.awt.event.FocusEvent evt) {                                                                            
-        this.jTextField2.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
-        if (this.jTextField2.getText().isEmpty()) {
-            this.jTextField2.setText("Enter email");
-            this.jTextField2.setForeground(new Color(128, 128, 128));
-        }
-    }                                                                          
-
-    private void jPasswordField1FocusGained(java.awt.event.FocusEvent evt) {                                                                                        
-        this.jPasswordField1.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-        String pass = new String(this.jPasswordField1.getPassword());
-        if (pass.equals("Enter password")) {
-            this.jPasswordField1.setText("");
-            this.jPasswordField1.setEchoChar('\u2022');
-            this.jPasswordField1.setForeground(new Color(0, 0, 0));
-        }
-    }                                                                                      
-
-    private void jPasswordField1FocusLost(java.awt.event.FocusEvent evt) {                                                                                    
-        this.jPasswordField1.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
-        String pass = new String(this.jPasswordField1.getPassword());
-        if (pass.isEmpty()) {
-            this.jPasswordField1.setText("Enter password");
-            this.jPasswordField1.setEchoChar('\u0000');
-            this.jPasswordField1.setForeground(new Color(128, 128, 128));
-        }
-    }                                                                                  
-
-    private void jPasswordField2FocusGained(java.awt.event.FocusEvent evt) {                                                                                        
-        this.jPasswordField2.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-        String pass = new String(this.jPasswordField2.getPassword());
-        if (pass.equals("Confirm Password")) {
-            this.jPasswordField2.setText("");
-            this.jPasswordField2.setEchoChar('\u2022');
-            this.jPasswordField2.setForeground(new Color(0, 0, 0));
-        }
-    }                                                                                      
-
-    private void jPasswordField2FocusLost(java.awt.event.FocusEvent evt) {                                                                                    
-        this.jPasswordField2.setBorder(BorderFactory.createLineBorder(new Color(255, 255, 255), 1));
-        String pass = new String(this.jPasswordField2.getPassword());
-        if (pass.isEmpty()) {
-            this.jPasswordField2.setText("Confirm Password");
-            this.jPasswordField2.setEchoChar('\u0000');
-            this.jPasswordField2.setForeground(new Color(128, 128, 128));
-        }
-    }                                                                                  
+    // Focus design behaviors refactored to SignupController                                                                                  
 
     public JTextField getUsernameField() {
         return this.jTextField1;
@@ -428,39 +228,14 @@ private void jTextField1FocusGained(java.awt.event.FocusEvent evt) {
         return this.jButton3;
     }
 
-    public void addAddUserListener(ActionListener listener) {
-        this.jButton1.addActionListener(listener);
-    }
 
-    public void addLoginListener(ActionListener listener) {
-        this.jButton3.addActionListener(listener);
-    }
-
-    public void addBrowseListener(ActionListener listener) {
-    }
 
     @Override
     public java.awt.Dimension getPreferredSize() {
         return new java.awt.Dimension(680, 480);
     }
 
-    public static void main(String[] args) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (!"Nimbus".equals(info.getName())) continue;
-                UIManager.setLookAndFeel(info.getClassName());
-                break;
-            }
-        }
-        catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(Signup.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        EventQueue.invokeLater(() -> {
-            Signup signupView = new Signup();
-            SignupController controller = new SignupController(signupView);
-            controller.open();
-        });
-    }
+
 
                        
 

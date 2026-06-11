@@ -24,7 +24,12 @@ extends JFrame {
 
     public Logout() {
         this.initComponents();
-        this.addHoverEffects();
+        this.setResizable(true);
+        this.jPanel1.setPreferredSize(new java.awt.Dimension(680, 480));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(this.jPanel1);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        this.setContentPane(scrollPane);
         try {
             this.setIconImage(new javax.swing.ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         } catch (Exception e) {
@@ -93,68 +98,39 @@ extends JFrame {
         jLabelSub.setBounds(20, 135, 410, 20);
 
         jPanel1.add(jPanelCard);
-        jPanelCard.setBounds(175, 90, 450, 320);
+        jPanelCard.setBounds(115, 80, 450, 320);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 840, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 680, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 880, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                                                                  
-        this.dispose();
-        new Login().setVisible(true);
-    }                                                                                
 
-    private void jButtonExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonExitActionPerformed
-        System.exit(0);
-    }//GEN-LAST:event_jButtonExitActionPerformed
 
-    private void addHoverEffects() {
-        this.jButton1.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                jButton1.setBackground(new Color(9, 21, 180));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                jButton1.setBackground(new Color(11, 27, 226));
-            }
-        });
-        
-        this.jButtonExit.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                jButtonExit.setBackground(new Color(245, 245, 245));
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                jButtonExit.setBackground(new Color(255, 255, 255));
-            }
-        });
+
+    public javax.swing.JButton getLoginAgainButton() {
+        return this.jButton1;
     }
 
-    public static void main(String[] args) {
-        try {
-            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-                if (!"Nimbus".equals(info.getName())) continue;
-                UIManager.setLookAndFeel(info.getClassName());
-                break;
-            }
-        }
-        catch (ReflectiveOperationException | UnsupportedLookAndFeelException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-        EventQueue.invokeLater(() -> new Logout().setVisible(true));
+    public javax.swing.JButton getExitButton() {
+        return this.jButtonExit;
     }
+
+    @Override
+    public java.awt.Dimension getPreferredSize() {
+        return new java.awt.Dimension(680, 480);
+    }
+
+
 
                        
 
