@@ -6,3 +6,4 @@ Model
 
 ## Verified Contributions
 - Prateek Satyal (verified June 12)
+- Rohan Budha (verified June 12)
