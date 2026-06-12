@@ -33,87 +33,19 @@ extends JFrame {
 
     public EnrollCourseFrame() {
         this.initComponents();
-        this.setupVisuals();
-        this.setupPlaceholder();
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        this.setResizable(true);
+        this.jPanel1.setPreferredSize(new java.awt.Dimension(530, 570));
+        this.setContentPane(this.jPanel1);
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         }
         catch (Exception exception) {
             // empty catch block
         }
-        this.addWindowListener(new WindowAdapter(){
-
-            @Override
-            public void windowOpened(WindowEvent e) {
-                EnrollCourseFrame.this.getContentPane().setFocusable(true);
-                EnrollCourseFrame.this.getContentPane().requestFocusInWindow();
-            }
-        });
     }
 
-    private void setupPlaceholder() {
-        this.jTextFieldStudentId.addFocusListener(new FocusListener(){
 
-            @Override
-            public void focusGained(FocusEvent e) {
-                if ("Enter Student ID".equals(EnrollCourseFrame.this.jTextFieldStudentId.getText())) {
-                    EnrollCourseFrame.this.jTextFieldStudentId.setText("");
-                    EnrollCourseFrame.this.jTextFieldStudentId.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (EnrollCourseFrame.this.jTextFieldStudentId.getText().trim().isEmpty()) {
-                    EnrollCourseFrame.this.jTextFieldStudentId.setText("Enter Student ID");
-                    EnrollCourseFrame.this.jTextFieldStudentId.setForeground(Color.GRAY);
-                }
-            }
-        });
-    }
-
-    private void setupVisuals() {
-        JComponent[] inputs;
-        JButton[] buttons;
-        this.jComboBoxCourse.setCursor(new Cursor(12));
-        this.jComboBoxSemester.setCursor(new Cursor(12));
-        for (final JButton btn : buttons = new JButton[]{this.jButtonEnroll, this.jButtonClear, this.jButtonBack}) {
-            btn.setCursor(new Cursor(12));
-            btn.addFocusListener(new FocusListener(){
-
-                @Override
-                public void focusGained(FocusEvent e) {
-                    btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-                }
-
-                @Override
-                public void focusLost(FocusEvent e) {
-                    if (btn == EnrollCourseFrame.this.jButtonEnroll) {
-                        btn.setBorder(null);
-                    } else {
-                        btn.setBorder(BorderFactory.createEtchedBorder());
-                    }
-                }
-            });
-        }
-        for (final JComponent in : inputs = new JComponent[]{this.jTextFieldStudentId, this.jComboBoxCourse, this.jComboBoxSemester}) {
-            in.addFocusListener(new FocusListener(){
-                {
-                    Objects.requireNonNull(EnrollCourseFrame.this);
-                }
-
-                @Override
-                public void focusGained(FocusEvent e) {
-                    in.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-                }
-
-                @Override
-                public void focusLost(FocusEvent e) {
-                    in.setBorder(BorderFactory.createLineBorder(new Color(224, 224, 224), 1));
-                }
-            });
-        }
-    }
 
     public JTextField getStudentIdField() {
         return this.jTextFieldStudentId;
@@ -161,7 +93,7 @@ extends JFrame {
         jComboBoxSemester = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("SMS - Enroll Student in Course");
+        setTitle("Student Management System - Enroll Student in Course");
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(243, 227, 225));
@@ -171,13 +103,13 @@ extends JFrame {
         jButtonBack.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonBack.setFocusPainted(false);
         jPanel1.add(jButtonBack);
-        jButtonBack.setBounds(310, 400, 100, 35);
+        jButtonBack.setBounds(350, 400, 140, 35);
 
         jButtonClear.setText("Clear Form");
         jButtonClear.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonClear.setFocusPainted(false);
         jPanel1.add(jButtonClear);
-        jButtonClear.setBounds(175, 400, 115, 35);
+        jButtonClear.setBounds(200, 400, 130, 35);
 
         jButtonEnroll.setText("Enroll Student");
         jButtonEnroll.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -185,7 +117,7 @@ extends JFrame {
         jButtonEnroll.setForeground(new java.awt.Color(255, 255, 255));
         jButtonEnroll.setFocusPainted(false);
         jPanel1.add(jButtonEnroll);
-        jButtonEnroll.setBounds(40, 400, 120, 35);
+        jButtonEnroll.setBounds(40, 400, 140, 35);
 
         jLabelCourse.setText("Select Course");
         jLabelCourse.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -217,22 +149,22 @@ extends JFrame {
         jTextFieldStudentId.setForeground(new java.awt.Color(128, 128, 128));
         jTextFieldStudentId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(224, 224, 224)));
         jPanel1.add(jTextFieldStudentId);
-        jTextFieldStudentId.setBounds(40, 125, 370, 30);
+        jTextFieldStudentId.setBounds(40, 125, 450, 30);
 
         jTextFieldStudentName.setText("Auto-loaded Student Name");
         jTextFieldStudentName.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jTextFieldStudentName.setForeground(new java.awt.Color(128, 128, 128));
         jTextFieldStudentName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(224, 224, 224)));
         jPanel1.add(jTextFieldStudentName);
-        jTextFieldStudentName.setBounds(40, 195, 370, 30);
+        jTextFieldStudentName.setBounds(40, 195, 450, 30);
 
         jComboBoxCourse.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jPanel1.add(jComboBoxCourse);
-        jComboBoxCourse.setBounds(40, 265, 370, 30);
+        jComboBoxCourse.setBounds(40, 265, 450, 30);
 
         jComboBoxSemester.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jPanel1.add(jComboBoxSemester);
-        jComboBoxSemester.setBounds(40, 335, 370, 30);
+        jComboBoxSemester.setBounds(40, 335, 450, 30);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -264,4 +196,9 @@ extends JFrame {
     private javax.swing.JTextField jTextFieldStudentId;
     private javax.swing.JTextField jTextFieldStudentName;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public java.awt.Dimension getPreferredSize() {
+        return new java.awt.Dimension(530, 570);
+    }
 }
