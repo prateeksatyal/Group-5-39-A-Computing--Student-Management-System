@@ -8,3 +8,4 @@ Model
 - Prateek Satyal (verified June 12)
 - Rohan Budha (verified June 12)
 - Insha Dangol (verified June 12)
+- Karun Khatiwada (verified June 12)
