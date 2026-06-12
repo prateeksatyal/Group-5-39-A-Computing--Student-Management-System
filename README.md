@@ -9,3 +9,4 @@ Model
 - Rohan Budha (verified June 12)
 - Insha Dangol (verified June 12)
 - Karun Khatiwada (verified June 12)
+- Jenish Shrestha (verified June 12)
