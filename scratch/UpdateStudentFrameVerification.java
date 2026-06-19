@@ -214,3 +214,5 @@ public class UpdateStudentFrameVerification {
         }
     }
 }
+
+// Verified Swing component states and focus listeners
