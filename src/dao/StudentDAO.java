@@ -206,6 +206,18 @@ public class StudentDAO {
             conn = mysql.openConnection();
             conn.setAutoCommit(false); // begin transaction
 
+            // Fetch student email to clean up corresponding record in 'users' table
+            String email = null;
+            try (PreparedStatement pEmail = conn.prepareStatement(
+                    "SELECT email FROM students WHERE student_id = ?")) {
+                pEmail.setString(1, studentId);
+                try (ResultSet rs = pEmail.executeQuery()) {
+                    if (rs.next()) {
+                        email = rs.getString("email");
+                    }
+                }
+            }
+
             // Step 1: remove course enrollments
             try (PreparedStatement p1 = conn.prepareStatement(
                     "DELETE FROM course_enrollments WHERE student_id = ?")) {
@@ -220,6 +232,20 @@ public class StudentDAO {
                 p2.executeUpdate();
             }
 
+            // Step 2.1: remove marks records
+            try (PreparedStatement pMarks = conn.prepareStatement(
+                    "DELETE FROM marks WHERE student_id = ?")) {
+                pMarks.setString(1, studentId);
+                pMarks.executeUpdate();
+            }
+
+            // Step 2.2: remove results records
+            try (PreparedStatement pResults = conn.prepareStatement(
+                    "DELETE FROM results WHERE student_id = ?")) {
+                pResults.setString(1, studentId);
+                pResults.executeUpdate();
+            }
+
             // Step 3: remove the student record itself
             int rows;
             try (PreparedStatement p3 = conn.prepareStatement(
@@ -228,7 +254,16 @@ public class StudentDAO {
                 rows = p3.executeUpdate();
             }
 
-            conn.commit(); // all 3 succeeded
+            // Step 4: remove corresponding user login record
+            if (email != null && !email.trim().isEmpty()) {
+                try (PreparedStatement p4 = conn.prepareStatement(
+                        "DELETE FROM users WHERE email = ? AND role = 'Student'")) {
+                    p4.setString(1, email);
+                    p4.executeUpdate();
+                }
+            }
+
+            conn.commit(); // all succeeded
             return rows > 0;
 
         } catch (Exception e) {

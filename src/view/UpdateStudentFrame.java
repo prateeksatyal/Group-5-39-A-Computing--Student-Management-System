@@ -12,6 +12,14 @@ extends JFrame {
 
     public UpdateStudentFrame() {
         this.initComponents();
+        this.setResizable(true);
+
+        this.jPanel1.setPreferredSize(new java.awt.Dimension(480, 520));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(this.jPanel1);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        this.setContentPane(scrollPane);
+
         try {
             this.setIconImage(new javax.swing.ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         }
@@ -59,7 +67,7 @@ extends JFrame {
         jButtonBack.setForeground(new java.awt.Color(255, 255, 255));
         jButtonBack.setFocusPainted(false);
         jPanel1.add(jButtonBack);
-        jButtonBack.setBounds(345, 440, 100, 30);
+        jButtonBack.setBounds(345, 440, 120, 35);
 
         jButtonDelete.setText("Delete");
         jButtonDelete.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -67,13 +75,13 @@ extends JFrame {
         jButtonDelete.setForeground(new java.awt.Color(255, 255, 255));
         jButtonDelete.setFocusPainted(false);
         jPanel1.add(jButtonDelete);
-        jButtonDelete.setBounds(135, 440, 90, 30);
+        jButtonDelete.setBounds(125, 440, 95, 35);
 
         jButtonReset.setText("Reset");
         jButtonReset.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonReset.setFocusPainted(false);
         jPanel1.add(jButtonReset);
-        jButtonReset.setBounds(240, 440, 90, 30);
+        jButtonReset.setBounds(235, 440, 95, 35);
 
         jButtonSearch.setText("Search");
         jButtonSearch.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -89,7 +97,7 @@ extends JFrame {
         jButtonUpdate.setForeground(new java.awt.Color(255, 255, 255));
         jButtonUpdate.setFocusPainted(false);
         jPanel1.add(jButtonUpdate);
-        jButtonUpdate.setBounds(30, 440, 90, 30);
+        jButtonUpdate.setBounds(15, 440, 95, 35);
 
         jLabelAddress.setText("Address");
         jLabelAddress.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -179,11 +187,11 @@ extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 520, Short.MAX_VALUE)
         );
 
         pack();
