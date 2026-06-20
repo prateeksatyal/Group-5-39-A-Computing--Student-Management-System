@@ -1,6 +1,6 @@
 package view;
 
-import controller.LogoutController;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
@@ -45,22 +45,11 @@ public class GenerateResultFrame extends JFrame {
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         this.setContentPane(scrollPane);
-        this.jButtonGenerate.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        this.jButtonGenerate.setBorder(null);
-        setupMenuIcons();
-        LogoutController.wireLogout(this, this.getLogoutButton());
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         } catch (Exception exception) {
             // ignore icon exceptions
         }
-        this.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowOpened(WindowEvent e) {
-                GenerateResultFrame.this.getContentPane().setFocusable(true);
-                GenerateResultFrame.this.getContentPane().requestFocusInWindow();
-            }
-        });
     }
 
     // ── Getters ──────────────────────────────────────────────────────────────
@@ -90,142 +79,15 @@ public class GenerateResultFrame extends JFrame {
     public JTextArea getPreviewTextArea() { return this.jTextAreaPreview; }
     public JButton getGenerateButton() { return this.jButtonGenerate; }
     public JButton getBackButton() { return this.jButtonBack; }
+    public javax.swing.JLabel getTitleLabel() { return this.jLabel1; }
 
     // ── Styling / Visual Effects ─────────────────────────────────────────────
 
-    private void setupMenuIcons() {
-        JButton[] actionButtons;
-        JButton[] sidebarButtons;
-        JButton[] pageTabs;
-        Color whiteColor = Color.WHITE;
-        Color activeColor = new Color(11, 27, 226);
 
-        this.jLabel1.setText("SMS");
-        this.jLabel1.setIcon(new VectorIcon("hamburger", 20, whiteColor));
-        this.jLabel1.setIconTextGap(12);
-
-        this.jButton1.setText("Dashboard");
-        this.jButton1.setIconTextGap(12);
-        this.jButton2.setText("Students Management");
-        this.jButton2.setIconTextGap(12);
-        this.jButton3.setText("Courses Management");
-        this.jButton3.setIconTextGap(12);
-        this.jButton4.setText("Attendance Management");
-        this.jButton4.setIconTextGap(12);
-        this.jButton5.setText("Academic Performance");
-        this.jButton5.setIconTextGap(12);
-        this.jButton6.setText("Grade Computation");
-        this.jButton6.setIconTextGap(12);
-        this.jButton7.setText("Result Generation");
-        this.jButton7.setIconTextGap(12);
-        this.jButton8.setText("Reports Export");
-        this.jButton8.setIconTextGap(12);
-        this.jButton9.setText("Profile");
-        this.jButton9.setIconTextGap(12);
-        this.jButton10.setText("Logout");
-        this.jButton10.setIconTextGap(12);
-
-        this.setActiveMenuItem(this.jButton7);
-
-        pageTabs = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9};
-        for (JButton btn : pageTabs) {
-            btn.addActionListener(e -> this.setActiveMenuItem(btn));
-        }
-
-        sidebarButtons = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9, this.jButton10};
-        for (JButton btn : sidebarButtons) {
-            this.addInteractiveEffects(btn);
-        }
-
-        actionButtons = new JButton[]{this.jButtonGenerate, this.jButtonBack};
-        for (final JButton btn : actionButtons) {
-            btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-            btn.addFocusListener(new FocusListener() {
-                @Override
-                public void focusGained(FocusEvent e) {
-                    btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-                }
-                @Override
-                public void focusLost(FocusEvent e) {
-                    if (btn == GenerateResultFrame.this.jButtonGenerate) {
-                        btn.setBorder(null);
-                    } else {
-                        btn.setBorder(BorderFactory.createEtchedBorder());
-                    }
-                }
-            });
-        }
-
-        this.jRadioButtonDetailed.setSelected(true);
-        this.jCheckBoxSubject.setSelected(true);
-        this.jCheckBoxGPA.setSelected(true);
-        this.jCheckBoxRank.setSelected(true);
-    }
-
-    private void addInteractiveEffects(final JButton btn) {
-        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btn.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-            }
-            @Override
-            public void focusLost(FocusEvent e) {
-                btn.setBorder(null);
-            }
-        });
-        btn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (btn.getBackground().equals(new Color(224, 242, 248))) {
-                    btn.setBackground(new Color(200, 235, 245));
-                } else if (btn.getBackground().equals(new Color(243, 227, 225))) {
-                    btn.setBackground(new Color(233, 212, 209));
-                }
-            }
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (btn.getBackground().equals(new Color(200, 235, 245))) {
-                    btn.setBackground(new Color(224, 242, 248));
-                } else if (btn.getBackground().equals(new Color(233, 212, 209))) {
-                    btn.setBackground(new Color(243, 227, 225));
-                }
-            }
-        });
-    }
-
-    public void setActiveMenuItem(JButton activeBtn) {
-        Color whiteColor = Color.WHITE;
-        Color activeColor = new Color(11, 27, 226);
-        Color activeBg = new Color(243, 227, 225);
-        Color normalColor = new Color(11, 27, 226);
-        Color normalBg = new Color(224, 242, 248);
-
-        JButton[] buttons = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9, this.jButton10};
-        String[] types = new String[]{"dashboard", "students", "courses", "attendance", "performance", "grade", "result", "reports", "profile", "logout"};
-
-        for (int i = 0; i < buttons.length; ++i) {
-            JButton btn = buttons[i];
-            String type = types[i];
-            if (btn == activeBtn) {
-                btn.setBackground(activeBg);
-                btn.setForeground(activeColor);
-                btn.setContentAreaFilled(true);
-                btn.setOpaque(true);
-                btn.setIcon(new VectorIcon(type, 28, whiteColor));
-            } else {
-                btn.setBackground(normalBg);
-                btn.setForeground(normalColor);
-                btn.setContentAreaFilled(true);
-                btn.setOpaque(true);
-                btn.setIcon(new VectorIcon(type, 28, activeColor));
-            }
-        }
-    }
 
     // ── VectorIcon Class ──────────────────────────────────────────────────────
 
-    private static class VectorIcon implements Icon {
+    public static class VectorIcon implements Icon {
         private final String type;
         private final int size;
         private final Color color;

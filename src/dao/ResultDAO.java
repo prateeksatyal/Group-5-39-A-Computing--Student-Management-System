@@ -228,7 +228,7 @@ public class ResultDAO {
      */
     public List<ResultData> generateResultsFromMarks(String term, String course, String section) {
         String sql = "SELECT m.student_id, s.full_name, m.term, m.course_name, m.section_name, "
-                   + "       m.marks, m.percentage, m.grade_point, m.grade "
+                   + "       m.marks, m.percentage, m.grade_point, m.grade, m.assignment_marks, m.exam_marks "
                    + "FROM marks m JOIN students s ON m.student_id = s.student_id "
                    + "WHERE m.term = ? AND m.course_name = ? AND m.section_name = ?";
         Connection conn = null;
@@ -247,8 +247,12 @@ public class ResultDAO {
                 double percentage = rs.getDouble("percentage");
                 double gpa        = rs.getDouble("grade_point");
                 String grade      = rs.getString("grade");
-                double assignment = total * 0.5;
-                double exam       = total * 0.5;
+                double assignment = rs.getDouble("assignment_marks");
+                double exam       = rs.getDouble("exam_marks");
+                if (assignment == 0 && exam == 0 && total != 0) {
+                    assignment = total * 0.5;
+                    exam = total * 0.5;
+                }
                 String status     = percentage >= 40.0 ? "Pass" : "Fail";
                 String today      = new java.text.SimpleDateFormat("yyyy-MM-dd")
                                         .format(new java.util.Date());
