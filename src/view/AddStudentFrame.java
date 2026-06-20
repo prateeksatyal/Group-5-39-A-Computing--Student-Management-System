@@ -12,6 +12,13 @@ extends JFrame {
 
     public AddStudentFrame() {
         this.initComponents();
+        this.setResizable(true);
+        this.jPanel1.setPreferredSize(new java.awt.Dimension(530, 570));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(this.jPanel1);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        this.setContentPane(scrollPane);
+
         try {
             this.setIconImage(new javax.swing.ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         }
@@ -19,6 +26,8 @@ extends JFrame {
             // empty catch block
         }
     }
+
+
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -55,13 +64,13 @@ extends JFrame {
         jButtonBack.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonBack.setFocusPainted(false);
         jPanel1.add(jButtonBack);
-        jButtonBack.setBounds(300, 440, 110, 35);
+        jButtonBack.setBounds(350, 440, 140, 35);
 
         jButtonClear.setText("Clear");
         jButtonClear.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonClear.setFocusPainted(false);
         jPanel1.add(jButtonClear);
-        jButtonClear.setBounds(170, 440, 110, 35);
+        jButtonClear.setBounds(200, 440, 130, 35);
 
         jButtonSave.setText("Save");
         jButtonSave.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -69,7 +78,7 @@ extends JFrame {
         jButtonSave.setForeground(new java.awt.Color(255, 255, 255));
         jButtonSave.setFocusPainted(false);
         jPanel1.add(jButtonSave);
-        jButtonSave.setBounds(30, 440, 120, 35);
+        jButtonSave.setBounds(40, 440, 140, 35);
 
         jLabelAddress.setText("Address");
         jLabelAddress.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -119,41 +128,41 @@ extends JFrame {
         jScrollPaneAddress.setViewportView(jTextAreaAddress);
 
         jPanel1.add(jScrollPaneAddress);
-        jScrollPaneAddress.setBounds(180, 370, 320, 50);
+        jScrollPaneAddress.setBounds(180, 370, 310, 50);
 
         jTextFieldEmail.setText("Enter Email Address");
         jTextFieldEmail.setForeground(new java.awt.Color(128, 128, 128));
         jTextFieldEmail.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jPanel1.add(jTextFieldEmail);
-        jTextFieldEmail.setBounds(180, 200, 220, 30);
+        jTextFieldEmail.setBounds(180, 200, 310, 30);
 
         jTextFieldFullName.setText("Enter Full Name");
         jTextFieldFullName.setForeground(new java.awt.Color(128, 128, 128));
         jTextFieldFullName.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jPanel1.add(jTextFieldFullName);
-        jTextFieldFullName.setBounds(180, 155, 220, 30);
+        jTextFieldFullName.setBounds(180, 155, 310, 30);
 
         jTextFieldPhone.setText("Enter Phone Number");
         jTextFieldPhone.setForeground(new java.awt.Color(128, 128, 128));
         jTextFieldPhone.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jPanel1.add(jTextFieldPhone);
-        jTextFieldPhone.setBounds(180, 245, 220, 30);
+        jTextFieldPhone.setBounds(180, 245, 310, 30);
 
         jTextFieldStudentId.setText("Enter Student ID");
         jTextFieldStudentId.setForeground(new java.awt.Color(128, 128, 128));
         jTextFieldStudentId.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jPanel1.add(jTextFieldStudentId);
-        jTextFieldStudentId.setBounds(180, 110, 220, 30);
+        jTextFieldStudentId.setBounds(180, 110, 310, 30);
 
         jComboBoxCourse.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Course", "Computing", "Business", "Multimedia", "Networking" }));
         jComboBoxCourse.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jPanel1.add(jComboBoxCourse);
-        jComboBoxCourse.setBounds(180, 290, 220, 30);
+        jComboBoxCourse.setBounds(180, 290, 310, 30);
 
         jComboBoxGender.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Select Gender", "Male", "Female", "Other" }));
         jComboBoxGender.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
         jPanel1.add(jComboBoxGender);
-        jComboBoxGender.setBounds(180, 330, 220, 30);
+        jComboBoxGender.setBounds(180, 330, 310, 30);
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

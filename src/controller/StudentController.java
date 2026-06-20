@@ -5,13 +5,21 @@ package controller;
 
 import dao.StudentDAO;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Objects;
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -20,6 +28,7 @@ import model.StudentData;
 import view.AddStudentFrame;
 import view.AdminDashboard;
 import view.StudentManagementFrame;
+import view.StudentManagementFrame.VectorIcon;
 import view.UpdateStudentFrame;
 
 public class StudentController {
@@ -30,6 +39,12 @@ public class StudentController {
 
     public StudentController(StudentManagementFrame managementView) {
         this.managementView = managementView;
+        
+        if (UserSession.isStudent()) {
+            JOptionPane.showMessageDialog(managementView, "Access denied. Students cannot access Student Management.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+            managementView.dispose();
+            return;
+        }
         
         // pack, enable resizing, and center natively
         this.managementView.setResizable(true);
@@ -57,35 +72,128 @@ public class StudentController {
         this.managementView.getUpdateButton().addActionListener(new OpenUpdateFrameListener());
         this.managementView.getDeleteButton().addActionListener(new DeleteStudentFromTableListener());
         this.managementView.getRefreshButton().addActionListener(e -> this.loadStudentsToTable());
-        this.managementView.getBackButton().addActionListener(new BackToAdminDashboardListener());
-        this.managementView.getDashboardButton().addActionListener(new BackToAdminDashboardListener());
+        this.managementView.getBackButton().addActionListener(e -> navigateToDashboard(this.managementView));
         
         // Wire sidebar navigation
-        this.managementView.getAttendanceButton().addActionListener(e -> {
+        this.setupSidebarNavigation();
+        
+        LogoutController.wireLogout(this.managementView, this.managementView.getLogoutButton());
+        this.setupLiveSearch();
+        this.setupMenuIcons();
+        this.setupPlaceholder();
+        this.setupInteractiveEffects();
+    }
+
+    private void setupSidebarNavigation() {
+        managementView.getDashboardButton().addActionListener(e -> navigateToDashboard(managementView));
+        
+        // Students Management (current frame)
+        managementView.getStudentsButton().addActionListener(e -> {
+            // Already on students management
+        });
+
+        managementView.getCoursesButton().addActionListener(e -> {
+            if (UserSession.isAdmin()) {
+                managementView.dispose();
+                EventQueue.invokeLater(() -> {
+                    view.CourseManagementFrame frame = new view.CourseManagementFrame();
+                    new CourseController(frame);
+                    frame.setVisible(true);
+                });
+            } else {
+                JOptionPane.showMessageDialog(managementView, "Access denied. Only admins can access Course Management.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        managementView.getAttendanceButton().addActionListener(e -> {
             if (UserSession.isAdmin() || UserSession.isTeacher()) {
-                this.managementView.dispose();
+                managementView.dispose();
                 EventQueue.invokeLater(() -> {
                     view.AttendanceSummaryFrame frame = new view.AttendanceSummaryFrame();
                     new AttendanceController(frame);
                     frame.setVisible(true);
                 });
             } else {
-                JOptionPane.showMessageDialog(this.managementView, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(managementView, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
             }
         });
 
-        this.managementView.getAcademicPerformanceButton().addActionListener(e -> {
-            String role = UserSession.isAdmin() ? "Admin" : (UserSession.isTeacher() ? "Teacher" : "Student");
-            this.managementView.dispose();
+        managementView.getAcademicPerformanceButton().addActionListener(e -> {
+            if (UserSession.isAdmin() || UserSession.isTeacher()) {
+                String role = UserSession.isAdmin() ? "Admin" : "Teacher";
+                managementView.dispose();
+                EventQueue.invokeLater(() -> {
+                    view.AcademicPerformanceFrame frame = new view.AcademicPerformanceFrame(role);
+                    new MarksController(frame, role);
+                    frame.setVisible(true);
+                });
+            } else {
+                JOptionPane.showMessageDialog(managementView, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        managementView.getGradeComputationButton().addActionListener(e -> {
+            if (UserSession.isAdmin() || UserSession.isTeacher()) {
+                managementView.dispose();
+                EventQueue.invokeLater(() -> {
+                    view.GradeComputationFrame frame = new view.GradeComputationFrame();
+                    new MarksController(frame);
+                    frame.setVisible(true);
+                });
+            } else {
+                JOptionPane.showMessageDialog(managementView, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        managementView.getResultGenerationButton().addActionListener(e -> {
+            if (UserSession.isAdmin() || UserSession.isTeacher()) {
+                managementView.dispose();
+                EventQueue.invokeLater(() -> {
+                    view.GenerateResultFrame frame = new view.GenerateResultFrame();
+                    new ResultController(frame);
+                    frame.setVisible(true);
+                });
+            } else {
+                JOptionPane.showMessageDialog(managementView, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        managementView.getReportsExportButton().addActionListener(e -> {
+            managementView.dispose();
             EventQueue.invokeLater(() -> {
-                view.AcademicPerformanceFrame frame = new view.AcademicPerformanceFrame(role);
-                new MarksController(frame, role);
+                view.DownloadResultFrame frame = new view.DownloadResultFrame();
+                new ResultController(frame);
                 frame.setVisible(true);
             });
         });
-        
-        LogoutController.wireLogout(this.managementView, this.managementView.getLogoutButton());
-        this.setupLiveSearch();
+
+        managementView.getProfileButton().addActionListener(e -> {
+            managementView.dispose();
+            EventQueue.invokeLater(() -> {
+                view.ViewStudentProfile frame = new view.ViewStudentProfile();
+                new ViewStudentProfileController(frame);
+                frame.setVisible(true);
+            });
+        });
+    }
+
+    private void navigateToDashboard(javax.swing.JFrame frame) {
+        frame.dispose();
+        EventQueue.invokeLater(() -> {
+            if (UserSession.isAdmin()) {
+                view.AdminDashboard admin = new view.AdminDashboard();
+                new AdminDashboardController(admin);
+                admin.setVisible(true);
+            } else if (UserSession.isTeacher()) {
+                view.TeacherDashboard teacher = new view.TeacherDashboard();
+                new TeacherDashboardController(teacher);
+                teacher.setVisible(true);
+            } else {
+                view.StudentDashboard student = new view.StudentDashboard();
+                new StudentDashboardController(student);
+                student.setVisible(true);
+            }
+        });
     }
 
     public void loadStudentsToTable() {
@@ -307,6 +415,10 @@ public class StudentController {
         public void actionPerformed(ActionEvent e) {
             if (StudentController.this.addView == null || !StudentController.this.addView.isDisplayable()) {
                 StudentController.this.addView = new AddStudentFrame();
+                StudentController.this.addView.getSaveButton().setUI(new javax.swing.plaf.basic.BasicButtonUI());
+                StudentController.this.addView.getSaveButton().setBorder(null);
+                StudentController.this.setupAddStudentPlaceholders(StudentController.this.addView);
+
                 StudentController.this.addView.getSaveButton().addActionListener(evt -> StudentController.this.saveStudent());
                 StudentController.this.addView.getClearButton().addActionListener(evt -> StudentController.this.clearAddForm());
                 StudentController.this.addView.getBackButton().addActionListener(evt -> {
@@ -331,6 +443,25 @@ public class StudentController {
             int selectedRow;
             if (StudentController.this.updateView == null || !StudentController.this.updateView.isDisplayable()) {
                 StudentController.this.updateView = new UpdateStudentFrame();
+                
+                // Apply Flat UI overrides to buttons
+                StudentController.this.updateView.getUpdateButton().setUI(new javax.swing.plaf.basic.BasicButtonUI());
+                StudentController.this.updateView.getUpdateButton().setBorder(null);
+                StudentController.this.updateView.getSearchButton().setUI(new javax.swing.plaf.basic.BasicButtonUI());
+                StudentController.this.updateView.getSearchButton().setBorder(null);
+                StudentController.this.updateView.getDeleteButton().setUI(new javax.swing.plaf.basic.BasicButtonUI());
+                StudentController.this.updateView.getDeleteButton().setBorder(null);
+                StudentController.this.updateView.getBackButton().setUI(new javax.swing.plaf.basic.BasicButtonUI());
+                StudentController.this.updateView.getBackButton().setBorder(null);
+                
+                StudentController.this.updateView.getResetButton().setUI(new javax.swing.plaf.basic.BasicButtonUI());
+                StudentController.this.updateView.getResetButton().setBorder(null);
+                StudentController.this.updateView.getResetButton().setBackground(new Color(108, 117, 125));
+                StudentController.this.updateView.getResetButton().setForeground(Color.WHITE);
+                
+                // Initialize text field placeholders
+                StudentController.this.setupUpdateStudentPlaceholders(StudentController.this.updateView);
+
                 StudentController.this.updateView.getSearchButton().addActionListener(evt -> StudentController.this.searchStudent());
                 StudentController.this.updateView.getUpdateButton().addActionListener(evt -> StudentController.this.updateStudent());
                 StudentController.this.updateView.getDeleteButton().addActionListener(evt -> StudentController.this.deleteStudent());
@@ -416,5 +547,217 @@ public class StudentController {
                 }
             });
         }
+    }
+
+    private void setupPlaceholder() {
+        final JTextField searchField = managementView.getSearchField();
+        searchField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                searchField.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
+                if ("Search Name or ID...".equals(searchField.getText())) {
+                    searchField.setText("");
+                    searchField.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                searchField.setBorder(BorderFactory.createLineBorder(new Color(224, 224, 224), 1));
+                if (searchField.getText().trim().isEmpty()) {
+                    searchField.setText("Search Name or ID...");
+                    searchField.setForeground(new Color(128, 128, 128));
+                }
+            }
+        });
+    }
+
+    private void setupMenuIcons() {
+        Color whiteColor = Color.WHITE;
+        Color activeColor = new Color(11, 27, 226);
+        managementView.getTitleLabel().setText("SMS");
+        managementView.getTitleLabel().setIcon(new VectorIcon("hamburger", 20, whiteColor));
+        managementView.getTitleLabel().setIconTextGap(12);
+        managementView.getDashboardButton().setText("Dashboard");
+        managementView.getDashboardButton().setIconTextGap(12);
+        managementView.getStudentsButton().setText("Students Management");
+        managementView.getStudentsButton().setIconTextGap(12);
+        managementView.getCoursesButton().setText("Courses Management");
+        managementView.getCoursesButton().setIconTextGap(12);
+        managementView.getAttendanceButton().setText("Attendance Management");
+        managementView.getAttendanceButton().setIconTextGap(12);
+        managementView.getAcademicPerformanceButton().setText("Academic Performance");
+        managementView.getAcademicPerformanceButton().setIconTextGap(12);
+        managementView.getGradeComputationButton().setText("Grade Computation");
+        managementView.getGradeComputationButton().setIconTextGap(12);
+        managementView.getResultGenerationButton().setText("Result Generation");
+        managementView.getResultGenerationButton().setIconTextGap(12);
+        managementView.getReportsExportButton().setText("Reports Export");
+        managementView.getReportsExportButton().setIconTextGap(12);
+        managementView.getProfileButton().setText("Profile");
+        managementView.getProfileButton().setIconTextGap(12);
+        managementView.getLogoutButton().setText("Logout");
+        managementView.getLogoutButton().setIconTextGap(12);
+        this.setActiveMenuItem(managementView.getStudentsButton());
+
+        managementView.getCardIconLabel().setText("");
+        managementView.getCardIconLabel().setIcon(new VectorIcon("students", 40, activeColor));
+        managementView.getRefreshButton().setIcon(new VectorIcon("reports", 20, activeColor));
+    }
+
+    private void setActiveMenuItem(JButton activeBtn) {
+        Color whiteColor = Color.WHITE;
+        Color activeColor = new Color(11, 27, 226);
+        Color activeBg = new Color(243, 227, 225);
+        Color normalColor = new Color(11, 27, 226);
+        Color normalBg = new Color(224, 242, 248);
+        JButton[] buttons = new JButton[]{
+            managementView.getDashboardButton(),
+            managementView.getStudentsButton(),
+            managementView.getCoursesButton(),
+            managementView.getAttendanceButton(),
+            managementView.getAcademicPerformanceButton(),
+            managementView.getGradeComputationButton(),
+            managementView.getResultGenerationButton(),
+            managementView.getReportsExportButton(),
+            managementView.getProfileButton(),
+            managementView.getLogoutButton()
+        };
+        String[] types = new String[]{"dashboard", "students", "courses", "attendance", "performance", "grade", "result", "reports", "profile", "logout"};
+        for (int i = 0; i < buttons.length; ++i) {
+            JButton btn = buttons[i];
+            String type = types[i];
+            if (btn == activeBtn) {
+                btn.setBackground(activeBg);
+                btn.setForeground(activeColor);
+                btn.setContentAreaFilled(true);
+                btn.setOpaque(true);
+                btn.setIcon(new VectorIcon(type, 28, whiteColor));
+                continue;
+            }
+            btn.setBackground(normalBg);
+            btn.setForeground(normalColor);
+            btn.setContentAreaFilled(true);
+            btn.setOpaque(true);
+            btn.setIcon(new VectorIcon(type, 28, activeColor));
+        }
+    }
+
+    private void setupInteractiveEffects() {
+        JButton[] buttons = new JButton[]{
+            managementView.getDashboardButton(),
+            managementView.getStudentsButton(),
+            managementView.getCoursesButton(),
+            managementView.getAttendanceButton(),
+            managementView.getAcademicPerformanceButton(),
+            managementView.getGradeComputationButton(),
+            managementView.getResultGenerationButton(),
+            managementView.getReportsExportButton(),
+            managementView.getProfileButton(),
+            managementView.getLogoutButton()
+        };
+
+        for (JButton btn : buttons) {
+            if (btn != managementView.getLogoutButton() && btn != managementView.getStudentsButton()) {
+                btn.addActionListener(e -> setActiveMenuItem(btn));
+            }
+            addHoverAndFocusEffects(btn);
+        }
+    }
+
+    private void addHoverAndFocusEffects(final JButton btn) {
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btn.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                btn.setBorder(null);
+            }
+        });
+
+        btn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (btn.getBackground().equals(new Color(224, 242, 248))) {
+                    btn.setBackground(new Color(200, 235, 245));
+                } else if (btn.getBackground().equals(new Color(243, 227, 225))) {
+                    btn.setBackground(new Color(233, 212, 209));
+                }
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (btn.getBackground().equals(new Color(200, 235, 245))) {
+                    btn.setBackground(new Color(224, 242, 248));
+                } else if (btn.getBackground().equals(new Color(233, 212, 209))) {
+                    btn.setBackground(new Color(243, 227, 225));
+                }
+            }
+        });
+    }
+
+    private void setupAddStudentPlaceholders(AddStudentFrame frame) {
+        addPlaceholder(frame.getStudentIdField(), "Enter Student ID");
+        addPlaceholder(frame.getFullNameField(), "Enter Full Name");
+        addPlaceholder(frame.getEmailField(), "Enter Email Address");
+        addPlaceholder(frame.getPhoneField(), "Enter Phone Number");
+        addPlaceholder(frame.getAddressArea(), frame.getAddressScrollPane(), "Enter Address");
+    }
+
+    private void setupUpdateStudentPlaceholders(UpdateStudentFrame frame) {
+        addPlaceholder(frame.getSearchIdField(), "Enter Student ID to Search...");
+        addPlaceholder(frame.getFullNameField(), "Enter Full Name");
+        addPlaceholder(frame.getEmailField(), "Enter Email Address");
+        addPlaceholder(frame.getPhoneField(), "Enter Phone Number");
+        addPlaceholder(frame.getAddressArea(), frame.getAddressScrollPane(), "Enter Address");
+    }
+
+
+    private void addPlaceholder(final JTextField field, final String placeholder) {
+        field.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                field.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
+                if (placeholder.equals(field.getText())) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                field.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
+                if (field.getText().trim().isEmpty()) {
+                    field.setText(placeholder);
+                    field.setForeground(new Color(128, 128, 128));
+                }
+            }
+        });
+    }
+
+    private void addPlaceholder(final JTextArea field, final JScrollPane scrollPane, final String placeholder) {
+        field.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                scrollPane.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
+                if (placeholder.equals(field.getText())) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                scrollPane.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
+                if (field.getText().trim().isEmpty()) {
+                    field.setText(placeholder);
+                    field.setForeground(new Color(128, 128, 128));
+                }
+            }
+        });
     }
 }
