@@ -5,6 +5,9 @@ import model.ResultData;
 import view.DownloadResultFrame;
 import view.GenerateResultFrame;
 import view.ViewResultFrame;
+import java.awt.Color;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.EventQueue;
@@ -32,8 +35,49 @@ public class ResultController {
 
     public ResultController(GenerateResultFrame view) {
         this.generateView = view;
-        this.generateView.pack();
+        
+        if (UserSession.isStudent()) {
+            JOptionPane.showMessageDialog(view, "Access denied. Students cannot access Result Generation.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+            view.dispose();
+            return;
+        }
+        
+        // WindowOpened focus handling
+        this.generateView.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                view.getContentPane().setFocusable(true);
+                view.getContentPane().requestFocusInWindow();
+            }
+        });
+
+        // Styling and sidebar setup
+        view.getGenerateButton().setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        view.getGenerateButton().setBorder(null);
+        setupMenuIcons(view);
+
+        // Expand the frame programmatically to show the preview on the right
+        this.generateView.setSize(1040, 520);
         this.generateView.setLocationRelativeTo(null);
+        
+        // Configure preview scroll pane and text area visibility
+        JTextArea previewArea = this.generateView.getPreviewTextArea();
+        if (previewArea != null) {
+            previewArea.setVisible(true);
+            previewArea.setEditable(false);
+            previewArea.setFont(new java.awt.Font("Monospaced", java.awt.Font.PLAIN, 11));
+            java.awt.Container scrollPane = previewArea.getParent().getParent();
+            if (scrollPane instanceof JScrollPane) {
+                scrollPane.setVisible(true);
+                scrollPane.setBounds(525, 70, 460, 330); // Position on the right side
+            }
+            java.awt.Container jPanel3 = previewArea.getParent().getParent().getParent();
+            if (jPanel3 != null) {
+                jPanel3.setBounds(240, 0, 800, 480); // Expand right-side panel
+            }
+        }
+        
+        LogoutController.wireLogout(this.generateView, this.generateView.getLogoutButton());
         wireGenerateFrame();
     }
 
@@ -41,6 +85,22 @@ public class ResultController {
 
     public ResultController(ViewResultFrame view) {
         this.viewResultView = view;
+        
+        setupMenuIcons(view);
+        setupStatCards(view);
+        
+        // Setup interactive effects for sidebar buttons
+        JButton[] sidebarButtons = new JButton[]{
+            view.getDashboardButton(),
+            view.getProfileButton(),
+            view.getAttendanceButton(),
+            view.getCoursesButton(),
+            view.getDownloadResultButton()
+        };
+        for (JButton btn : sidebarButtons) {
+            addSidebarHoverEffects(btn, view.getDownloadResultButton());
+        }
+
         this.viewResultView.pack();
         this.viewResultView.setLocationRelativeTo(null);
         wireViewResultFrame();
@@ -50,27 +110,37 @@ public class ResultController {
 
     public ResultController(DownloadResultFrame view) {
         this.downloadView = view;
+        
+        // WindowOpened focus handling
+        this.downloadView.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowOpened(WindowEvent e) {
+                view.getContentPane().setFocusable(true);
+                view.getContentPane().requestFocusInWindow();
+            }
+        });
+
+        // Styling and sidebar setup
+        view.getDownloadButton().setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        view.getDownloadButton().setBorder(null);
+        setupMenuIcons(view);
+
         this.downloadView.pack();
         this.downloadView.setLocationRelativeTo(null);
+        LogoutController.wireLogout(this.downloadView, this.downloadView.getLogoutButton());
         wireDownloadFrame();
     }
 
     // ── GenerateResultFrame wiring ────────────────────────────────────────────
 
     private void wireGenerateFrame() {
-        // Populate combo-boxes with defaults if needed
-        if (generateView.getTermComboBox().getItemCount() == 0) {
-            generateView.getTermComboBox().setModel(
-                new DefaultComboBoxModel<>(new String[]{"Term 1", "Term 2", "Term 3"}));
-        }
-        if (generateView.getCourseComboBox().getItemCount() == 0) {
-            generateView.getCourseComboBox().setModel(
-                new DefaultComboBoxModel<>(new String[]{"BSc Computer Science", "BIT", "BBA"}));
-        }
-        if (generateView.getSectionComboBox().getItemCount() == 0) {
-            generateView.getSectionComboBox().setModel(
-                new DefaultComboBoxModel<>(new String[]{"Section A", "Section B", "Section C"}));
-        }
+        // Populate combo-boxes with defaults
+        generateView.getTermComboBox().setModel(
+            new DefaultComboBoxModel<>(new String[]{"Term 1", "Term 2", "Term 3"}));
+        generateView.getCourseComboBox().setModel(
+            new DefaultComboBoxModel<>(new String[]{"BSc Computer Science", "BIT", "BBA"}));
+        generateView.getSectionComboBox().setModel(
+            new DefaultComboBoxModel<>(new String[]{"Section A", "Section B", "Section C"}));
 
         // Generate button — compute results from marks and save
         generateView.getGenerateButton().addActionListener(e -> generateResults());
@@ -136,10 +206,8 @@ public class ResultController {
 
     private void wireViewResultFrame() {
         // Populate term combo-box
-        if (viewResultView.getTermComboBox().getItemCount() == 0) {
-            viewResultView.getTermComboBox().setModel(
-                new DefaultComboBoxModel<>(new String[]{"All Terms", "Term 1", "Term 2", "Term 3"}));
-        }
+        viewResultView.getTermComboBox().setModel(
+            new DefaultComboBoxModel<>(new String[]{"All Terms", "Term 1", "Term 2", "Term 3"}));
 
         // Load results for logged-in student (or all, if admin/teacher)
         loadResultsIntoTable();
@@ -167,6 +235,43 @@ public class ResultController {
         viewResultView.getDashboardButton().addActionListener(e -> {
             viewResultView.dispose();
             navigateToDashboard();
+        });
+
+        // Sidebar: Profile
+        viewResultView.getProfileButton().addActionListener(e -> {
+            viewResultView.dispose();
+            EventQueue.invokeLater(() -> {
+                view.ViewStudentProfile frame = new view.ViewStudentProfile();
+                new ViewStudentProfileController(frame);
+                frame.setVisible(true);
+            });
+        });
+
+        // Sidebar: Attendance
+        viewResultView.getAttendanceButton().addActionListener(e -> {
+            viewResultView.dispose();
+            EventQueue.invokeLater(() -> {
+                view.AttendanceSummaryFrame frame = new view.AttendanceSummaryFrame();
+                AttendanceController ac = new AttendanceController(frame);
+                if (UserSession.isStudent()) {
+                    String sid = resolveStudentId();
+                    if (sid != null && !sid.isEmpty()) {
+                        ac.searchAttendance(sid);
+                    }
+                    frame.getMarkSaveButton().setEnabled(false);
+                }
+                frame.setVisible(true);
+            });
+        });
+
+        // Sidebar: Courses
+        viewResultView.getCoursesButton().addActionListener(e -> {
+            viewResultView.dispose();
+            EventQueue.invokeLater(() -> {
+                view.ViewAssignedCourseFrame frame = new view.ViewAssignedCourseFrame();
+                new CourseController(frame);
+                frame.setVisible(true);
+            });
         });
     }
 
@@ -238,10 +343,8 @@ public class ResultController {
 
     private void wireDownloadFrame() {
         // Populate term combo-box
-        if (downloadView.getTermComboBox().getItemCount() == 0) {
-            downloadView.getTermComboBox().setModel(
-                new DefaultComboBoxModel<>(new String[]{"Term 1", "Term 2", "Term 3"}));
-        }
+        downloadView.getTermComboBox().setModel(
+            new DefaultComboBoxModel<>(new String[]{"Term 1", "Term 2", "Term 3"}));
 
         // Generate preview on term change
         downloadView.getTermComboBox().addActionListener(e -> generateScorecardPreview());
@@ -275,6 +378,43 @@ public class ResultController {
         downloadView.getDashboardButton().addActionListener(e -> {
             downloadView.dispose();
             navigateToDashboard();
+        });
+
+        // Sidebar: Profile
+        downloadView.getProfileButton().addActionListener(e -> {
+            downloadView.dispose();
+            EventQueue.invokeLater(() -> {
+                view.ViewStudentProfile frame = new view.ViewStudentProfile();
+                new ViewStudentProfileController(frame);
+                frame.setVisible(true);
+            });
+        });
+
+        // Sidebar: Attendance
+        downloadView.getAttendanceButton().addActionListener(e -> {
+            downloadView.dispose();
+            EventQueue.invokeLater(() -> {
+                view.AttendanceSummaryFrame frame = new view.AttendanceSummaryFrame();
+                AttendanceController ac = new AttendanceController(frame);
+                if (UserSession.isStudent()) {
+                    String sid = resolveStudentId();
+                    if (sid != null && !sid.isEmpty()) {
+                        ac.searchAttendance(sid);
+                    }
+                    frame.getMarkSaveButton().setEnabled(false);
+                }
+                frame.setVisible(true);
+            });
+        });
+
+        // Sidebar: Courses
+        downloadView.getCoursesButton().addActionListener(e -> {
+            downloadView.dispose();
+            EventQueue.invokeLater(() -> {
+                view.ViewAssignedCourseFrame frame = new view.ViewAssignedCourseFrame();
+                new CourseController(frame);
+                frame.setVisible(true);
+            });
         });
     }
 
@@ -358,6 +498,42 @@ public class ResultController {
     private void wireSidebarAdmin(JFrame source) {
         // This is called for GenerateResultFrame which has Admin sidebar
         if (generateView != null) {
+            generateView.getDashboardButton().addActionListener(e -> {
+                generateView.dispose();
+                navigateToDashboard();
+            });
+            generateView.getStudentsButton().addActionListener(e -> {
+                if (UserSession.isAdmin() || UserSession.isTeacher()) {
+                    generateView.dispose();
+                    EventQueue.invokeLater(() -> {
+                        view.StudentManagementFrame frame = new view.StudentManagementFrame();
+                        new StudentController(frame);
+                        frame.setVisible(true);
+                    });
+                } else {
+                    JOptionPane.showMessageDialog(generateView, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+                }
+            });
+            generateView.getCoursesButton().addActionListener(e -> {
+                if (UserSession.isAdmin()) {
+                    generateView.dispose();
+                    EventQueue.invokeLater(() -> {
+                        view.CourseManagementFrame frame = new view.CourseManagementFrame();
+                        new CourseController(frame);
+                        frame.setVisible(true);
+                    });
+                } else {
+                    JOptionPane.showMessageDialog(generateView, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+                }
+            });
+            generateView.getAttendanceButton().addActionListener(e -> {
+                generateView.dispose();
+                EventQueue.invokeLater(() -> {
+                    view.AttendanceSummaryFrame frame = new view.AttendanceSummaryFrame();
+                    new AttendanceController(frame);
+                    frame.setVisible(true);
+                });
+            });
             generateView.getAcademicPerformanceButton().addActionListener(e -> {
                 generateView.dispose();
                 EventQueue.invokeLater(() -> {
@@ -372,6 +548,22 @@ public class ResultController {
                     view.GradeComputationFrame gf = new view.GradeComputationFrame();
                     new MarksController(gf);
                     gf.setVisible(true);
+                });
+            });
+            generateView.getReportsExportButton().addActionListener(e -> {
+                generateView.dispose();
+                EventQueue.invokeLater(() -> {
+                    view.DownloadResultFrame frame = new view.DownloadResultFrame();
+                    new ResultController(frame);
+                    frame.setVisible(true);
+                });
+            });
+            generateView.getProfileButton().addActionListener(e -> {
+                generateView.dispose();
+                EventQueue.invokeLater(() -> {
+                    view.ViewStudentProfile frame = new view.ViewStudentProfile();
+                    new ViewStudentProfileController(frame);
+                    frame.setVisible(true);
                 });
             });
         }
@@ -402,6 +594,367 @@ public class ResultController {
                 student.pack();
                 student.setLocationRelativeTo(null);
                 student.setVisible(true);
+            }
+        });
+    }
+
+    private void setupMenuIcons(GenerateResultFrame view) {
+        Color whiteColor = Color.WHITE;
+        Color activeColor = new Color(11, 27, 226);
+
+        view.getTitleLabel().setText("SMS");
+        view.getTitleLabel().setIcon(new GenerateResultFrame.VectorIcon("hamburger", 20, whiteColor));
+        view.getTitleLabel().setIconTextGap(12);
+
+        view.getDashboardButton().setText("Dashboard");
+        view.getDashboardButton().setIconTextGap(12);
+        view.getStudentsButton().setText("Students Management");
+        view.getStudentsButton().setIconTextGap(12);
+        view.getCoursesButton().setText("Courses Management");
+        view.getCoursesButton().setIconTextGap(12);
+        view.getAttendanceButton().setText("Attendance Management");
+        view.getAttendanceButton().setIconTextGap(12);
+        view.getAcademicPerformanceButton().setText("Academic Performance");
+        view.getAcademicPerformanceButton().setIconTextGap(12);
+        view.getGradeComputationButton().setText("Grade Computation");
+        view.getGradeComputationButton().setIconTextGap(12);
+        view.getResultGenerationButton().setText("Result Generation");
+        view.getResultGenerationButton().setIconTextGap(12);
+        view.getReportsExportButton().setText("Reports Export");
+        view.getReportsExportButton().setIconTextGap(12);
+        view.getProfileButton().setText("Profile");
+        view.getProfileButton().setIconTextGap(12);
+        view.getLogoutButton().setText("Logout");
+        view.getLogoutButton().setIconTextGap(12);
+
+        this.setActiveMenuItem(view, view.getResultGenerationButton());
+
+        JButton[] pageTabs = new JButton[]{
+            view.getDashboardButton(),
+            view.getStudentsButton(),
+            view.getCoursesButton(),
+            view.getAttendanceButton(),
+            view.getAcademicPerformanceButton(),
+            view.getGradeComputationButton(),
+            view.getResultGenerationButton(),
+            view.getReportsExportButton(),
+            view.getProfileButton()
+        };
+        for (JButton btn : pageTabs) {
+            btn.addActionListener(e -> this.setActiveMenuItem(view, btn));
+        }
+
+        JButton[] sidebarButtons = new JButton[]{
+            view.getDashboardButton(),
+            view.getStudentsButton(),
+            view.getCoursesButton(),
+            view.getAttendanceButton(),
+            view.getAcademicPerformanceButton(),
+            view.getGradeComputationButton(),
+            view.getResultGenerationButton(),
+            view.getReportsExportButton(),
+            view.getProfileButton(),
+            view.getLogoutButton()
+        };
+        for (JButton btn : sidebarButtons) {
+            this.addInteractiveEffects(btn);
+        }
+
+        JButton[] actionButtons = new JButton[]{view.getGenerateButton(), view.getBackButton()};
+        for (final JButton btn : actionButtons) {
+            btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            btn.addFocusListener(new java.awt.event.FocusListener() {
+                @Override
+                public void focusGained(java.awt.event.FocusEvent e) {
+                    btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
+                }
+                @Override
+                public void focusLost(java.awt.event.FocusEvent e) {
+                    if (btn == view.getGenerateButton()) {
+                        btn.setBorder(null);
+                    } else {
+                        btn.setBorder(BorderFactory.createEtchedBorder());
+                    }
+                }
+            });
+        }
+
+        view.getDetailedRadioButton().setSelected(true);
+        view.getSubjectMarksCheckBox().setSelected(true);
+        view.getGpaCheckBox().setSelected(true);
+        view.getRankCheckBox().setSelected(true);
+    }
+
+    private void addInteractiveEffects(final JButton btn) {
+        btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn.addFocusListener(new java.awt.event.FocusListener() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                btn.setBorder(null);
+            }
+        });
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                if (btn.getBackground().equals(new Color(224, 242, 248))) {
+                    btn.setBackground(new Color(200, 235, 245));
+                } else if (btn.getBackground().equals(new Color(243, 227, 225))) {
+                    btn.setBackground(new Color(233, 212, 209));
+                }
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                if (btn.getBackground().equals(new Color(200, 235, 245))) {
+                    btn.setBackground(new Color(224, 242, 248));
+                } else if (btn.getBackground().equals(new Color(233, 212, 209))) {
+                    btn.setBackground(new Color(243, 227, 225));
+                }
+            }
+        });
+    }
+
+    private void setActiveMenuItem(GenerateResultFrame view, JButton activeBtn) {
+        Color whiteColor = Color.WHITE;
+        Color activeColor = new Color(11, 27, 226);
+        Color activeBg = new Color(243, 227, 225);
+        Color normalColor = new Color(11, 27, 226);
+        Color normalBg = new Color(224, 242, 248);
+
+        JButton[] buttons = new JButton[]{
+            view.getDashboardButton(),
+            view.getStudentsButton(),
+            view.getCoursesButton(),
+            view.getAttendanceButton(),
+            view.getAcademicPerformanceButton(),
+            view.getGradeComputationButton(),
+            view.getResultGenerationButton(),
+            view.getReportsExportButton(),
+            view.getProfileButton(),
+            view.getLogoutButton()
+        };
+        String[] types = new String[]{"dashboard", "students", "courses", "attendance", "performance", "grade", "result", "reports", "profile", "logout"};
+
+        for (int i = 0; i < buttons.length; ++i) {
+            JButton btn = buttons[i];
+            String type = types[i];
+            if (btn == activeBtn) {
+                btn.setBackground(activeBg);
+                btn.setForeground(activeColor);
+                btn.setContentAreaFilled(true);
+                btn.setOpaque(true);
+                btn.setIcon(new GenerateResultFrame.VectorIcon(type, 28, whiteColor));
+            } else {
+                btn.setBackground(normalBg);
+                btn.setForeground(normalColor);
+                btn.setContentAreaFilled(true);
+                btn.setOpaque(true);
+                btn.setIcon(new GenerateResultFrame.VectorIcon(type, 28, activeColor));
+            }
+        }
+    }
+
+    private void setupMenuIcons(DownloadResultFrame view) {
+        Color whiteColor = Color.WHITE;
+        Color activeColor = new Color(11, 27, 226);
+
+        view.getTitleLabel().setText("SMS");
+        view.getTitleLabel().setIcon(new DownloadResultFrame.VectorIcon("hamburger", 20, whiteColor));
+        view.getTitleLabel().setIconTextGap(12);
+
+        view.getDashboardButton().setText("Dashboard");
+        view.getDashboardButton().setIconTextGap(12);
+        view.getProfileButton().setText("View Profile");
+        view.getProfileButton().setIconTextGap(12);
+        view.getAttendanceButton().setText("Attendance Summary");
+        view.getAttendanceButton().setIconTextGap(12);
+        view.getCoursesButton().setText("Enrolled Courses");
+        view.getCoursesButton().setIconTextGap(12);
+        view.getViewResultsButton().setText("View Results");
+        view.getViewResultsButton().setIconTextGap(12);
+        view.getDownloadResultButton().setText("Download Result");
+        view.getDownloadResultButton().setIconTextGap(12);
+        view.getLogoutButton().setText("Logout");
+        view.getLogoutButton().setIconTextGap(12);
+
+        this.setActiveMenuItem(view, view.getDownloadResultButton());
+
+        JButton[] pageTabs = new JButton[]{
+            view.getDashboardButton(),
+            view.getProfileButton(),
+            view.getAttendanceButton(),
+            view.getCoursesButton(),
+            view.getViewResultsButton(),
+            view.getDownloadResultButton()
+        };
+        for (JButton btn : pageTabs) {
+            btn.addActionListener(e -> this.setActiveMenuItem(view, btn));
+        }
+
+        JButton[] sidebarButtons = new JButton[]{
+            view.getDashboardButton(),
+            view.getProfileButton(),
+            view.getAttendanceButton(),
+            view.getCoursesButton(),
+            view.getViewResultsButton(),
+            view.getDownloadResultButton(),
+            view.getLogoutButton()
+        };
+        for (JButton btn : sidebarButtons) {
+            this.addInteractiveEffects(btn);
+        }
+
+        JButton[] actionButtons = new JButton[]{view.getDownloadButton(), view.getPrintButton(), view.getBackButton()};
+        for (final JButton btn : actionButtons) {
+            btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+            btn.addFocusListener(new java.awt.event.FocusListener() {
+                @Override
+                public void focusGained(java.awt.event.FocusEvent e) {
+                    btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
+                }
+                @Override
+                public void focusLost(java.awt.event.FocusEvent e) {
+                    if (btn == view.getDownloadButton()) {
+                        btn.setBorder(null);
+                    } else {
+                        btn.setBorder(BorderFactory.createEtchedBorder());
+                    }
+                }
+            });
+        }
+    }
+
+    private void setActiveMenuItem(DownloadResultFrame view, JButton activeBtn) {
+        Color whiteColor = Color.WHITE;
+        Color activeColor = new Color(11, 27, 226);
+        Color activeBg = new Color(243, 227, 225);
+        Color normalColor = new Color(11, 27, 226);
+        Color normalBg = new Color(224, 242, 248);
+
+        JButton[] buttons = new JButton[]{
+            view.getDashboardButton(),
+            view.getProfileButton(),
+            view.getAttendanceButton(),
+            view.getCoursesButton(),
+            view.getViewResultsButton(),
+            view.getDownloadResultButton(),
+            view.getLogoutButton()
+        };
+        String[] types = new String[]{"dashboard", "profile", "attendance", "courses", "result", "reports", "logout"};
+
+        for (int i = 0; i < buttons.length; ++i) {
+            JButton btn = buttons[i];
+            String type = types[i];
+            if (btn == activeBtn) {
+                btn.setBackground(activeBg);
+                btn.setForeground(activeColor);
+                btn.setContentAreaFilled(true);
+                btn.setOpaque(true);
+                btn.setIcon(new DownloadResultFrame.VectorIcon(type, 28, whiteColor));
+            } else {
+                btn.setBackground(normalBg);
+                btn.setForeground(normalColor);
+                btn.setContentAreaFilled(true);
+                btn.setOpaque(true);
+                btn.setIcon(new DownloadResultFrame.VectorIcon(type, 28, activeColor));
+            }
+        }
+    }
+
+    private void setupMenuIcons(ViewResultFrame view) {
+        try {
+            view.getDashboardButton().setIcon(new ImageIcon(this.getClass().getResource("/images/home.png")));
+            view.getProfileButton().setIcon(new ImageIcon(this.getClass().getResource("/images/user.png")));
+            view.getAttendanceButton().setIcon(new ImageIcon(this.getClass().getResource("/images/attendance.png")));
+            view.getCoursesButton().setIcon(new ImageIcon(this.getClass().getResource("/images/course.png")));
+            view.getDownloadResultButton().setIcon(new ImageIcon(this.getClass().getResource("/images/result.png")));
+        }
+        catch (Exception exception) {
+            // empty catch block
+        }
+    }
+
+    private void setupStatCards(ViewResultFrame view) {
+        java.awt.Font numFont = new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 20);
+        java.awt.Font lblFont = new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 11);
+        java.awt.Color numColor = new java.awt.Color(28, 39, 50);
+
+        view.getGpaValLabel().setFont(numFont); 
+        view.getGpaValLabel().setForeground(numColor);
+        view.getGpaValLabel().setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        view.getPercentageValLabel().setFont(numFont); 
+        view.getPercentageValLabel().setForeground(numColor);
+        view.getPercentageValLabel().setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        view.getOverallGradeValLabel().setFont(numFont); 
+        view.getOverallGradeValLabel().setForeground(numColor);
+        view.getOverallGradeValLabel().setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        // Add to card panels
+        view.getCard1Panel().setBackground(new java.awt.Color(248, 249, 250));
+        view.getCard1Panel().setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220, 220, 220)));
+        view.getCard1Panel().setLayout(new java.awt.BorderLayout());
+        javax.swing.JLabel l1 = new javax.swing.JLabel("Overall GPA", javax.swing.SwingConstants.CENTER);
+        l1.setFont(lblFont); 
+        view.getCard1Panel().add(view.getGpaValLabel(), java.awt.BorderLayout.CENTER); 
+        view.getCard1Panel().add(l1, java.awt.BorderLayout.SOUTH);
+
+        view.getCard2Panel().setBackground(new java.awt.Color(248, 249, 250));
+        view.getCard2Panel().setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220, 220, 220)));
+        view.getCard2Panel().setLayout(new java.awt.BorderLayout());
+        javax.swing.JLabel l2 = new javax.swing.JLabel("Percentage", javax.swing.SwingConstants.CENTER);
+        l2.setFont(lblFont); 
+        view.getCard2Panel().add(view.getPercentageValLabel(), java.awt.BorderLayout.CENTER); 
+        view.getCard2Panel().add(l2, java.awt.BorderLayout.SOUTH);
+
+        view.getCard3Panel().setBackground(new java.awt.Color(248, 249, 250));
+        view.getCard3Panel().setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220, 220, 220)));
+        view.getCard3Panel().setLayout(new java.awt.BorderLayout());
+        javax.swing.JLabel l3 = new javax.swing.JLabel("Overall Grade", javax.swing.SwingConstants.CENTER);
+        l3.setFont(lblFont); 
+        view.getCard3Panel().add(view.getOverallGradeValLabel(), java.awt.BorderLayout.CENTER); 
+        view.getCard3Panel().add(l3, java.awt.BorderLayout.SOUTH);
+
+        // Position card panels on the main panel
+        view.getCard1Panel().setBounds(270, 70, 190, 110);
+        view.getCard2Panel().setBounds(470, 70, 190, 110);
+        view.getCard3Panel().setBounds(670, 70, 190, 110);
+    }
+
+    private void addSidebarHoverEffects(final JButton btn, final JButton activeBtn) {
+        btn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btn.addMouseListener(new java.awt.event.MouseAdapter(){
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                if (btn != activeBtn) {
+                    btn.setContentAreaFilled(true);
+                    btn.setBackground(new Color(40, 55, 70));
+                }
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                if (btn != activeBtn && !btn.isFocusOwner()) {
+                    btn.setContentAreaFilled(false);
+                }
+            }
+        });
+        btn.addFocusListener(new java.awt.event.FocusListener(){
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (btn != activeBtn) {
+                    btn.setContentAreaFilled(true);
+                    btn.setBackground(new Color(50, 70, 90));
+                }
+            }
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (btn != activeBtn) {
+                    btn.setContentAreaFilled(false);
+                }
             }
         });
     }
