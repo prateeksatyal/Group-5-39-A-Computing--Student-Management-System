@@ -28,7 +28,10 @@ extends JFrame {
 
     public ViewAssignedCourseFrame() {
         this.initComponents();
-        this.setupPlaceholders();
+        this.setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        this.setResizable(true);
+        this.jPanel1.setPreferredSize(new java.awt.Dimension(780, 480));
+        this.setContentPane(this.jPanel1);
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         }
@@ -63,7 +66,7 @@ extends JFrame {
         jButtonBack.setForeground(new java.awt.Color(255, 255, 255));
         jButtonBack.setFocusPainted(false);
         jPanel1.add(jButtonBack);
-        jButtonBack.setBounds(660, 85, 100, 30);
+        jButtonBack.setBounds(650, 85, 100, 30);
 
         jButtonRefresh.setText("Refresh");
         jButtonRefresh.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
@@ -88,12 +91,12 @@ extends JFrame {
         jLabelHeader.setBounds(30, 15, 400, 30);
 
         jPanel1.add(jPanelHeader);
-        jPanelHeader.setBounds(0, 0, 800, 60);
+        jPanelHeader.setBounds(0, 0, 780, 60);
 
         jScrollPane1.setViewportView(jTableAssigned);
 
         jPanel1.add(jScrollPane1);
-        jScrollPane1.setBounds(30, 140, 730, 310);
+        jScrollPane1.setBounds(30, 140, 720, 310);
 
         jTextFieldSearch.setFont(new java.awt.Font("Segoe UI", 0, 13)); // NOI18N
         jTextFieldSearch.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(220, 220, 220)));
@@ -104,40 +107,17 @@ extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 960, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-private void setupPlaceholders() {
-        this.jTextFieldSearch.setText("Type Course Code or Name to Search...");
-        this.jTextFieldSearch.setForeground(Color.GRAY);
-        this.jTextFieldSearch.addFocusListener(new FocusAdapter(){
 
-            @Override
-            public void focusGained(FocusEvent e) {
-                ViewAssignedCourseFrame.this.jTextFieldSearch.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-                if (ViewAssignedCourseFrame.this.jTextFieldSearch.getText().equals("Type Course Code or Name to Search...")) {
-                    ViewAssignedCourseFrame.this.jTextFieldSearch.setText("");
-                    ViewAssignedCourseFrame.this.jTextFieldSearch.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                ViewAssignedCourseFrame.this.jTextFieldSearch.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
-                if (ViewAssignedCourseFrame.this.jTextFieldSearch.getText().isEmpty()) {
-                    ViewAssignedCourseFrame.this.jTextFieldSearch.setText("Type Course Code or Name to Search...");
-                    ViewAssignedCourseFrame.this.jTextFieldSearch.setForeground(Color.GRAY);
-                }
-            }
-        });
-    }
 
     public JButton getRefreshButton() {
         return this.jButtonRefresh;
@@ -174,4 +154,9 @@ private void setupPlaceholders() {
     private javax.swing.JTable jTableAssigned;
     private javax.swing.JTextField jTextFieldSearch;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public java.awt.Dimension getPreferredSize() {
+        return new java.awt.Dimension(780, 480);
+    }
 }

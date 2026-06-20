@@ -21,8 +21,15 @@ public class AttendanceSummaryFrame extends javax.swing.JFrame {
 
     public AttendanceSummaryFrame() {
         initComponents();
-        setupMenuIcons();
+        this.setResizable(true);
         setupMarkAttendancePanel();
+        
+        jPanel1.setPreferredSize(new java.awt.Dimension(780, 640));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(jPanel1);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        setContentPane(scrollPane);
+
         try {
             this.setIconImage(new javax.swing.ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         } catch (Exception e) {
@@ -47,6 +54,7 @@ public class AttendanceSummaryFrame extends javax.swing.JFrame {
     public JTable getAttendanceTable() { return attendanceTable; }
     public JLabel getTotalStudentsLabel() { return totalStudentsLabel; }
     public JLabel getAvgAttendanceLabel() { return avgAttendanceLabel; }
+    public javax.swing.JLabel getTitleLabel() { return jLabel1; }
 
     // Getters for Mark Attendance panel (Bug 1 fix)
     public JTextField getMarkStudentIdField()     { return markStudentIdField; }
@@ -216,7 +224,7 @@ public class AttendanceSummaryFrame extends javax.swing.JFrame {
         refreshButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         refreshButton.setFocusPainted(false);
         jPanel3.add(refreshButton);
-        refreshButton.setBounds(230, 85, 80, 25);
+        refreshButton.setBounds(220, 85, 80, 25);
 
         exportButton.setText("Export CSV");
         exportButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -224,7 +232,7 @@ public class AttendanceSummaryFrame extends javax.swing.JFrame {
         exportButton.setForeground(new java.awt.Color(255, 255, 255));
         exportButton.setFocusPainted(false);
         jPanel3.add(exportButton);
-        exportButton.setBounds(320, 85, 100, 25);
+        exportButton.setBounds(315, 85, 100, 25);
 
         backButton.setText("Back");
         backButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -265,7 +273,7 @@ public class AttendanceSummaryFrame extends javax.swing.JFrame {
         // Bug 3 fix: combo starts with placeholder only; populateCourseCombo() fills it from DB via controller
         courseComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Select Course" }));
         jPanel3.add(courseComboBox);
-        courseComboBox.setBounds(30, 85, 180, 25);
+        courseComboBox.setBounds(30, 85, 175, 25);
 
         jPanelCard1.setBackground(new java.awt.Color(224, 242, 248));
         jPanelCard1.setLayout(null);
@@ -310,7 +318,7 @@ public class AttendanceSummaryFrame extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 640, Short.MAX_VALUE)
         );
 
         pack();
@@ -428,80 +436,7 @@ public class AttendanceSummaryFrame extends javax.swing.JFrame {
         return l;
     }
 
-    /**
-     * Bug 3 fix: called by AttendanceController to fill the filter combo and
-     * the Mark Attendance course combo with real DB course names.
-     */
-    public void populateCourseCombo(java.util.List<String> courseNames) {
-        // Filter combo (top of the summary panel)
-        courseComboBox.removeAllItems();
-        courseComboBox.addItem("Select Course");
-        // Mark Attendance course combo
-        markCourseCombo.removeAllItems();
-        markCourseCombo.addItem("Select Course");
-        for (String name : courseNames) {
-            courseComboBox.addItem(name);
-            markCourseCombo.addItem(name);
-        }
-    }
-
-    private void setupMenuIcons() {
-        Color whiteColor = Color.WHITE;
-        Color activeColor = new Color(11, 27, 226);
-        this.jLabel1.setText("SMS");
-        this.jLabel1.setIcon(new VectorIcon("hamburger", 20, whiteColor));
-        this.jLabel1.setIconTextGap(12);
-        this.jButton1.setText("Dashboard");
-        this.jButton1.setIconTextGap(12);
-        this.jButton2.setText("Students Management");
-        this.jButton2.setIconTextGap(12);
-        this.jButton3.setText("Courses Management");
-        this.jButton3.setIconTextGap(12);
-        this.jButton4.setText("Attendance Management");
-        this.jButton4.setIconTextGap(12);
-        this.jButton5.setText("Academic Performance");
-        this.jButton5.setIconTextGap(12);
-        this.jButton6.setText("Grade Computation");
-        this.jButton6.setIconTextGap(12);
-        this.jButton7.setText("Result Generation");
-        this.jButton7.setIconTextGap(12);
-        this.jButton8.setText("Reports Export");
-        this.jButton8.setIconTextGap(12);
-        this.jButton9.setText("Profile");
-        this.jButton9.setIconTextGap(12);
-        this.jButton10.setText("Logout");
-        this.jButton10.setIconTextGap(12);
-        this.setActiveMenuItem(this.jButton4);
-    }
-
-    public void setActiveMenuItem(JButton activeBtn) {
-        Color whiteColor = Color.WHITE;
-        Color activeColor = new Color(11, 27, 226);
-        Color activeBg = new Color(243, 227, 225);
-        Color normalColor = new Color(11, 27, 226);
-        Color normalBg = new Color(224, 242, 248);
-        JButton[] buttons = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9, this.jButton10};
-        String[] types = new String[]{"dashboard", "students", "courses", "attendance", "performance", "grade", "result", "reports", "profile", "logout"};
-        for (int i = 0; i < buttons.length; ++i) {
-            JButton btn = buttons[i];
-            String type = types[i];
-            if (btn == activeBtn) {
-                btn.setBackground(activeBg);
-                btn.setForeground(activeColor);
-                btn.setContentAreaFilled(true);
-                btn.setOpaque(true);
-                btn.setIcon(new VectorIcon(type, 28, whiteColor));
-                continue;
-            }
-            btn.setBackground(normalBg);
-            btn.setForeground(normalColor);
-            btn.setContentAreaFilled(true);
-            btn.setOpaque(true);
-            btn.setIcon(new VectorIcon(type, 28, activeColor));
-        }
-    }
-
-    private static class VectorIcon implements Icon {
+    public static class VectorIcon implements Icon {
         private final String type;
         private final int size;
         private final Color color;
@@ -667,4 +602,9 @@ public class AttendanceSummaryFrame extends javax.swing.JFrame {
     private JComboBox<String> markCourseCombo;
     private JButton        markSaveButton;
     private JButton        markClearButton;
+
+    @Override
+    public java.awt.Dimension getPreferredSize() {
+        return new java.awt.Dimension(780, 660);
+    }
 }

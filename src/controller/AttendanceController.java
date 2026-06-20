@@ -21,6 +21,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 import model.AttendanceData;
 import model.CourseData;
@@ -48,6 +49,14 @@ public class AttendanceController {
             "Attendance ID", "Student ID", "Student Name", "Course", "Total Classes", "Attended", "Attendance %", "Date"
         });
 
+        // Move constructor styling overrides
+        this.view.getExportButton().setUI(new javax.swing.plaf.basic.BasicButtonUI());
+        this.view.getExportButton().setBorder(null);
+        if (this.view.getMarkSaveButton() != null) {
+            this.view.getMarkSaveButton().setUI(new javax.swing.plaf.basic.BasicButtonUI());
+            this.view.getMarkSaveButton().setBorder(null);
+        }
+
         // Enforce Role hard stops
         if (!UserSession.isAdmin()) {
             this.view.getCoursesButton().setEnabled(false);
@@ -55,6 +64,9 @@ public class AttendanceController {
             this.view.getResultGenerationButton().setEnabled(false);
             this.view.getReportsExportButton().setEnabled(false);
         }
+
+        // Setup menu icons
+        this.setupMenuIcons();
 
         // Populate both course filter combo and mark-attendance course combo from DB
         loadCourseNamesForCombo();
@@ -74,6 +86,11 @@ public class AttendanceController {
                 markStudentNameLookup();
             }
         });
+
+        // Setup field placeholders
+        this.setupPlaceholder(this.view.getMarkStudentIdField(), "Enter Student ID");
+        this.setupPlaceholder(this.view.getMarkTotalClassesField(), "e.g. 30");
+        this.setupPlaceholder(this.view.getMarkAttendedField(), "e.g. 25");
 
         setupSidebarNavigation();
         setupSidebarEffects();
@@ -136,18 +153,75 @@ public class AttendanceController {
                     frame.setVisible(true);
                 });
             } else {
-                JOptionPane.showMessageDialog(this.view, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this.view, "Access denied. Only admins can access Course Management.", "Security Alert", JOptionPane.WARNING_MESSAGE);
             }
+        });
+
+        // Attendance Management (current frame)
+        this.view.getAttendanceButton().addActionListener(e -> {
+            // Already on attendance summary
         });
 
         // Academic Performance
         this.view.getAcademicPerformanceButton().addActionListener(e -> {
-            String role = UserSession.isAdmin() ? "Admin" : (UserSession.isTeacher() ? "Teacher" : "Student");
+            if (UserSession.isStudent()) {
+                JOptionPane.showMessageDialog(this.view, "Access denied. Students cannot access Academic Performance.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            String role = UserSession.isAdmin() ? "Admin" : "Teacher";
             this.view.dispose();
             EventQueue.invokeLater(() -> {
                 AcademicPerformanceFrame frame = new AcademicPerformanceFrame(role);
                 new controller.MarksController(frame, role);
                 frame.setVisible(true);
+            });
+        });
+
+        // Grade Computation
+        this.view.getGradeComputationButton().addActionListener(e -> {
+            if (UserSession.isAdmin() || UserSession.isTeacher()) {
+                this.view.dispose();
+                EventQueue.invokeLater(() -> {
+                    view.GradeComputationFrame frame = new view.GradeComputationFrame();
+                    new MarksController(frame);
+                    frame.setVisible(true);
+                });
+            } else {
+                JOptionPane.showMessageDialog(this.view, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        // Result Generation
+        this.view.getResultGenerationButton().addActionListener(e -> {
+            if (UserSession.isAdmin() || UserSession.isTeacher()) {
+                this.view.dispose();
+                EventQueue.invokeLater(() -> {
+                    view.GenerateResultFrame frame = new view.GenerateResultFrame();
+                    new ResultController(frame);
+                    frame.setVisible(true);
+                });
+            } else {
+                JOptionPane.showMessageDialog(this.view, "Access denied.", "Security Alert", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        // Reports/Export
+        this.view.getReportsExportButton().addActionListener(e -> {
+            this.view.dispose();
+            EventQueue.invokeLater(() -> {
+                view.DownloadResultFrame frame = new view.DownloadResultFrame();
+                new ResultController(frame);
+                frame.setVisible(true);
+            });
+        });
+
+        // Profile
+        this.view.getProfileButton().addActionListener(e -> {
+            this.view.dispose();
+            EventQueue.invokeLater(() -> {
+                view.ViewStudentProfile profileView = new view.ViewStudentProfile();
+                new ViewStudentProfileController(profileView);
+                profileView.setVisible(true);
             });
         });
     }
@@ -167,7 +241,7 @@ public class AttendanceController {
         };
 
         for (JButton btn : buttons) {
-            btn.addActionListener(e -> view.setActiveMenuItem(btn));
+            btn.addActionListener(e -> this.setActiveMenuItem(btn));
             addHoverAndFocusEffects(btn);
         }
     }
@@ -443,10 +517,103 @@ public class AttendanceController {
      */
     private void loadCourseNamesForCombo() {
         List<CourseData> courses = courseDAO.getAllCourses();
-        List<String> names = new ArrayList<>();
+        this.view.getCourseComboBox().removeAllItems();
+        this.view.getCourseComboBox().addItem("Select Course");
+        this.view.getMarkCourseCombo().removeAllItems();
+        this.view.getMarkCourseCombo().addItem("Select Course");
         for (CourseData c : courses) {
-            names.add(c.getCourseName());
+            String name = c.getCourseName();
+            this.view.getCourseComboBox().addItem(name);
+            this.view.getMarkCourseCombo().addItem(name);
         }
-        this.view.populateCourseCombo(names);
+    }
+
+    private void setupPlaceholder(final JTextField field, final String placeholder) {
+        field.addFocusListener(new java.awt.event.FocusListener() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                field.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
+                if (placeholder.equals(field.getText())) {
+                    field.setText("");
+                    field.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                field.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
+                if (field.getText().trim().isEmpty()) {
+                    field.setText(placeholder);
+                    field.setForeground(new Color(128, 128, 128));
+                }
+            }
+        });
+    }
+
+    private void setupMenuIcons() {
+        Color whiteColor = Color.WHITE;
+        Color activeColor = new Color(11, 27, 226);
+        this.view.getTitleLabel().setText("SMS");
+        this.view.getTitleLabel().setIcon(new AttendanceSummaryFrame.VectorIcon("hamburger", 20, whiteColor));
+        this.view.getTitleLabel().setIconTextGap(12);
+        this.view.getDashboardButton().setText("Dashboard");
+        this.view.getDashboardButton().setIconTextGap(12);
+        this.view.getStudentsButton().setText("Students Management");
+        this.view.getStudentsButton().setIconTextGap(12);
+        this.view.getCoursesButton().setText("Courses Management");
+        this.view.getCoursesButton().setIconTextGap(12);
+        this.view.getAttendanceButton().setText("Attendance Management");
+        this.view.getAttendanceButton().setIconTextGap(12);
+        this.view.getAcademicPerformanceButton().setText("Academic Performance");
+        this.view.getAcademicPerformanceButton().setIconTextGap(12);
+        this.view.getGradeComputationButton().setText("Grade Computation");
+        this.view.getGradeComputationButton().setIconTextGap(12);
+        this.view.getResultGenerationButton().setText("Result Generation");
+        this.view.getResultGenerationButton().setIconTextGap(12);
+        this.view.getReportsExportButton().setText("Reports Export");
+        this.view.getReportsExportButton().setIconTextGap(12);
+        this.view.getProfileButton().setText("Profile");
+        this.view.getProfileButton().setIconTextGap(12);
+        this.view.getLogoutButton().setText("Logout");
+        this.view.getLogoutButton().setIconTextGap(12);
+        this.setActiveMenuItem(this.view.getAttendanceButton());
+    }
+
+    private void setActiveMenuItem(JButton activeBtn) {
+        Color whiteColor = Color.WHITE;
+        Color activeColor = new Color(11, 27, 226);
+        Color activeBg = new Color(243, 227, 225);
+        Color normalColor = new Color(11, 27, 226);
+        Color normalBg = new Color(224, 242, 248);
+        JButton[] buttons = new JButton[]{
+            this.view.getDashboardButton(),
+            this.view.getStudentsButton(),
+            this.view.getCoursesButton(),
+            this.view.getAttendanceButton(),
+            this.view.getAcademicPerformanceButton(),
+            this.view.getGradeComputationButton(),
+            this.view.getResultGenerationButton(),
+            this.view.getReportsExportButton(),
+            this.view.getProfileButton(),
+            this.view.getLogoutButton()
+        };
+        String[] types = new String[]{"dashboard", "students", "courses", "attendance", "performance", "grade", "result", "reports", "profile", "logout"};
+        for (int i = 0; i < buttons.length; ++i) {
+            JButton btn = buttons[i];
+            String type = types[i];
+            if (btn == activeBtn) {
+                btn.setBackground(activeBg);
+                btn.setForeground(activeColor);
+                btn.setContentAreaFilled(true);
+                btn.setOpaque(true);
+                btn.setIcon(new AttendanceSummaryFrame.VectorIcon(type, 28, whiteColor));
+                continue;
+            }
+            btn.setBackground(normalBg);
+            btn.setForeground(normalColor);
+            btn.setContentAreaFilled(true);
+            btn.setOpaque(true);
+            btn.setIcon(new AttendanceSummaryFrame.VectorIcon(type, 28, activeColor));
+        }
     }
 }
