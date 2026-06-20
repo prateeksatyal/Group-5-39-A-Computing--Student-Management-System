@@ -1,15 +1,39 @@
+/*
+ * Decompiled with CFR 0.152. Logic moved to StudentDashboardController per MVC.
+ */
 package view;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Objects;
-import javax.swing.*;
-import view.AcademicPerformanceFrame;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
-public class AdminDashboard
-extends JFrame {
+public class StudentDashboard extends JFrame {
 
-    public AdminDashboard() {
+    public StudentDashboard() {
         this.initComponents();
         this.setResizable(true);
         this.jPanel1.setPreferredSize(new java.awt.Dimension(780, 480));
@@ -17,23 +41,36 @@ extends JFrame {
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(16);
         this.setContentPane(scrollPane);
-        
-        // Navigation is handled entirely by AdminDashboardController (MVC pattern).
-        // No inline action listeners here.
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
-        }
-        catch (Exception exception) {
-            // empty catch block
+        } catch (Exception exception) {
+            // ignore — icon is optional
         }
     }
+
+    // ── Public Getters (used by StudentDashboardController) ─────────────────
+
+    public JButton getDashboardButton()       { return jButton1; }
+    public JButton getViewProfileButton()     { return jButton2; }
+    public JButton getAttendanceButton()      { return jButton3; }
+    public JButton getEnrolledCoursesButton() { return jButton4; }
+    public JButton getViewResultsButton()     { return jButton5; }
+    public JButton getDownloadResultButton()  { return jButton6; }
+    public JButton getLogoutButton()          { return jButton7; }
+
+    /** Welcome label — updated by controller with real student name */
+    public JLabel getWelcomeLabel()    { return jLabel2; }
+    /** Attendance rate card num — updated by controller */
+    public JLabel getCard2NumLabel()   { return jLabelCard2Num; }
+    /** Enrolled courses count card — updated by controller */
+    public JLabel getCard3NumLabel()   { return jLabelCard3Num; }
+
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        jButton10 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
@@ -41,8 +78,6 @@ extends JFrame {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -69,7 +104,7 @@ extends JFrame {
         jLabelRecentTitle = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Student Management System - Admin Dashboard");
+        setTitle("Student Management System - Student Dashboard");
         setResizable(false);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
@@ -77,16 +112,6 @@ extends JFrame {
 
         jPanel2.setBackground(new java.awt.Color(28, 39, 50));
         jPanel2.setLayout(null);
-
-        jButton10.setText("  Logout");
-        jButton10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton10.setForeground(new java.awt.Color(255, 255, 255));
-        jButton10.setBorder(null);
-        jButton10.setContentAreaFilled(false);
-        jButton10.setFocusPainted(false);
-        jButton10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanel2.add(jButton10);
-        jButton10.setBounds(10, 440, 220, 32);
 
         jButton1.setText("  Dashboard");
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -98,7 +123,7 @@ extends JFrame {
         jPanel2.add(jButton1);
         jButton1.setBounds(10, 80, 220, 32);
 
-        jButton2.setText("  Students Management");
+        jButton2.setText("  View Profile");
         jButton2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton2.setForeground(new java.awt.Color(255, 255, 255));
         jButton2.setBorder(null);
@@ -108,7 +133,7 @@ extends JFrame {
         jPanel2.add(jButton2);
         jButton2.setBounds(10, 120, 220, 32);
 
-        jButton3.setText("  Courses Management");
+        jButton3.setText("  Attendance Summary");
         jButton3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton3.setForeground(new java.awt.Color(255, 255, 255));
         jButton3.setBorder(null);
@@ -118,7 +143,7 @@ extends JFrame {
         jPanel2.add(jButton3);
         jButton3.setBounds(10, 160, 220, 32);
 
-        jButton4.setText("  Attendance Management");
+        jButton4.setText("  Enrolled Courses");
         jButton4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton4.setForeground(new java.awt.Color(255, 255, 255));
         jButton4.setBorder(null);
@@ -128,7 +153,7 @@ extends JFrame {
         jPanel2.add(jButton4);
         jButton4.setBounds(10, 200, 220, 32);
 
-        jButton5.setText("  Academic Performance");
+        jButton5.setText("  View Results");
         jButton5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton5.setForeground(new java.awt.Color(255, 255, 255));
         jButton5.setBorder(null);
@@ -138,7 +163,7 @@ extends JFrame {
         jPanel2.add(jButton5);
         jButton5.setBounds(10, 240, 220, 32);
 
-        jButton6.setText("  Grade Computation");
+        jButton6.setText("  Download Result");
         jButton6.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton6.setForeground(new java.awt.Color(255, 255, 255));
         jButton6.setBorder(null);
@@ -148,7 +173,7 @@ extends JFrame {
         jPanel2.add(jButton6);
         jButton6.setBounds(10, 280, 220, 32);
 
-        jButton7.setText("  Result Generation");
+        jButton7.setText("  Logout");
         jButton7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jButton7.setForeground(new java.awt.Color(255, 255, 255));
         jButton7.setBorder(null);
@@ -157,26 +182,6 @@ extends JFrame {
         jButton7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jPanel2.add(jButton7);
         jButton7.setBounds(10, 320, 220, 32);
-
-        jButton8.setText("  Reports Export");
-        jButton8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton8.setForeground(new java.awt.Color(255, 255, 255));
-        jButton8.setBorder(null);
-        jButton8.setContentAreaFilled(false);
-        jButton8.setFocusPainted(false);
-        jButton8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanel2.add(jButton8);
-        jButton8.setBounds(10, 360, 220, 32);
-
-        jButton9.setText("  Profile");
-        jButton9.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jButton9.setForeground(new java.awt.Color(255, 255, 255));
-        jButton9.setBorder(null);
-        jButton9.setContentAreaFilled(false);
-        jButton9.setFocusPainted(false);
-        jButton9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jPanel2.add(jButton9);
-        jButton9.setBounds(10, 400, 220, 32);
 
         jLabel1.setText("  SMS");
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
@@ -190,7 +195,7 @@ extends JFrame {
         jPanel3.setBackground(new java.awt.Color(243, 227, 225));
         jPanel3.setLayout(null);
 
-        jLabel2.setText("Admin Dashboard");
+        jLabel2.setText("Welcome, Student!");
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jPanel3.add(jLabel2);
         jLabel2.setBounds(30, 20, 350, 35);
@@ -200,15 +205,15 @@ extends JFrame {
         jPanelCard1.add(jLabelCard1Icon);
         jLabelCard1Icon.setBounds(160, 20, 50, 50);
 
-        jLabelCard1Label.setText("Active Students");
+        jLabelCard1Label.setText("Active Enrollment");
         jLabelCard1Label.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jPanelCard1.add(jLabelCard1Label);
         jLabelCard1Label.setBounds(15, 55, 130, 20);
 
-        jLabelCard1Num.setText("1,250");
-        jLabelCard1Num.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
+        jLabelCard1Num.setText("Student Info");
+        jLabelCard1Num.setFont(new java.awt.Font("Segoe UI", 1, 20)); // NOI18N
         jPanelCard1.add(jLabelCard1Num);
-        jLabelCard1Num.setBounds(15, 15, 100, 30);
+        jLabelCard1Num.setBounds(15, 15, 130, 30);
 
         jPanel3.add(jPanelCard1);
         jPanelCard1.setBounds(30, 80, 225, 100);
@@ -218,12 +223,12 @@ extends JFrame {
         jPanelCard2.add(jLabelCard2Icon);
         jLabelCard2Icon.setBounds(160, 20, 50, 50);
 
-        jLabelCard2Label.setText("Total Courses");
+        jLabelCard2Label.setText("Attendance Rate");
         jLabelCard2Label.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jPanelCard2.add(jLabelCard2Label);
         jLabelCard2Label.setBounds(15, 55, 130, 20);
 
-        jLabelCard2Num.setText("45");
+        jLabelCard2Num.setText("95%");
         jLabelCard2Num.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jPanelCard2.add(jLabelCard2Num);
         jLabelCard2Num.setBounds(15, 15, 100, 30);
@@ -236,59 +241,59 @@ extends JFrame {
         jPanelCard3.add(jLabelCard3Icon);
         jLabelCard3Icon.setBounds(160, 20, 50, 50);
 
-        jLabelCard3Label.setText("Attendance Today");
+        jLabelCard3Label.setText("Enrolled Courses");
         jLabelCard3Label.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jPanelCard3.add(jLabelCard3Label);
         jLabelCard3Label.setBounds(15, 55, 130, 20);
 
-        jLabelCard3Num.setText("94%");
+        jLabelCard3Num.setText("5");
         jLabelCard3Num.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jPanelCard3.add(jLabelCard3Num);
         jLabelCard3Num.setBounds(15, 15, 100, 30);
 
         jPanel3.add(jPanelCard3);
-        jPanelCard3.setBounds(30, 200, 225, 100);
+        jPanelCard3.setBounds(30, 190, 225, 100);
 
         jPanelCard4.setBackground(new java.awt.Color(253, 235, 235));
         jPanelCard4.setLayout(null);
         jPanelCard4.add(jLabelCard4Icon);
         jLabelCard4Icon.setBounds(160, 20, 50, 50);
 
-        jLabelCard4Label.setText("Pending Tasks");
+        jLabelCard4Label.setText("Latest Term GPA");
         jLabelCard4Label.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jPanelCard4.add(jLabelCard4Label);
         jLabelCard4Label.setBounds(15, 55, 130, 20);
 
-        jLabelCard4Num.setText("12");
+        jLabelCard4Num.setText("A / 4.0");
         jLabelCard4Num.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jPanelCard4.add(jLabelCard4Num);
         jLabelCard4Num.setBounds(15, 15, 100, 30);
 
         jPanel3.add(jPanelCard4);
-        jPanelCard4.setBounds(285, 200, 225, 100);
+        jPanelCard4.setBounds(285, 190, 225, 100);
 
         jPanelRecent.setBackground(new java.awt.Color(255, 255, 255));
         jPanelRecent.setLayout(null);
 
-        jLabelLog1.setText("• John Doe registered as a Student (Student Portal)");
+        jLabelLog1.setText("• Term End Examination schedule has been posted.");
         jPanelRecent.add(jLabelLog1);
         jLabelLog1.setBounds(15, 35, 450, 20);
 
-        jLabelLog2.setText("• Attendance sheet for Class 10A finalized");
+        jLabelLog2.setText("• Attendance update: CS101 Lecture 5 attendance uploaded.");
         jPanelRecent.add(jLabelLog2);
         jLabelLog2.setBounds(15, 60, 450, 20);
 
-        jLabelLog3.setText("• New Course 'Data Structures' added by Admin");
+        jLabelLog3.setText("• Grade Report: CS101 final marks released by Prof. Davis.");
         jPanelRecent.add(jLabelLog3);
         jLabelLog3.setBounds(15, 85, 450, 20);
 
-        jLabelRecentTitle.setText("Recent Activities");
+        jLabelRecentTitle.setText("Announcements & Notifications");
         jLabelRecentTitle.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jPanelRecent.add(jLabelRecentTitle);
-        jLabelRecentTitle.setBounds(15, 10, 200, 20);
+        jLabelRecentTitle.setBounds(15, 10, 400, 20);
 
         jPanel3.add(jPanelRecent);
-        jPanelRecent.setBounds(30, 320, 480, 130);
+        jPanelRecent.setBounds(30, 300, 480, 150);
 
         jPanel1.add(jPanel3);
         jPanel3.setBounds(240, 0, 540, 480);
@@ -297,61 +302,17 @@ extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 780, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 480, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-public JButton getDashboardButton() {
-        return this.jButton1;
-    }
 
-    public JButton getStudentsButton() {
-        return this.jButton2;
-    }
-
-    public JButton getCoursesButton() {
-        return this.jButton3;
-    }
-
-    public JButton getAttendanceButton() {
-        return this.jButton4;
-    }
-
-    public JButton getPerformanceButton() {
-        return this.jButton5;
-    }
-
-    public JButton getGradeButton() {
-        return this.jButton6;
-    }
-
-    public JButton getResultButton() {
-        return this.jButton7;
-    }
-
-    public JButton getReportsButton() {
-        return this.jButton8;
-    }
-
-    public JButton getProfileButton() {
-        return this.jButton9;
-    }
-
-    public JButton getLogoutButton() {
-        return this.jButton10;
-    }
-
-    // ── Card label getters (so controller can populate live stats) ───────
-    public JLabel getCard1NumLabel() { return this.jLabelCard1Num; }
-    public JLabel getCard2NumLabel() { return this.jLabelCard2Num; }
-    public JLabel getCard3NumLabel() { return this.jLabelCard3Num; }
-    public JLabel getCard4NumLabel() { return this.jLabelCard4Num; }
 
     // ── Icon and title getters for controller styling ───────
     public JLabel getCard1IconLabel() { return this.jLabelCard1Icon; }
@@ -359,9 +320,6 @@ public JButton getDashboardButton() {
     public JLabel getCard3IconLabel() { return this.jLabelCard3Icon; }
     public JLabel getCard4IconLabel() { return this.jLabelCard4Icon; }
     public JLabel getTitleLabel() { return this.jLabel1; }
-
-
-
 
 
 
@@ -455,12 +413,6 @@ public JButton getDashboardButton() {
                     g2.fillOval(cx + shapeSize - 4, cy + shapeSize - 3, 1, 1);
                     break;
                 }
-                case "performance": {
-                    g2.drawOval(cx + 1, cy + 1, shapeSize - 2, shapeSize - 2);
-                    g2.drawLine(cx + 3, cy + shapeSize - 3, cx + shapeSize / 2, cy + shapeSize / 2);
-                    g2.drawLine(cx + shapeSize / 2, cy + shapeSize / 2, cx + shapeSize - 3, cy + 3);
-                    break;
-                }
                 case "grade": {
                     g2.drawRoundRect(cx + 1, cy + 1, shapeSize - 2, (int)((double)shapeSize * 0.7), 2, 2);
                     g2.drawLine(cx + shapeSize / 2, cy + (int)((double)shapeSize * 0.7), cx + shapeSize / 2, cy + shapeSize - 1);
@@ -505,15 +457,12 @@ public JButton getDashboardButton() {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabelCard1Icon;

@@ -27,9 +27,6 @@ public class AcademicPerformanceFrame extends javax.swing.JFrame {
         this.userRole = role;
         initComponents();
         this.setResizable(false);
-        this.jButtonSaveMarks.setUI(new javax.swing.plaf.basic.BasicButtonUI());
-        this.jButtonSaveMarks.setBorder(null);
-        setupMenuIcons();
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         } catch (Exception exception) {
@@ -59,62 +56,9 @@ public class AcademicPerformanceFrame extends javax.swing.JFrame {
     public JButton getSaveMarksButton() { return this.jButtonSaveMarks; }
     public JButton getResetButton() { return this.jButtonReset; }
     public JButton getBackButton() { return this.jButtonBack; }
+    public javax.swing.JLabel getTitleLabel() { return this.jLabel1; }
 
-    private void setupMenuIcons() {
-        Color whiteColor = Color.WHITE;
-        Color activeColor = new Color(11, 27, 226);
-        this.jLabel1.setText("SMS");
-        this.jLabel1.setIcon(new VectorIcon("hamburger", 20, whiteColor));
-        this.jLabel1.setIconTextGap(12);
-        this.jButton1.setText("Dashboard");
-        this.jButton1.setIconTextGap(12);
-        this.jButton2.setText("Students Management");
-        this.jButton2.setIconTextGap(12);
-        this.jButton3.setText("Courses Management");
-        this.jButton3.setIconTextGap(12);
-        this.jButton4.setText("Attendance Management");
-        this.jButton4.setIconTextGap(12);
-        this.jButton5.setText("Academic Performance");
-        this.jButton5.setIconTextGap(12);
-        this.jButton6.setText("Grade Computation");
-        this.jButton6.setIconTextGap(12);
-        this.jButton7.setText("Result Generation");
-        this.jButton7.setIconTextGap(12);
-        this.jButton8.setText("Reports Export");
-        this.jButton8.setIconTextGap(12);
-        this.jButton9.setText("Profile");
-        this.jButton9.setIconTextGap(12);
-        this.jButton10.setText("Logout");
-        this.jButton10.setIconTextGap(12);
-        this.setActiveMenuItem(this.jButton5);
-    }
 
-    public void setActiveMenuItem(JButton activeBtn) {
-        Color whiteColor = Color.WHITE;
-        Color activeColor = new Color(11, 27, 226);
-        Color activeBg = new Color(243, 227, 225);
-        Color normalColor = new Color(11, 27, 226);
-        Color normalBg = new Color(224, 242, 248);
-        JButton[] buttons = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9, this.jButton10};
-        String[] types = new String[]{"dashboard", "students", "courses", "attendance", "performance", "grade", "result", "reports", "profile", "logout"};
-        for (int i = 0; i < buttons.length; ++i) {
-            JButton btn = buttons[i];
-            String type = types[i];
-            if (btn == activeBtn) {
-                btn.setBackground(activeBg);
-                btn.setForeground(activeColor);
-                btn.setContentAreaFilled(true);
-                btn.setOpaque(true);
-                btn.setIcon(new VectorIcon(type, 28, whiteColor));
-                continue;
-            }
-            btn.setBackground(normalBg);
-            btn.setForeground(normalColor);
-            btn.setContentAreaFilled(true);
-            btn.setOpaque(true);
-            btn.setIcon(new VectorIcon(type, 28, activeColor));
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -347,7 +291,7 @@ public class AcademicPerformanceFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private static class VectorIcon implements Icon {
+    public static class VectorIcon implements Icon {
         private final String type;
         private final int size;
         private final Color color;
