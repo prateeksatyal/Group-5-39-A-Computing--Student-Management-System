@@ -32,44 +32,21 @@ extends JFrame {
 
     public CourseManagementFrame() {
         this.initComponents();
-        this.setupMenuIcons();
-        this.setupPlaceholder();
+        this.setResizable(true);
+        this.jPanel1.setPreferredSize(new java.awt.Dimension(780, 480));
+        javax.swing.JScrollPane scrollPane = new javax.swing.JScrollPane(this.jPanel1);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        this.setContentPane(scrollPane);
         try {
             this.setIconImage(new ImageIcon(this.getClass().getResource("/images/Ellipse 21.png")).getImage());
         }
         catch (Exception exception) {
             // empty catch block
         }
-        this.addWindowListener(new WindowAdapter(){
-
-            @Override
-            public void windowOpened(WindowEvent e) {
-                CourseManagementFrame.this.getContentPane().setFocusable(true);
-                CourseManagementFrame.this.getContentPane().requestFocusInWindow();
-            }
-        });
     }
 
-    private void setupPlaceholder() {
-        this.jTextFieldSearch.addFocusListener(new FocusListener(){
 
-            @Override
-            public void focusGained(FocusEvent e) {
-                if ("Search Course Name or Code...".equals(CourseManagementFrame.this.jTextFieldSearch.getText())) {
-                    CourseManagementFrame.this.jTextFieldSearch.setText("");
-                    CourseManagementFrame.this.jTextFieldSearch.setForeground(Color.BLACK);
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (CourseManagementFrame.this.jTextFieldSearch.getText().trim().isEmpty()) {
-                    CourseManagementFrame.this.jTextFieldSearch.setText("Search Course Name or Code...");
-                    CourseManagementFrame.this.jTextFieldSearch.setForeground(Color.GRAY);
-                }
-            }
-        });
-    }
 
     public JButton getDashboardButton() {
         return this.jButton1;
@@ -151,148 +128,14 @@ extends JFrame {
         return this.jButtonViewAssigned;
     }
 
-    private void setupMenuIcons() {
-        JButton[] actionButtons;
-        JButton[] sidebarButtons;
-        JButton[] pageTabs;
-        Color whiteColor = Color.WHITE;
-        Color activeColor = new Color(11, 27, 226);
-        this.jLabel1.setText("SMS");
-        this.jLabel1.setIcon(new VectorIcon("hamburger", 20, whiteColor));
-        this.jLabel1.setIconTextGap(12);
-        this.jButton1.setText("Dashboard");
-        this.jButton1.setIconTextGap(12);
-        this.jButton2.setText("Students Management");
-        this.jButton2.setIconTextGap(12);
-        this.jButton3.setText("Courses Management");
-        this.jButton3.setIconTextGap(12);
-        this.jButton4.setText("Attendance Management");
-        this.jButton4.setIconTextGap(12);
-        this.jButton5.setText("Academic Performance");
-        this.jButton5.setIconTextGap(12);
-        this.jButton6.setText("Grade Computation");
-        this.jButton6.setIconTextGap(12);
-        this.jButton7.setText("Result Generation");
-        this.jButton7.setIconTextGap(12);
-        this.jButton8.setText("Reports Export");
-        this.jButton8.setIconTextGap(12);
-        this.jButton9.setText("Profile");
-        this.jButton9.setIconTextGap(12);
-        this.jButton10.setText("Logout");
-        this.jButton10.setIconTextGap(12);
-        this.setActiveMenuItem(this.jButton3);
-        for (JButton btn : pageTabs = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9}) {
-            btn.addActionListener(e -> this.setActiveMenuItem(btn));
-        }
-        this.jLabelCardIcon.setText("");
-        this.jLabelCardIcon.setIcon(new VectorIcon("courses", 40, activeColor));
-        this.jButtonRefresh.setIcon(new VectorIcon("reports", 20, activeColor));
-        for (JButton btn : sidebarButtons = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9, this.jButton10}) {
-            this.addInteractiveEffects(btn);
-        }
-        for (final JButton btn : actionButtons = new JButton[]{this.jButtonAdd, this.jButtonUpdate, this.jButtonDelete, this.jButtonBack, this.jButtonRefresh, this.jButtonEnroll, this.jButtonViewAssigned}) {
-            btn.setCursor(new Cursor(12));
-            btn.addFocusListener(new FocusListener(){
-
-                @Override
-                public void focusGained(FocusEvent e) {
-                    btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-                }
-
-                @Override
-                public void focusLost(FocusEvent e) {
-                    if (btn == CourseManagementFrame.this.jButtonAdd || btn == CourseManagementFrame.this.jButtonEnroll) {
-                        btn.setBorder(null);
-                    } else if (btn == CourseManagementFrame.this.jButtonRefresh) {
-                        btn.setBorder(null);
-                    } else {
-                        btn.setBorder(BorderFactory.createEtchedBorder());
-                    }
-                }
-            });
-        }
-        this.jTextFieldSearch.addFocusListener(new FocusListener(){
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                CourseManagementFrame.this.jTextFieldSearch.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                CourseManagementFrame.this.jTextFieldSearch.setBorder(BorderFactory.createLineBorder(new Color(224, 224, 224), 1));
-            }
-        });
+    public javax.swing.JLabel getTitleLabel() {
+        return this.jLabel1;
     }
 
-    private void addInteractiveEffects(final JButton btn) {
-        btn.setCursor(new Cursor(12));
-        btn.addFocusListener(new FocusListener(){
-            {
-                Objects.requireNonNull(CourseManagementFrame.this);
-            }
-
-            @Override
-            public void focusGained(FocusEvent e) {
-                btn.setBorder(BorderFactory.createLineBorder(new Color(11, 27, 226), 2));
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                btn.setBorder(null);
-            }
-        });
-        btn.addMouseListener(new MouseAdapter(){
-            {
-                Objects.requireNonNull(CourseManagementFrame.this);
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (btn.getBackground().equals(new Color(224, 242, 248))) {
-                    btn.setBackground(new Color(200, 235, 245));
-                } else if (btn.getBackground().equals(new Color(243, 227, 225))) {
-                    btn.setBackground(new Color(233, 212, 209));
-                }
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (btn.getBackground().equals(new Color(200, 235, 245))) {
-                    btn.setBackground(new Color(224, 242, 248));
-                } else if (btn.getBackground().equals(new Color(233, 212, 209))) {
-                    btn.setBackground(new Color(243, 227, 225));
-                }
-            }
-        });
+    public javax.swing.JLabel getCardIconLabel() {
+        return this.jLabelCardIcon;
     }
 
-    public void setActiveMenuItem(JButton activeBtn) {
-        Color whiteColor = Color.WHITE;
-        Color activeColor = new Color(11, 27, 226);
-        Color activeBg = new Color(243, 227, 225);
-        Color normalColor = new Color(11, 27, 226);
-        Color normalBg = new Color(224, 242, 248);
-        JButton[] buttons = new JButton[]{this.jButton1, this.jButton2, this.jButton3, this.jButton4, this.jButton5, this.jButton6, this.jButton7, this.jButton8, this.jButton9, this.jButton10};
-        String[] types = new String[]{"dashboard", "students", "courses", "attendance", "performance", "grade", "result", "reports", "profile", "logout"};
-        for (int i = 0; i < buttons.length; ++i) {
-            JButton btn = buttons[i];
-            String type = types[i];
-            if (btn == activeBtn) {
-                btn.setBackground(activeBg);
-                btn.setForeground(activeColor);
-                btn.setContentAreaFilled(true);
-                btn.setOpaque(true);
-                btn.setIcon(new VectorIcon(type, 28, whiteColor));
-                continue;
-            }
-            btn.setBackground(normalBg);
-            btn.setForeground(normalColor);
-            btn.setContentAreaFilled(true);
-            btn.setOpaque(true);
-            btn.setIcon(new VectorIcon(type, 28, activeColor));
-        }
-    }
 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -484,25 +327,25 @@ extends JFrame {
         jButtonAdd.setForeground(new java.awt.Color(255, 255, 255));
         jButtonAdd.setFocusPainted(false);
         jPanelCRUD.add(jButtonAdd);
-        jButtonAdd.setBounds(0, 5, 100, 35);
+        jButtonAdd.setBounds(15, 5, 100, 35);
 
         jButtonBack.setText("Back");
         jButtonBack.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonBack.setFocusPainted(false);
         jPanelCRUD.add(jButtonBack);
-        jButtonBack.setBounds(380, 5, 100, 35);
+        jButtonBack.setBounds(395, 5, 70, 35);
 
         jButtonDelete.setText("Delete Course");
         jButtonDelete.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonDelete.setFocusPainted(false);
         jPanelCRUD.add(jButtonDelete);
-        jButtonDelete.setBounds(240, 5, 110, 35);
+        jButtonDelete.setBounds(265, 5, 115, 35);
 
         jButtonUpdate.setText("Update Course");
         jButtonUpdate.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
         jButtonUpdate.setFocusPainted(false);
         jPanelCRUD.add(jButtonUpdate);
-        jButtonUpdate.setBounds(110, 5, 120, 35);
+        jButtonUpdate.setBounds(130, 5, 120, 35);
 
         jPanel3.add(jPanelCRUD);
         jPanelCRUD.setBounds(30, 415, 480, 50);
@@ -544,17 +387,17 @@ extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 900, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 780, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 940, Short.MAX_VALUE)
+            .add(jPanel1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 480, Short.MAX_VALUE)
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-private static class VectorIcon
+public static class VectorIcon
     implements Icon {
         private final String type;
         private final int size;
@@ -725,4 +568,9 @@ private static class VectorIcon
     private javax.swing.JTable jTableCourses;
     private javax.swing.JTextField jTextFieldSearch;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public java.awt.Dimension getPreferredSize() {
+        return new java.awt.Dimension(780, 480);
+    }
 }
